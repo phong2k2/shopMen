@@ -6,9 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import * as userService from '@/services/adminServices/userService'
 import { createAxios } from "@/utils/httpRfreshRequest";
 import { loginSuccess } from "@/redux/authSlice";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import * as orderService from '@/services/orderService'
 import { formatPrice } from "@/components/formatData/formatData";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import config from "@/config";
 
 const cx = classNames.bind(styles)
 function Order() {
@@ -146,12 +149,15 @@ function Order() {
                     <div className={cx('col-md-6')}>
                         <div className={cx('main')}>
                             <div className={cx('main-head')}>
-                                <h2>KENTA.VN</h2>
+                                <h2><Link to={config.publicRouter.home}>KENTA.VN</Link></h2>
                                 <ul className={cx('breadcrumb')}>
                                     <li className={cx('breadcrumb-item')}>
-                                        <a href="">
-                                            Giỏ hàng -
-                                        </a>
+                                        <Link to={config.publicRouter.cart}>
+                                            Giỏ hàng
+                                        </Link>
+                                    </li>
+                                    <li className={cx('breadcrumb-item')}>
+                                        <FontAwesomeIcon icon={faAngleRight}/>
                                     </li>
                                     <li className={cx('breadcrumb-item')}>
                                         Thông tin giao hàng
@@ -309,10 +315,10 @@ function Order() {
                                                 {
                                                     cart?.cartItems?.map(proItem => {
                                                         return (
-                                                            <tr key={proItem?.product}>
+                                                            <tr className={cx('tr-title')} key={proItem?.product}>
                                                                 <td className={cx('product-img')}>
                                                                     <div className={cx('product-thumbnail-wrapper')}>
-                                                                        <img src="//product.hstatic.net/1000096703/product/13_c501e27e197d438faf86ea17656bfb2f_small.jpg" alt="" />
+                                                                        <img  src={`http://localhost:3000/${proItem?.image}`}  alt="" />
                                                                     </div>
                                                                     <span className={cx('product-thumbnail-quantity')}>{proItem?.amount}</span>
                                                                 </td>
@@ -323,7 +329,7 @@ function Order() {
                                                                 <td className={cx("product-price")}>
                                                                     <span>{formatPrice(proItem?.price)}</span>
                                                                 </td>
-                                                             </tr>
+                                                            </tr>
                                                         )
                                                     })
                                                 }

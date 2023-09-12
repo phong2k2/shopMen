@@ -85,45 +85,80 @@
                     align-items: center;
                     justify-content: center;
                     height: 100%;
-
                     img {
                         width: 100%;
+                        border-top-left-radius: 4px;
+                        border-top-right-radius: 4px;
                     }
                 }
             }
 
-            .product-details{
-                text-align: center;
-                a {
-                    text-decoration: none;
-
+            .product-block {
+                padding: 5px 10px;
+                background-color: var(--white);
+                border-radius: 4px;
+                box-shadow: 2px 2px 11px hsla(0, 3%, 7%, 0.1);
+                
+                .product-detail{
                     
-                }
-                h2 {
-                    font-size: 1.5rem;
-                    font-weight: 500;
-                    line-height: 1.6rem;
-                    margin: 5px 0;
-                    text-transform: capitalize;
+                    .pro-name{
+                        padding-bottom: 8px;
+                        font-weight: 500;
+                        margin: 5px 0;
+                        text-transform: capitalize;
 
-                    &:hover {
-                        color: #4eb5ec;
+                        a {
+                            color: var(--black);
+                            font-size: 1.6rem;
+                            font-weight: 500;
+                            text-transform: capitalize;
+                            cursor: pointer;
+                            text-decoration: none;
+    
+                            &:hover {
+                                color: #4eb5ec;
+                            }
+        
+                        }
                     }
-                }
+                    
+                    .box-pro-detail {
+                        display: flex;
+                        justify-content: space-between;
+                        padding-bottom: 5px;
+                        
+                        .product-price{
+                            font-size: 1.5rem;
+                            font-weight: 700;
+                            .price-del {
+                                del {
+                                    margin-left: 5px;
+                                    font-size: 1.4rem;
+                                    opacity: .7;
+                                }
+                            }
+                        }
 
-                .product-price{
-                    font-size: 1.5rem;
-                    font-weight: 700;
-                    text-align: center;
-                    .price-del {
-                        del {
-                            margin-left: 5px;
-                            font-size: 1.4rem;
-                            opacity: .7;
+                        .add-cart {
+                            align-items: center;
+                            background: transparent;
+                            border: 1px solid #003644;
+                            border-radius: 3px;
+                            box-sizing: border-box;
+                            color: #003644;
+                            cursor: pointer;
+                            display: flex;
+                            height: 26px;
+                            align-items: center;
+
+                            span {
+                                padding-left: 3px;
+                            }
                         }
                     }
                 }
             }
+
     }
 
 // Phân trang
@@ -133,26 +168,33 @@
     justify-content: center;
     list-style: none;
     padding: 0;
-    margin: 20px 0;
+    padding: 60px 0;
+    margin-bottom: 0;
 
     .custom-pagination__active {
         opacity: 1 !important;
+        cursor: default;
+        pointer-events: none;
+        background-color: #00b156!important;
+        color: #fafafa;
     }
 
     .custom-pagination__disabled {
-        display: none !important;
+        cursor: default;
+        pointer-events: none;
     }
 
     .custom-pagination__item {
         display: block;
         font-size: 1.8rem;
-        // color: var(--back);
         text-decoration: none;
         opacity: 0.5;
-        padding: 10px;
+        padding: 4px;
+        margin: 0 4px;
 
         a {
             text-decoration: none;
+            font-size: 1.5rem !important;
         }
 
         .custom-pagination__link {

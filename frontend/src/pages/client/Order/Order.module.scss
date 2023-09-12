@@ -63,8 +63,12 @@ form {
         .main-head {
 
             h2 {
-                font-size: 3rem;
-                color: #444141;
+               
+                a {
+                    font-size: 3rem;
+                    color: #444141;
+                    text-decoration: none;
+                }
             }
 
             .breadcrumb {
@@ -160,6 +164,13 @@ form {
         font-size: 1.5rem;
         font-weight: 400;
         float: right;
+        background-color: var(--black);
+        color: #fff;
+        font-weight: 600;
+
+        &:hover {
+            opacity: .7;
+        }
     }
 }
 
@@ -178,13 +189,13 @@ form {
             font-size: 1em;
             margin-bottom: 10px;
             
+            
             .product-img {
                 width: 60px;
                 height: 60px;
                 border-radius: 8px;
                 background: #fff;
                 position: relative;
-
 
                 .product-thumbnail-wrapper {
                     width: 100%;
@@ -266,6 +277,7 @@ form {
                     font-weight: 400;
                     color: var(--text-color);
                     span {
+                        font-weight: 600;
                         float: right;
                     }
                 }

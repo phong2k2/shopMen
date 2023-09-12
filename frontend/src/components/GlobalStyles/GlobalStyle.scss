@@ -47,11 +47,11 @@ a {
 .conformName {
   white-space: normal;
   color: #000000;
-  line-height: 16px;
   overflow: hidden;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   display: -webkit-box;
+  word-break: break-all!important;
 }
 
 // .row {

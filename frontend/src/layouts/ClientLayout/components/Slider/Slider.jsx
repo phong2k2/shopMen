@@ -13,13 +13,13 @@ function Slider() {
         </ol>
         <div className="carousel-inner">
           <div className="carousel-item active">
-            <img className="d-block w-100" src="https://cdn.thanhtrungmobile.vn/thanhtrungmobile-vn/2020/10/shop-quan-ao-nam-dep-nhat-o-ha-noi.jpg" alt="First slide"/>
+            <img className="d-block w-100" src="https://file.hstatic.net/1000096703/file/gray_minimalist_aesthetic_fashion_facebook_cover_0a9911db9a6d47c39bc95617b47ac520.jpg"/>
           </div>
           <div className="carousel-item">
-            <img className="d-block w-100" src="https://palia.vn/wp-content/uploads/2016/11/Fashion-Boutique.jpg" alt="Second slide"/>
+            <img className="d-block w-100" src="https://file.hstatic.net/1000096703/file/ao_khoac_du_03a8426826034e17a1d5b6f8ffeaec2c.jpg" alt="Second slide"/>
           </div>
           <div className="carousel-item">
-            <img className="d-block w-100" src="https://pendecor.vn/uploads/files/2020/07/04/thiet-ke-shop-quan-ao-nu-1.jpg" alt="Third slide"/>
+            <img className="d-block w-100" src="https://file.hstatic.net/1000096703/file/gray_minimalist_aesthetic_fashion_facebook_cover_0a9911db9a6d47c39bc95617b47ac520.jpg" alt="Third slide"/>
           </div>
         </div>
         <a className="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

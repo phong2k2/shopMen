@@ -5,6 +5,9 @@ import { useEffect } from "react";
 import { clearCart, decreaseCart, getTotals, increaseCart, removeFromCart } from "@/redux/cartSlice";
 import { Link } from "react-router-dom";
 import { formatPrice } from "@/components/formatData/formatData";
+import  config  from "@/config";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 const cx = classNames.bind(styles)
 function Cart() {
@@ -12,11 +15,12 @@ function Cart() {
     const dispatch = useDispatch()
     const user = useSelector(state => state.auth.login?.currentUser?.data)
 
+    console.log(cart)
+    
     useEffect(() => {
         dispatch(getTotals());
     }, [cart, dispatch]);
 
-    console.log(cart)
     
     const handleChangeCount = (type, idProduct, limited) => {
     if(type === 'decrease') {
@@ -93,7 +97,7 @@ function Cart() {
                                                             d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"
                                                             />
                                                         </svg>
-                                                        <span>Start Shopping</span>
+                                                        <span>Tiếp tục mua hàng</span>
                                                     </button>
                                                 </Link>
                                             </div>
@@ -101,7 +105,7 @@ function Cart() {
                                         ): (
                                             <div className={cx('list-cart')}>
                                             <div className={cx('cart-row')}>
-                                                <h2>Bạn đang có 3 sản phẩm trong giỏ hàng</h2>
+                                                <h2>{`Bạn đang có ${cart?.cartItems?.length} sản phẩm trong giỏ hàng`}</h2>
                                                 <div className={cx('table-cart')}>
                                                     {
                                                         cart?.cartItems?.map((cartItem, index) => {
@@ -109,7 +113,7 @@ function Cart() {
                                                                 <div key={index} className={cx('item-cart')}>
                                                                     <div className={cx('left')}>
                                                                         <a>
-                                                                            <img src="//product.hstatic.net/1000096703/product/10_b66222e5f4c844cb92d9f06ab4a0e68e_medium.jpg " alt="" />
+                                                                            <img src={`http://localhost:3000/${cartItem?.image}`} alt="" />
                                                                         </a>
                                                                     </div>
                                                                     <div className={cx('right')}>
@@ -129,12 +133,12 @@ function Cart() {
                                                                         </div>
                                                                         <div className={cx('item-total')}>
                                                                             <div className={cx('price')}>
-                                                                                <span>Thành tiền</span>
+                                                                                <span className={cx('text')}>Thành tiền</span>
                                                                                 <span>{formatPrice(cartItem?.price * cartItem?.amount)}</span>
                                                                             </div>
                                                                             <div className={cx('remove')}>
                                                                                 <a onClick={() => handleRemoveFromCart(cartItem?.product)}>
-                                                                                    Xóa
+                                                                                    <FontAwesomeIcon icon={faTrashCan}/>
                                                                                 </a>
                                                                             </div>
                                                                         </div>
@@ -145,10 +149,10 @@ function Cart() {
                                                     }
                                                     
                                                 </div>
-                                            </div>
                                             <div className={cx('clear-car')}>
-                                                <button onClick={(() => handleClearCart())}>Clear Cart</button>
+                                                <button onClick={(() => handleClearCart())}>Xóa tất cả sản phẩm</button>
                                             </div>
+                                        </div>
                                     </div>
                                         )
                                     }
@@ -162,11 +166,29 @@ function Cart() {
                                             <span>{formatPrice(cart?.cartTotalAmount)}</span>
                                             </p>
                                         </div>
-                                        <div className={cx('summary-actions')}>
-                                            <Link to={`/checkout/${user?._id}`}>
-                                                Thanh toán
-                                            </Link>
-                                        </div>
+
+                                        {
+                                            user ? (
+                                            <div className={cx('summary-actions')}>
+                                                {
+                                                    cart?.cartItems?.length > 0 ? (
+                                                        <Link to={`/checkout/${user?._id}`}>
+                                                             Thanh toán
+                                                        </Link>
+                                                    ): (
+                                                        <a>Thanh toán</a>
+                                                    )
+                                                }
+                                                
+                                            </div>
+                                            ):(
+                                            <div className={cx('summary-actions')}>
+                                                <Link to={config.publicRouter.auth}>
+                                                    Đăng nhập để thanh toán
+                                                </Link>
+                                            </div>
+                                        )}
+
                                     </div>
                                 </div>
                             </div>

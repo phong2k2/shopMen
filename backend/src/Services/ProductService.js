@@ -131,32 +131,6 @@ const getAllProducts = ({limit = 10, page, sort, filter}) => {
     })
 }
 
-//Get Product type
-// const getProductsByCategory = (slug) => {
-//     return new Promise( async (resolve, reject) => {
-//         try {
-//             const category = await Category.findOne({ slug: slug });
-//             if (category) {
-//                 const allProductByCate = await Product.find({ category: category._id }).populate('category');
-//                 const listProduct = allProductByCate.map(product => ({
-//                     ...product.toObject(),
-//                     image: `http://localhost:3000/${product.image}`  // Chỉnh sửa đường dẫn ảnh
-//                 }));
-//                  resolve({
-//                      status: 'Success',
-//                      message: 'Successful request',
-//                      data: listProduct
-//                  })
-//             }
-//         }catch(err) {
-//             reject({
-//                 status: 'Error',
-//                 message: 'Failed to get Product Detail',
-//                 error: err
-//             }) 
-//         }
-//     })
-// }
 
 // Get Product Detail 
 const getDetailsProduct = (slug) => {
@@ -172,14 +146,14 @@ const getDetailsProduct = (slug) => {
                     message: 'The product is not defined'
                 })
             }
-            const listProduct = {
-                ...product._doc,
-                'image': `http://localhost:3000/${product._doc.image}`
-            }
+            // const listProduct = {
+            //     ...product._doc,
+            //     'image': `http://localhost:3000/${product._doc.image}`
+            // }
             resolve({
                 status: 'OK',
                 message: 'SUCESS',
-                data: listProduct
+                data: product
             })
         }catch (err) {
             reject({

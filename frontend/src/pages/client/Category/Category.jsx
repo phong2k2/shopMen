@@ -1,12 +1,13 @@
 import classNames from "classnames/bind";
 import styles from './Category.module.scss'
 import ReactPaginate from 'react-paginate';
-import { Link, useParams } from "react-router-dom";
+import { Link, NavLink, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import * as categoryService from "@/services/adminServices/categoryService";
 import { formatPrice } from '@/components/formatData/formatData';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { IconCart } from "@/components/Icons/icon";
 
 
 const cx = classNames.bind(styles)
@@ -15,7 +16,7 @@ function Category() {
     const [nameTitle, setNameTitle] = useState('')
     const [data, setData] = useState([]);
     const [pageNumber, setPageNumber] = useState(0);
-    const limit = 1
+    const limit = 10
 
     const pageCount = useMemo(() => {
         return Math.ceil(data?.countProduct / limit);
@@ -107,17 +108,23 @@ function Category() {
                                                         </Link>
                                                     </div>
 
-                                                    <div className={cx('product-details')}>
-                                                        <Link to={`/products/${itemPro?.slug}`}>
-                                                            <h2 className={cx("conformName")}>{itemPro?.name}</h2>
-                                                        </Link>
-
-                                                        <div className={cx('product-price', 'conformName')}>
-                                                            {formatPrice(itemPro?.price)}
-                                                            <span className={cx('price-del')}>
-                                                                <del>1000</del>
-                                                            </span>
-
+                                                    <div className={cx('product-detail')}>
+                                                        <div  className={cx("pro-name")}>
+                                                            <NavLink className={cx("conformName")} to={`/products/${itemPro?.slug}`}>
+                                                               {itemPro?.name}
+                                                            </NavLink>
+                                                        </div>
+                                                        <div className={cx("box-pro-detail")}>
+                                                            <div className={cx('product-price', 'conformName')}>
+                                                                {formatPrice(itemPro?.price)}
+                                                                {/* <span className={cx('price-del')}>
+                                                                    <del>1000</del>
+                                                                </span> */}
+                                                            </div>
+                                                            <button className={cx("add-cart")}>
+                                                                <IconCart width={'1.6rem'}/>
+                                                                <span>Thêm</span>
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>

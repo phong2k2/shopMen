@@ -4,7 +4,8 @@ import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as productService from "@/services/adminServices/productService";
 import styles from "./ProductDetail.module.scss"
-import { addToCart } from "@/redux/cartSlice";
+import { addToCart, getTotals } from "@/redux/cartSlice";
+import { formatPrice } from "@/components/formatData/formatData";
 
 const cx = classNames.bind(styles)
 function ProductDetail() {
@@ -58,17 +59,23 @@ function ProductDetail() {
         }
        
     }
+    console.log(detailProduct)
     //Add to Cart
     const handleAddToCart =  () => {
-        dispatch(addToCart({
-            orderItem : {
-                name: detailProduct?.name,
-                amount: amount,
-                price: detailProduct?.price,
-                discount: detailProduct?.discount,
-                product: detailProduct?._id
-            }
-        }))
+        if(detailProduct) {
+            dispatch(addToCart({
+                orderItem : {
+                    name: detailProduct?.name,
+                    image: detailProduct?.image,
+                    amount: amount,
+                    price: detailProduct?.price,
+                    discount: detailProduct?.discount,
+                    product: detailProduct?._id
+                }
+            }))
+            dispatch(getTotals());
+        }
+        
     }
 
     return ( 
@@ -113,25 +120,7 @@ function ProductDetail() {
                                             <div className={cx('div-detail')}>
                                                 <ul className={cx('slide-product')}>
                                                     <li className={cx('gallery-item')}>
-                                                        <img src={detailProduct?.image} alt="" />
-                                                    </li>
-                                                    <li className={cx('gallery-item')}>
-                                                        <img src="//product.hstatic.net/1000096703/product/8_7c88b69f767c4c8bb5e14f0d25cfa12c_master.jpg" alt="" />
-                                                    </li>
-                                                    <li className={cx('gallery-item')}>
-                                                        <img src="//product.hstatic.net/1000096703/product/8_7c88b69f767c4c8bb5e14f0d25cfa12c_master.jpg" alt="" />
-                                                    </li>
-                                                    <li className={cx('gallery-item')}>
-                                                        <img src="//product.hstatic.net/1000096703/product/8_7c88b69f767c4c8bb5e14f0d25cfa12c_master.jpg" alt="" />
-                                                    </li>
-                                                    <li className={cx('gallery-item')}>
-                                                        <img src="//product.hstatic.net/1000096703/product/8_7c88b69f767c4c8bb5e14f0d25cfa12c_master.jpg" alt="" />
-                                                    </li>
-                                                    <li className={cx('gallery-item')}>
-                                                        <img src="//product.hstatic.net/1000096703/product/8_7c88b69f767c4c8bb5e14f0d25cfa12c_master.jpg" alt="" />
-                                                    </li>
-                                                    <li className={cx('gallery-item')}>
-                                                        <img src="//product.hstatic.net/1000096703/product/8_7c88b69f767c4c8bb5e14f0d25cfa12c_master.jpg" alt="" />
+                                                        <img src={`http://localhost:3000/${detailProduct?.image}`} alt="" />
                                                     </li>
                                                 </ul>
                                             </div>
@@ -146,8 +135,8 @@ function ProductDetail() {
                                             </p>
                                         </div>
                                         <div className={cx('product-price')}>
-                                            <span className={cx('pro-price')}>{detailProduct?.price}</span>
-                                            <del>10000d</del>
+                                            <span className={cx('pro-price')}>{formatPrice(detailProduct?.price) }</span>
+                                            {/* <del>10000d</del> */}
                                         </div>
                                         
                                             <div className={cx('select-action')}>

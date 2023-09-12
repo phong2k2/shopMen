@@ -1,11 +1,12 @@
 import PropType from 'prop-types'
 import classNames from "classnames/bind";
 import styles from "./Menu.module.scss"
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { formatPrice } from '@/components/formatData/formatData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import { IconCart } from '@/components/Icons/icon';
 
 const cx = classNames.bind(styles)
 function Menu({id, activeCategory, product, onClick }) {
@@ -15,9 +16,6 @@ function Menu({id, activeCategory, product, onClick }) {
   const cartRef = useRef()
 
   
-
-  
-
     return (
       // 
        <>
@@ -30,31 +28,34 @@ function Menu({id, activeCategory, product, onClick }) {
                     slicedProducts?.map ((proItem, index) => {
                       return (
                         <div key={index} ref={cartRef} className={cx("col-md-3", "owl-item")}>
-                          <div className={cx("product-img")}>
-                            <Link to={`/products/${proItem?.slug}`}>
-                              <img
-                                className={cx("image-resize")}
-                                src={`http://localhost:3000/${proItem?.image}`}
-                              />
-                            </Link>
-                            <div className={cx("button-add")}>
-                              <button className={cx("action")}>Mua ngay</button>
-                              <button onClick={() => onClick(proItem)} className={cx("action")}>
-                                Thêm vào giỏ hàng
-                              </button>
+                          <div className={cx('product-items')}>
+                            <div className={cx("product-img")}>
+                              <Link to={`/products/${proItem?.slug}`}>
+                                <img
+                                  className={cx("image-resize")}
+                                  src={`http://localhost:3000/${proItem?.image}`}
+                                />
+                              </Link>
                             </div>
-                          </div>
-                          <div className={cx("product-detail")}>
-                            <h2 className={cx("pro-name")}>
-                              <Link to={`/products/${proItem?.slug}`} className={cx("conformName")}>{proItem?.name}</Link>
-                            </h2>
-                            <div className={cx("box-pro-detail")}>
-                              <p className={cx("pro-price")}>
-                                {formatPrice(proItem?.price) }
-                                <span className={cx("pro-price-del")}>
-                                  <del>295,000d</del>
-                                </span>
-                              </p>
+                            <div className={cx("product-detail")}>
+                              <div className={cx('box-product')}>
+                                <h2 className={cx("pro-name")}>
+                                  <NavLink to={`/products/${proItem?.slug}`} className={cx("conformName")}>{proItem?.name}</NavLink>
+                                </h2>
+                                <div className={cx("box-pro-detail")}>
+                                  <div className={cx("pro-price")}>
+                                    {formatPrice(proItem?.price) }
+                                    {/* <span className={cx("pro-price-del")}>
+                                      <del>295,000d</del>
+                                    </span> */}
+                                  </div>
+
+                                  <button onClick={() => onClick(proItem)} className={cx("add-cart")}>
+                                    <IconCart width={'1.6rem'}/>
+                                    <span>Thêm</span>
+                                  </button>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>

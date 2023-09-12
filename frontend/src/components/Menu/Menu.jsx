@@ -1,14 +1,16 @@
 import Button from "../Button/Button";
+import MenuItems from "./MenuItems";
 function Menu({items, onClick}) {
     return ( 
-            items?.map((item, index) => {
-                return (
-                    <li key={index}>
-                        <Button to={item?.to} onClick={onClick}>{item.title}</Button>
-                    </li>
-                )
-            })
+        <ul>
+            {
+                items.filter((item) => item.check ).map((item, index) => {
+                    return <MenuItems key={index} onClick={onClick} tabItem={item}/>
+                })
+            }
+        </ul>
      );
 }
+
 
 export default Menu;

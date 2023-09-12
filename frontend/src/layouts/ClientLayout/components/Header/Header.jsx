@@ -7,40 +7,45 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { createAxios } from "@/utils/httpRfreshRequest";
+import { NavLink } from "react-router-dom";
+import { IconCart } from "@/components/Icons/icon";
 import Menu from "@/components/Menu/Menu";
 import  config from "@/config";
 import { loginSuccess, logoutFailed, logoutStart, logoutSuccess } from "@/redux/authSlice";
-import { NavLink } from "react-router-dom";
-import { IconCart } from "@/components/Icons/icon";
+import Button from "@/components/Button";
 
 const cx = classNames.bind(styles);
 function Header() {
   const dispatch = useDispatch()
-  const user = useSelector(state => state.auth.login.currentUser)
-  const name = user?.data?.username
-  const axiosJWT = createAxios(user, dispatch, loginSuccess)
+  const user = useSelector(state => state.auth?.login)
+  const name = user?.currentUser?.data?.username
+  const axiosJWT = createAxios(user?.currentUser, dispatch, loginSuccess)
   const listCategory = useSelector(state => state.category.allCategory)
   const cart = useSelector(state => state.cart)
 
+
+
+
+
+
   const userMenus = [
+    
     {
-      title: 'Xem hồ sơ',
+      title: 'Quản Trị website',
+      check: user?.currentUser?.data?.admin,
+      to: config.privateRouter.dashboard
     },
     {
-      title: 'Đăng nhập',
-      to: config.publicRouter.auth
+      title: 'Đăng xuất',
+      check: true
     },
-    {
-      title: 'Đăng xuất'
-    }
   ]
 
-  const handleClicklogout = async () => {
+  const handleClickLogout = async () => {
     dispatch(logoutStart())
       try {
-          const accessToken = user?.accessToken
+        const accessToken =user?.currentUser?.accessToken
           const res = await authService.logOut(accessToken, axiosJWT);
-          console.log(res)
           if (res) {
               dispatch(logoutSuccess())
               window.location.reload()
@@ -59,18 +64,18 @@ function Header() {
                 <ul className={cx('nav')}>
                   <li>Tell 18001833</li>
                   <span className={cx('span')}></span>
-                  <li >
-                    {name ?'Hi, '+ name : 'Đăng nhập' }
-                      <span className={cx("account-menu")}>
-                        <FontAwesomeIcon
-                          className={cx("icon-header")}
-                          icon={faCircleUser}
-                        />
-                      </span>
-                    <ul className={cx('sub-nav')}>
-                      <Menu items={userMenus}  onClick={handleClicklogout}/>
-                    </ul>
-                  </li>
+                    <li >
+                      {name ?'Hi, '+ name : <Button to={config.publicRouter.auth} >Đăng nhập</Button> }
+                        <span className={cx("account-menu")}>
+                          <FontAwesomeIcon
+                            className={cx("icon-header")}
+                            icon={faCircleUser}
+                          />
+                        </span>
+                        {
+                          user?.isLogin ? <Menu items={ userMenus}  onClick={handleClickLogout}/> : ''
+                        }
+                    </li>
                 </ul>
               </div>
           </div>

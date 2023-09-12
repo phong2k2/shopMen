@@ -53,7 +53,7 @@ function Home() {
       <section className={cx("wrapper-home-news")}>
         <div className={cx("section")}>
           <div className={cx("row")}>
-            <div className={cx("col-sm-2", "item")}>
+            <div className={cx("col-sm-2", "item", "item")}>
               <div className={cx("block-item")}>
                 <a href="#">
                   <img
@@ -63,7 +63,7 @@ function Home() {
                 </a>
               </div>
             </div>
-            <div className={cx("col-sm-2")}>
+            <div className={cx("col-sm-2", "item")}>
               <div className={cx("block-item")}>
                 <a href="#">
                   <img
@@ -74,7 +74,7 @@ function Home() {
               </div>
             </div>
 
-            <div className={cx("col-sm-2")}>
+            <div className={cx("col-sm-2", "item")}>
               <div className={cx("block-item")}>
                 <a href="#">
                   <img
@@ -85,7 +85,7 @@ function Home() {
               </div>
             </div>
 
-            <div className={cx("col-sm-2")}>
+            <div className={cx("col-sm-2", "item")}>
               <div className={cx("block-item")}>
                 <a href="#">
                   <img
@@ -95,7 +95,7 @@ function Home() {
                 </a>
               </div>
             </div>
-            <div className={cx("col-sm-2")}>
+            <div className={cx("col-sm-2", "item")}>
               <div className={cx("block-item")}>
                 <a href="#">
                   <img
@@ -105,7 +105,7 @@ function Home() {
                 </a>
               </div>
             </div>
-            <div className={cx("col-sm-2")}>
+            <div className={cx("col-sm-2", "item")}>
               <div className={cx("block-item")}>
                 <a href="#">
                   <img

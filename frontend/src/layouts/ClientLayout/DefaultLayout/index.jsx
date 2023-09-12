@@ -28,9 +28,7 @@ function DefaultLayout({ children }) {
     <div >
       <Header />
       <Slider/>
-      <div className={cx("")}>
         <div className={cx("content")}>{children}</div>
-      </div>
       <Footer />
     </div>
   );

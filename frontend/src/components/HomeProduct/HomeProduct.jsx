@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import * as categoryService from "@/services/adminServices/categoryService";
 import Menu from "./Product/Menu";
-import { addToCart } from "@/redux/cartSlice";
+import { addToCart, getTotals } from "@/redux/cartSlice";
 
 
 const cx = classNames.bind(styles)
@@ -15,14 +15,18 @@ function HomeProduct() {
   const dispatch = useDispatch()
 
   const handelAddToCart = (product) => {
-    dispatch(addToCart({
-      orderItem: {
-        name: product?.name,
-        amount: 1, 
-        price: product?.price,
-        product: product?._id
-      }
-    }))
+    if(product) {
+      dispatch(addToCart({
+        orderItem: {
+          name: product?.name,
+          image: product?.image,
+          amount: 1, 
+          price: product?.price,
+          product: product?._id
+        }
+      }))
+      dispatch(getTotals());
+    }
   };
 
     

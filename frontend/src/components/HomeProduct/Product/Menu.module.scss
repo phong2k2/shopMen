@@ -11,15 +11,13 @@
     .owl-stage-outer {
         overflow: hidden;
     }
-    a {
-        display: block;
-    }
+    
 
     .owl-stage {
         display: flex;
         flex-wrap: nowrap;
         transform: translate3d(0px, 0px, 0px);
-    
+        
         .owl-item {
             width: 230px;
             // width: 100%;
@@ -28,98 +26,93 @@
             -webkit-animation-duration: 1s;
             animation-duration: 1s;
             animation-fill-mode: both;
+            
 
-            &:hover .product-img .button-add {
-                opacity: 1;
-                visibility: visible;
-                bottom: 0px;
-            }
-    
-            .product-img{
-                width: 100%;
-                position: relative;
-    
-    
-                .button-add {
-                    width: 100%;
-                    opacity: 0;
-                    visibility: hidden;
-                    width: 100%;
-                    position: absolute;
-                    display: flex;
-                    left: 0;
-                    bottom: -10%;
-                    // -webkit-transition: all ease-in-out 0.5s;
-                    // -o-transition: all ease-in-out 0.5s;
-                    transition: opacity ease-in-out 0.6s;
-                    // transform: translateY(-33px);
-    
-                    .action {
-                        border-radius: 0px;
-                        text-transform: uppercase;
-                        font-weight: 500;
-                        font-size: 11px;
-                        border: 0px;
-                        background: rgb(26, 26, 26);
-                        color: rgb(255, 255, 255);
-                        width: 100%;
-                        padding: 10px 5px;
-                        margin-right: 5px;
-                        outline: none;
-                    }
+            .product-items {
+                box-shadow: 2px 2px 11px hsla(0,3%,7%,.1);
+                border-radius: 4px;
 
-                    & button:last-child{
-                        margin-right: 0;
-                    }
-                }
-    
-                .image-resize{
+                
+        
+                .product-img{
                     width: 100%;
-                }
-            }
-    
-            .product-detail{
-                padding: 20px 0;
-                text-align: center;
-    
-                .pro-name{
-                    margin-bottom: 5px;
+                    position: relative;
+                    border-radius: 4px;
                     
-    
-                    a {
-                        color: var(--black);
-                        font-size: 1.5rem;
-                        font-weight: 500;
-                        text-transform: capitalize;
-                        letter-spacing: 1.2px;
-                        line-height: 1.6rem;
-                        cursor: pointer;
-                        text-decoration: none;
-
-                        &:hover {
-                            color: #4eb5ec;
-                        }
+                    img{
+                        border-radius: 4px;
+                    }
+        
+                    .image-resize{
+                        width: 100%;
                     }
                 }
+        
+                .product-detail{
+                    padding: 5px 10px;
+                    background-color: var(--white);
+                    border-radius: 4px;
+        
+                    .pro-name{
+                        padding-bottom: 8px;
+        
+                        a {
+                            color: var(--black);
+                            font-size: 1.5rem;
+                            font-weight: 500;
+                            text-transform: capitalize;
+                            letter-spacing: 1.2px;
+                            line-height: 1.6rem;
+                            cursor: pointer;
+                            text-decoration: none;
     
-                .box-pro-detail{
-                    width: 100%;
-                    align-items: center;
-                    .pro-price{
-                        color: var(--price-color);
-                        font-size: 1.5rem;
-                        font-weight: 700;
-                        color: var(--black);
-    
-                        .pro-price-del{
-                            margin-left: 5px;
-                            font-size: 1.3rem;
-                            font-weight: normal;
-                            color: var(--text-color);
+                            &:hover {
+                                color: #4eb5ec;
+                            }
                         }
+                    }
+        
+                    .box-pro-detail{
+                        width: 100%;
+                        align-items: center;
+                        display: flex;
+                        justify-content: space-between;
+                        padding-bottom: 4px;
+                        .pro-price{
+                            color: var(--price-color);
+                            font-size: 1.5rem;
+                            font-weight: 700;
+                            color: var(--black);
+        
+                            .pro-price-del{
+                                margin-left: 5px;
+                                font-size: 1.3rem;
+                                font-weight: normal;
+                                color: var(--text-color);
+                            }
+                        }
+
+                        .add-cart {
+                            align-items: center;
+                            background: transparent;
+                            border: 1px solid #003644;
+                            border-radius: 3px;
+                            box-sizing: border-box;
+                            color: #003644;
+                            cursor: pointer;
+                            display: flex;
+                            height: 26px;
+                            justify-content: center;
+
+                            span {
+                                padding-left: 3px;
+                            }
+                        }
+
                     }
                 }
             }
+
         }
     }
 
@@ -235,7 +228,7 @@
           &:hover::before {
             transform-origin: center left;
             transform: scaleX(1);
-          }
+        }
     }
 }
 

@@ -1,7 +1,4 @@
 
-:root {
-    
-}
 .wrapper-header {
     position: fixed;
     right: 0;
@@ -54,8 +51,17 @@
                     color: var(--black);
                     list-style: none;
                     font-size: 1.5rem;
+                    font-weight: 600;
                     cursor: pointer;
-                   
+                    
+                    a {
+                        font-size: 1.5rem;
+                        text-decoration: none;
+                        color: var(--black);
+                        font-weight: 500;
+                        padding: 0;
+                    }
+
                     .icon-header{
                         padding-left: 6px;
                     }
@@ -64,15 +70,16 @@
                         display: block;
                         
                     }  
+                    
                     ul {
                         position: absolute;
                         top: 40px;
                         right: 0;
+                        padding-left: 0;
                         background: #ecf2f5;
                         z-index: 90;
-                        min-width: 200px;
+                        min-width: 150px;
                         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-                        padding: 10px 0;
                         border-radius: 4px;
                         display: none;
                         text-decoration: none;
@@ -80,17 +87,39 @@
                         li{
                             color: var(--black);
                             font-size: 1.5rem;
-                            line-height: 1.5rem;
-                            padding: 10px ;
-                            padding-left: 24px;
                             font-weight: 400;
                             margin-left: 0;
                             list-style: none;
                             display: flex;
                             cursor: pointer;
+                            border-radius: 4px;
 
                             &:hover {
                                 background-color: #dad6d6;
+                            }
+
+                            a {
+                                color: #000;
+                                text-decoration: none;
+                                padding: 0;
+                                padding-left: 10px;
+                                font-size: 1.5rem;
+                                font-weight: 500;
+                            }
+
+                            button {
+                                width: 100%;
+                                padding-left: 10px;
+                                font-weight: 500;
+
+                                span {
+                                    float: left;
+                                    font-size: 1.5rem;
+                                }
+                                &:hover {
+                                    color: red;
+                                    background-color: #dad6d6;
+                                }
                             }
                         }
                     }
@@ -176,9 +205,10 @@
     }
 
     .navbar-main {
-
+        height: 100%;
         .list-main{
             display: inline-block;
+            line-height: 69px;
             list-style: none;
             margin-bottom: 0;
             height: 100%;
@@ -200,7 +230,6 @@
                 position: relative;
                 display: block;
                 padding: 0;
-                line-height: 60px;
                 width: 100%;
                 height: 100%;
                 letter-spacing: 1.5px;

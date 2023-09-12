@@ -87,20 +87,11 @@ function Footer() {
                     <li>
                       <a>Kiểm tra đơn hàng</a>
                     </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className={cx("col-md-3")}>
-              <div className={cx("footer-block")}>
-                <h4 className={cx("footer-title")}>Kenta VN</h4>
-                <div className={cx("footer-content")}>
-                  <ul>
                     <li>
-                      <a>Giới thiệu</a>
+                      <a>Cách chọn size</a>
                     </li>
                     <li>
-                      <a>Kiểm tra đơn hàng</a>
+                      <a>Thông tin liên hệ</a>
                     </li>
                   </ul>
                 </div>
@@ -108,14 +99,20 @@ function Footer() {
             </div>
             <div className={cx("col-md-3")}>
               <div className={cx("footer-block")}>
-                <h4 className={cx("footer-title")}>Kenta VN</h4>
+                <h4 className={cx("footer-title")}>Chính sách</h4>
                 <div className={cx("footer-content")}>
                   <ul>
                     <li>
-                      <a>Giới thiệu</a>
+                      <a>Hướng dẫn mua hàng</a>
                     </li>
                     <li>
-                      <a>Kiểm tra đơn hàng</a>
+                      <a>Khách hàng thân thiết</a>
+                    </li>
+                    <li>
+                      <a>Chính sách đổi hàng</a>
+                    </li>
+                    <li>
+                      <a>Chính sách bảo mật</a>
                     </li>
                   </ul>
                 </div>
@@ -123,14 +120,49 @@ function Footer() {
             </div>
             <div className={cx("col-md-3")}>
               <div className={cx("footer-block")}>
-                <h4 className={cx("footer-title")}>Kenta VN</h4>
+                <h4 className={cx("footer-title")}>Kết nối với Kenta</h4>
+                <div className={cx("footer-content")}>
+                  <div className={cx("social-list")}>
+                    <a>
+                      <i className="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a>
+                      <i className="fa-brands fa-google"></i>
+                    </a>
+                    <a>
+                      <i className="fa-brands fa-instagram"></i>
+                    </a>
+                    <a>
+                      <i className="fa-brands fa-tiktok"></i>
+                    </a>
+                  </div>
+                  <div className={cx("logo-footer")}>
+                    <a href="#">
+                      <img
+                        src="https://file.hara.vn/1000114117/file/logo-bct_5a0bbf4fb2d34c3e88c04df41ad38dc9.png"
+                        alt=""
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={cx("col-md-3")}>
+              <div className={cx("footer-block")}>
+                <h4 className={cx("footer-title")}>Thông tin cửa hàng</h4>
                 <div className={cx("footer-content")}>
                   <ul>
                     <li>
-                      <a>Giới thiệu</a>
+                      <i className="fa-solid fa-house"></i>
+                      <span>20 Tất Thành, P15, Q.10, DN</span>
                     </li>
                     <li>
-                      <a>Kiểm tra đơn hàng</a>
+                      <i className="fa-solid fa-phone"></i>
+                      <span>Hotline: (028) 7300 6200</span>
+                    </li>
+                    <li>
+                      <i className="fa-solid fa-envelope"></i>
+                      <span>Mail: phongweb@gmail.com</span>
                     </li>
                   </ul>
                 </div>

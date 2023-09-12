@@ -14,7 +14,7 @@ function AdminLayout({children}) {
         <div id="wrapper" className={cx('wrapper')}>
                 <Sidebar/>
             <div id="content-wrapper" className="d-flex flex-column">
-                <div id="content" className={cx('content')}>
+                <div id="content" className={cx('contents')}>
                     <Header/>
                     {children}
                 </div>
