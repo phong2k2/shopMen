@@ -1,0 +1,107 @@
+.footer{
+    display: block;
+    margin-top: 24px;
+
+
+    .footer-module {
+        background: #fff;
+        border-bottom: 1px solid #eee;
+        border-top: 1px solid #eee;
+        padding: 0;
+
+        .module-container{
+            width: 1290px ;
+            margin: 0 auto ;
+            padding: 30px;
+
+            .col-block {
+                display: flex;
+                align-items: center;
+
+                .icon {
+                    .icon-detail {
+                        font-size: 2.5rem;
+                        padding-right: 10px;
+                        margin-top: -11px;
+                    }
+                }
+
+                .text {
+                    
+                    .title {
+                        display: block;
+                        font-size: 1.6rem;
+                        font-weight: 500;
+                        color: var(--black);
+                        margin-bottom: 0;
+                    }
+                    .des {
+                        font-size: 1.5rem;
+                        font-weight: 400;
+                        color: var(--text-color);
+                    }
+                }
+            }
+        }
+    }
+    .footer-bottom{
+        padding: 60px 0;
+        background-color: #f9fafa;
+
+
+
+        .container{
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+
+
+            .footer-block{
+                margin-bottom: 24px;
+
+                .footer-title{
+                    font-size: 2rem;
+                    font-weight: 400;
+                    text-transform: uppercase;
+                    margin-bottom: 20px ;
+                    line-height: 1.5rem;
+                    color: var(--color-footer);
+                }
+
+                .footer-content{
+                    ul {
+                        list-style: none;
+                        margin-bottom: 15px;
+
+                        li {
+                            display: block;
+                            line-height: 28px;
+                            padding-left: 20px;
+                            position: relative;
+
+                            a {
+                                font-size: 1.5rem;
+                                color: var(--color-footer);
+                                font-weight: 500;
+                                
+                                &::before {
+                                    content: "";
+                                        width: 7px;
+                                        height: 1px;
+                                        background: var(--white);
+                                        left: -18px;
+                                        opacity: 1;
+                                        position: absolute;
+                                        top: 0;
+                                        bottom: 0;
+                                        margin: auto;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

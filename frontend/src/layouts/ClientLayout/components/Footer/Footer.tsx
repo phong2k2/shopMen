@@ -1,0 +1,146 @@
+import classNames from "classnames/bind";
+import styles from "./Footer.module.scss";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faPhoneVolume,
+  faRightLeft,
+  faShieldHalved,
+  faThumbsUp,
+} from "@fortawesome/free-solid-svg-icons";
+
+const cx = classNames.bind(styles);
+function Footer() {
+  return (
+    <footer className={cx("footer")}>
+      <div className={cx("footer-module")}>
+        <div className={cx("container", "module-container")}>
+          <div className={cx("row")}>
+            <div className={cx("col-md-3", "col-block")}>
+              <div className={cx("icon")}>
+                <FontAwesomeIcon
+                  className={cx("icon-detail")}
+                  icon={faRightLeft}
+                />
+              </div>
+              <div className={cx("text")}>
+                <p className={cx("title")}>Đổi hàng 30 ngày</p>
+                <p className={cx("des")}>
+                  Thời Gian thay đổi sản phẩm lên đến 30 ngày
+                </p>
+              </div>
+            </div>
+
+            <div className={cx("col-md-3", "col-block")}>
+              <div className={cx("icon")}>
+                <FontAwesomeIcon
+                  className={cx("icon-detail")}
+                  icon={faShieldHalved}
+                />
+              </div>
+              <div className={cx("text")}>
+                <p className={cx("title")}>Bảo hành 90 ngày</p>
+                <p className={cx("des")}>Hỗ trợ bảo hành miễn phí</p>
+              </div>
+            </div>
+
+            <div className={cx("col-md-3", "col-block")}>
+              <div className={cx("icon")}>
+                <FontAwesomeIcon
+                  className={cx("icon-detail")}
+                  icon={faPhoneVolume}
+                />
+              </div>
+              <div className={cx("text")}>
+                <p className={cx("title")}>5 ngày hoàn tiền</p>
+                <p className={cx("des")}>
+                  Thời gian hoàn tiền không lý do lên đến 5 ngày
+                </p>
+              </div>
+            </div>
+
+            <div className={cx("col-md-3", "col-block")}>
+              <div className={cx("icon")}>
+                <FontAwesomeIcon
+                  className={cx("icon-detail")}
+                  icon={faThumbsUp}
+                />
+              </div>
+              <div className={cx("text")}>
+                <p className={cx("title")}>Ưu đãi 15%</p>
+                <p className={cx("des")}>Ưu đãi Vip cho Member lên đến 15%</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={cx("footer-bottom")}>
+        <div className={cx("container")}>
+          <div className={cx("row")}>
+            <div className={cx("col-md-3", "col-block")}>
+              <div className={cx("footer-block")}>
+                <h4 className={cx("footer-title")}>Kenta VN</h4>
+                <div className={cx("footer-content")}>
+                  <ul>
+                    <li>
+                      <a>Giới thiệu</a>
+                    </li>
+                    <li>
+                      <a>Kiểm tra đơn hàng</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className={cx("col-md-3")}>
+              <div className={cx("footer-block")}>
+                <h4 className={cx("footer-title")}>Kenta VN</h4>
+                <div className={cx("footer-content")}>
+                  <ul>
+                    <li>
+                      <a>Giới thiệu</a>
+                    </li>
+                    <li>
+                      <a>Kiểm tra đơn hàng</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className={cx("col-md-3")}>
+              <div className={cx("footer-block")}>
+                <h4 className={cx("footer-title")}>Kenta VN</h4>
+                <div className={cx("footer-content")}>
+                  <ul>
+                    <li>
+                      <a>Giới thiệu</a>
+                    </li>
+                    <li>
+                      <a>Kiểm tra đơn hàng</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className={cx("col-md-3")}>
+              <div className={cx("footer-block")}>
+                <h4 className={cx("footer-title")}>Kenta VN</h4>
+                <div className={cx("footer-content")}>
+                  <ul>
+                    <li>
+                      <a>Giới thiệu</a>
+                    </li>
+                    <li>
+                      <a>Kiểm tra đơn hàng</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default Footer;

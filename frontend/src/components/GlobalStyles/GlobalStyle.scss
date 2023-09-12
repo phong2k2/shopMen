@@ -1,0 +1,105 @@
+@import 'normalize.css';
+
+:root {
+    --black: #000;
+    --while: #fff;
+    --text-color: #555;
+    --color-main: #fff;
+    --price-color: rgb(230, 153, 153);
+    --grey: #333;
+    --color-footer: #d7d7d7
+
+
+    --height-body-header: 70px
+    --height-top-header: 30px
+    --width-item-header: 97px
+
+    --pd-top-header: calc(var(--height-body-header) + var(--height-top-header));
+}
+
+html {
+    font-size: 62.5%;
+  }
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+button,
+input,
+[tabindex] {
+  outline: none;
+  border: none;
+}
+
+a {
+    color: var(var(--text-color));
+    text-decoration: none;
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.conformName {
+  white-space: normal;
+  color: #000000;
+  line-height: 16px;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+}
+
+// .row {
+//   align-items: center;
+// }
+
+
+// @media (min-width: 1200px) {
+//   .container {
+//     width: 1200px;
+//   }
+// }
+
+// @media (min-width: 992px){
+//   .container {
+//      width: 1300px;
+//   }
+// }
+
+// @media (min-width: 768px){
+//   .container {
+//       width: 750px;
+//   }
+// }
+
+@media only screen and (min-width: 960px) {
+  /* styles for browsers larger than 960px; */
+  .container {
+    max-width: 1440px !important;
+  }
+}
+@media only screen and (min-width: 1440px) {
+  /* styles for browsers larger than 1440px; */
+}
+@media only screen and (min-width: 2000px) {
+  /* for sumo sized (mac) screens */
+}
+@media only screen and (max-device-width: 480px) {
+ /* styles for mobile browsers smaller than 480px; (iPhone) */
+}
+@media only screen and (device-width: 768px) {
+ /* default iPad screens */
+}
+/* different techniques for iPad screening */
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
+/* For portrait layouts only */
+}
+
+@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {
+/* For landscape layouts only */
+}
