@@ -20,6 +20,9 @@ function EditProduct() {
     const [listCate, setListCate] = useState([])
     const { id } = useParams();
     const navigate = useNavigate()
+
+    console.log(stateDetailProduct)
+
     // Get edit product details
     useEffect(() => {
         const editProductApi = async () => {
@@ -52,12 +55,20 @@ function EditProduct() {
         getAllCategory()
     },[])
 
-    const handleSubmitEditForm =async (e) => {
+    const handleSubmitEditForm = async (e) => {
         e.preventDefault()
+        const formData = new FormData()
+        const propertiesToAppend = [
+          'name', 'price', 'image', 'discount',
+          'countInStock', 'description', 'hot','category',
+        ];
+        propertiesToAppend.forEach(property => {
+            formData.append(property, stateDetailProduct[property]);
+        });
             try {
+                console.log(formData);
                if (id ) {
-                const res = await productService.updateProduct(stateDetailProduct)
-                console.log(res)
+                const res = await productService.updateProduct({formData, id})
                 if(res) {
                     navigate(config.privateRouter.indexProduct)
                 }
@@ -68,64 +79,80 @@ function EditProduct() {
     }
 
     const handleChangeEdit = (e) => {
+        const type = e.target.name;
+        let value;
+
+        switch (type) {
+            case "image":
+            value = e.target.files[0];
+            break;
+            default:
+            value = e.target.value;
+            break;
+        }
         setStateDetailProduct(prev => ({
-            ...prev, 
-            [e.target.name]: e.target.value
-        }))
+            ...prev,
+            [type]: value,
+        }));
+        // console.log(e.target.files[0])
+        // setStateDetailProduct(prev => ({
+        //     ...prev, 
+        //     [e.target.name]: e.target.value
+        // }))
     }
 
     return ( 
         <div className="mx-2">
         <form onSubmit={handleSubmitEditForm}>
            
-        <Input type={'name'} onChange={handleChangeEdit} value={stateDetailProduct?.name} name={"name"} id={'exampleInputEmail1'} placeholder={'Tên sản phẩm'} >Tên sản phẩm</Input>
+            <Input type={'name'} onChange={handleChangeEdit} value={stateDetailProduct?.name} name={"name"} id={'exampleInputEmail1'} placeholder={'Tên sản phẩm'} >Tên sản phẩm</Input>
+
+                <div className="form-group">
+                    <label >Danh Mục</label>
+                    <select
+                        onChange={handleChangeEdit}
+                        className="form-control show-cti form-select list"
+                        name="category"
+                        id="cate"
+                        value={stateDetailProduct?.category}
+                        >
+                        <option  value="">Chọn danh mục</option>
+                        {listCate.map((cate, index) => {
+                            return (
+                                <option key={index}  value={cate?._id}>{cate?.name}</option>
+                            )
+                        })}
+                    </select>
+                </div>
+                <div className="form-group">
+                    <label >Hot</label>
+                    <select onChange={handleChangeEdit} className="form-control show-cti form-select list"  name="hot" id="cate">
+                    <option value="">Chọn danh mục</option>
+                    <option value="1">Bình thường</option>
+                    <option value="0">Hot</option>
+                    </select>
+                </div>
+            <Input type={'text'} onChange={handleChangeEdit} value={stateDetailProduct?.price} name={"price"} id={'exampleInputName1'} placeholder={'Giá sản phẩm'} >Giá</Input>
+
+            <Input type={'number'} onChange={handleChangeEdit} value={stateDetailProduct?.discount} name={"discount"} id={'exampleInputName1'} placeholder={'Số tiền giảm'} >Giảm giá</Input>
+
+            <Input type={'number'} onChange={handleChangeEdit} value={stateDetailProduct?.countInStock} name={"countInStock"} id={'exampleInputName1'} placeholder={'Số lượng sản phẩm'} >Số lượng sản phẩm</Input>
+
+            <Input type={'file'} onChange={handleChangeEdit} name={"image"} id={'exampleInputName1'}>Số lượng sản phẩm</Input>
 
             <div className="form-group">
-                <label >Danh Mục</label>
-                <select
+                <label>Mô tả sản phẩm</label>
+                <textarea
+                    id="demo summernote1"
                     onChange={handleChangeEdit}
-                    className="form-control show-cti form-select list"
-                    name="category"
-                    id="cate"
-                    value={stateDetailProduct?.category}
-                    >
-                    <option  value="">Chọn danh mục</option>
-                    {listCate.map((cate, index) => {
-                        return (
-                            <option key={index}  value={cate?._id}>{cate?.name}</option>
-                        )
-                    })}
-                </select>
+                    value={stateDetailProduct?.description}
+                    name="description" 
+                    className="form-control ckeditor" 
+                    required
+                    ></textarea>
             </div>
-            <div className="form-group">
-                <label >Hot</label>
-                <select onChange={handleChangeEdit} className="form-control show-cti form-select list"  name="hot" id="cate">
-                <option value="">Chọn danh mục</option>
-                <option value="1">Bình thường</option>
-                <option value="0">Hot</option>
-                </select>
-            </div>
-        <Input type={'text'} onChange={handleChangeEdit} value={stateDetailProduct?.price} name={"price"} id={'exampleInputName1'} placeholder={'Giá sản phẩm'} >Giá</Input>
-
-        <Input type={'number'} onChange={handleChangeEdit} value={stateDetailProduct?.discount} name={"discount"} id={'exampleInputName1'} placeholder={'Số tiền giảm'} >Giảm giá</Input>
-
-        <Input type={'number'} onChange={handleChangeEdit} value={stateDetailProduct?.countInStock} name={"countInStock"} id={'exampleInputName1'} placeholder={'Số lượng sản phẩm'} >Số lượng sản phẩm</Input>
-
-        <Input type={'file'} onChange={handleChangeEdit} name={"image"} id={'exampleInputName1'}>Số lượng sản phẩm</Input>
-
-        <div className="form-group">
-            <label>Mô tả sản phẩm</label>
-            <textarea
-                id="demo summernote1"
-                onChange={handleChangeEdit}
-                value={stateDetailProduct?.description}
-                name="description" 
-                className="form-control ckeditor" 
-                required
-                ></textarea>
-        </div>
-        
-        <button className="btn btn-primary">Sửa sản phẩm</button>
+            
+            <button className="btn btn-primary">Sửa sản phẩm</button>
         </form>
    </div>
      );

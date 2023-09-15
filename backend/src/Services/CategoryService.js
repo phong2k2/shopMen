@@ -4,7 +4,7 @@ const Subcategory = require('../app/model/SubCategory')
 
 const createCategory = (newCategory) => {
     return new Promise(async (resolve, reject) => {
-        const {name, hot} = newCategory
+        const {name} = newCategory
         try {
             const checkCategory = await Category.findOne({name: name})
             if(checkCategory !== null) {
@@ -14,8 +14,7 @@ const createCategory = (newCategory) => {
                 })
             }
             const newCategory = await Category.create({
-                name,
-                hot
+                name
             })
             if(newCategory) {
                 resolve({
@@ -86,7 +85,7 @@ const getACategory = ({id, limit = 5, page}) => {
 const getDetailCategory = ({slug, limit, page}) => {
     return new Promise( async (resolve, reject) => {
         try {
-            const skipPage = page  * limit
+            const skipPage = page  * limit 
             const category = await Category.findOne({ slug: slug });
             let countProduct
             if (category) {
@@ -94,10 +93,12 @@ const getDetailCategory = ({slug, limit, page}) => {
                     _id: { $in: category.product },
                 });
              }
+
             const getDetailCategory = await Category.findOne({slug: slug}).populate({
                 path: 'product',
                 options: { limit: limit, sort: { createdAt: -1 }, skip: skipPage },
               })
+
             if(getDetailCategory === null) {
                 return reject({
                     status: 'Error',

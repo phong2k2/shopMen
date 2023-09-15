@@ -6,7 +6,7 @@ const jwtService = require('./JwtService')
 const registerUser = (newUser) => {
     return new Promise( async (resolve, reject) => {
         try {
-            const { name, email, password, address, phone, image} = newUser
+            const { name, email, password, address, phone} = newUser
 
             const checkUser = await User.findOne({
                 email: email
@@ -26,7 +26,6 @@ const registerUser = (newUser) => {
                 password: hash,
                 address,
                 phone,
-                image
             })
 
             if (checkUserName) {

@@ -17,7 +17,14 @@ function DetailOrder() {
     const user = useSelector(state => state.auth?.login?.currentUser)
     const axiosJWT = createAxios(user, dispatch, loginSuccess)
 
-    console.log(detailOrder)
+    const status = {
+       processing: "Đang xử lý",
+       confirmed: "Đang xác nhận",
+       shipped: "Đang vận chuyển",
+       complete: "Hoàn thành",
+       cancelled: "Hủy",
+
+    }
     
     useEffect(() => {
         const getDetailOrder = async () => {
@@ -58,7 +65,7 @@ function DetailOrder() {
                                             <th scope="row">{index + 1}</th>
                                             <td>{item?.name}</td>
                                             <td>
-                                                <img src="https://www.thedigitalbridges.com/wp-content/uploads/2016/08/best-gaming-laptop-how-to-buy.jpg" alt="" />
+                                                <img src={`http://localhost:3000/${item?.image}`} alt="" />
                                             </td>
                                             <td>{item?.amount}</td>
                                             <td>{formatPrice(item?.price)}</td>
@@ -73,13 +80,17 @@ function DetailOrder() {
                     <div className={cx('col-md-4', 'content')}>
                         <h2>Thông tin khách hàng</h2>
                         <div className={cx('img')}>
-                            <img src={detailOrder?.user?.image} alt="" />
+                            <img src={`http://localhost:3000/${detailOrder?.user?.image}`} alt="" />
                             <span>{detailOrder?.user?.username}</span>
                         </div>
                         <span>Người nhận: {detailOrder?.shippingAddress?.fullName} </span>
                         <span>Địa chỉ: {detailOrder?.shippingAddress?.address}</span>
                         <span>SĐT: {detailOrder?.shippingAddress?.phone}</span>
-                        <span>Trạng thái: </span>
+                        <span>Trạng thái: 
+                            <strong className="pl-2">
+                                {status[detailOrder?.status]}
+                            </strong>
+                        </span>
                         <span>Tổng tiền: {formatPrice(detailOrder?.totalPrice)}</span>
                     </div>
                 </div>

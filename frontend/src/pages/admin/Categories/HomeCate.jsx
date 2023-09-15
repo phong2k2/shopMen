@@ -40,7 +40,6 @@ function HomeCate() {
             <tr>
                 <th scope="col">STT</th>
                 <th scope="col">Tên danh mục</th>
-                <th scope="col">Miêu tả</th>
                 <th rowSpan={2} scope="col">Hành động</th>
             </tr>
         </thead>
@@ -51,10 +50,9 @@ function HomeCate() {
                     <tr key={index} >
                         <th scope="row">{index + 1}</th>
                         <td>{cate?.name}</td>
-                        <td>{cate?.description}</td>
                         <td>
-                            <Link to={`/admin/category/${cate._id}`} >Sửa</Link>
-                            <button onClick={() => handleDeleteCate(cate?._id)} className='ml-3'>Xóa</button>
+                            <Link className='btn btn-primary' to={`/admin/category/${cate._id}`} >Sửa</Link>
+                            <button className='btn btn-danger ml-3' onClick={() => handleDeleteCate(cate?._id)} >Xóa</button>
                         </td>
                     </tr>
                 )

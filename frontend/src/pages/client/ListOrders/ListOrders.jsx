@@ -7,6 +7,7 @@ import * as orderService from "@/services/orderService"
 import { useDispatch, useSelector } from "react-redux";
 import { createAxios } from "@/utils/httpRfreshRequest";
 import { loginSuccess } from "@/redux/authSlice";
+import { formatPrice } from "@/components/formatData/formatData";
 
 const cx = classNames.bind(styles)
 function ListOrders() {
@@ -15,7 +16,17 @@ function ListOrders() {
     const user = useSelector(state => state.auth?.login?.currentUser)
     const dispatch = useDispatch()
     const axiosJWT = createAxios(user, dispatch, loginSuccess)
+    const accessToken = user?.accessToken
+    const [idCancer, serIdCancer] = useState('')
 
+    const status = {
+        processing: "Đang xử lý",
+        confirmed: "Đang xác nhận",
+        shipped: "Đang vận chuyển",
+        complete: "Hoàn thành",
+        cancelled: "Hủy",
+ 
+     }
 
     const handleShowDetailOrder = (index) => {
         if(idShowItem === index) {
@@ -31,7 +42,6 @@ function ListOrders() {
 
     useEffect(() => {
         const getAllOrder = async () => {
-            const accessToken = user?.accessToken
             try {
                 const res = await orderService.getAllOrder(accessToken, axiosJWT)
                 if(res) {
@@ -43,6 +53,17 @@ function ListOrders() {
         }
         getAllOrder()
     },[])
+
+    const handleCancerOrder = async () => {
+        try {
+            const res = await orderService.cancerOrder(accessToken, idCancer, axiosJWT)
+            if(res){
+                window.location =''
+            }
+        }catch (err) {
+            console.log(err)
+        }
+    }
 
     return ( 
         <section className={cx('list-order')}>
@@ -60,7 +81,6 @@ function ListOrders() {
                     </thead>
                     {
                         allOrders?.map((item, index) => {
-                            console.log(allOrders)
                             return (
                                 <tbody key={index}>
                                     <tr>
@@ -70,8 +90,8 @@ function ListOrders() {
                                         </td>
                                         <td>{item?.createdAt}</td>
                                         <td>{item?.orderCode}</td>
-                                        <td>{item?.totalPrice}</td>
-                                        <td>Đơn hàng mới</td>
+                                        <td>{formatPrice(item?.totalPrice)}</td>
+                                        <td>{status[item?.status]}</td>
                                     </tr>
                                     <tr  className={cx('info-order', {
                                         show: idShowItem === index
@@ -106,7 +126,7 @@ function ListOrders() {
                                                                         <td>
                                                                             <div className={cx('wrap-oder')}>
                                                                                 <div className={cx('img')}>
-                                                                                    <img src="https://aristino.com/Data/ResizeImage/images/product/ao-tanktop/att008s3/_TC_0092x650x650x4.webp" alt="" />
+                                                                                    <img src={`http://localhost:3000/${itemProduct?.image}`} alt="" />
                                                                                 </div>
                                                                                 <div className={cx('title-product')}>
                                                                                     <h3>{itemProduct?.name}</h3>
@@ -115,9 +135,9 @@ function ListOrders() {
                                                                             </div>
                                                                         </td>
                                                                         <td>
-                                                                            {itemProduct?.price}
+                                                                            {formatPrice(itemProduct?.price)}
                                                                         </td>
-                                                                     </tr>
+                                                                        </tr>
                                                                 )
                                                             })
                                                         }
@@ -126,8 +146,8 @@ function ListOrders() {
                                                         <tr>
                                                             <td colSpan={2}>
                                                                 <div className={cx('price-total')}>
-                                                                    <span >Phí vận chuyển: {item?.shippingPrice}</span>
-                                                                    <span>Tổng cộng: <strong>{item?.totalPrice}</strong></span>
+                                                                    <span >Phí vận chuyển: {formatPrice(item?.shippingPrice)}</span>
+                                                                    <span>Tổng cộng: <strong>{formatPrice(item?.totalPrice)}</strong></span>
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -136,19 +156,52 @@ function ListOrders() {
                                             </div>
 
                                             <div className={cx('button')}>
-                                                <button className={cx('close')}>Hủy đơn hàng</button>
-                                                <button onClick={()=> handleClose()} className={cx('cancel-order')}>Rút gọn</button>
+                                                <button onClick={()=> handleClose()} className={cx('cancel')}>
+                                                    <i className="fa-solid fa-chevron-up"></i>
+                                                    Rút gọn
+                                                </button>
+                                                {/* <button onClick={() => handleCancerOrder(item?._id)} className={cx('close')}>Hủy đơn hàng</button> */}
+                                                {
+                                                    item?.status === 'processing' ? (
+                                                        <button type="button" onClick={() => serIdCancer(item?._id)} className={cx('close', 'btn')} data-toggle="modal" data-target="#exampleModal">
+                                                            Hủy đơn hàng
+                                                        </button>
+                                                    ): ''
+
+                                                }
+
                                             </div>
                                         </td>
                                     </tr>
-                            </tbody>
+                                </tbody>
                             )
                         })
                     }
                     
                     
                 </table>
+                {/* Model */}
+                <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Bạn muốn xóa</h5>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            Bạn chắc chắn hủy đơn hàng này
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Huy</button>
+                            <button type="button"  onClick={() => handleCancerOrder()} className="btn btn-primary">Xóa</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </section>
      );
 }

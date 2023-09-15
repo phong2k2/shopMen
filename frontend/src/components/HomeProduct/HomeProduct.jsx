@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import * as categoryService from "@/services/adminServices/categoryService";
 import Menu from "./Product/Menu";
 import { addToCart, getTotals } from "@/redux/cartSlice";
+// import { useNavigate } from "react-router-dom";
+
 
 
 const cx = classNames.bind(styles)
@@ -13,19 +15,22 @@ function HomeProduct() {
   const [listProduct, setListProduct] = useState([]); // Initialize with an empty array
   const [activeCategory, setActiveCategory] = useState(0); 
   const dispatch = useDispatch()
+  // const navigate = useNavigate()
+
 
   const handelAddToCart = (product) => {
     if(product) {
       dispatch(addToCart({
         orderItem: {
           name: product?.name,
-          image: product?.image,
+          image: product?.image[0],
           amount: 1, 
           price: product?.price,
           product: product?._id
         }
       }))
       dispatch(getTotals());
+
     }
   };
 
@@ -34,18 +39,13 @@ function HomeProduct() {
       const getFirstProduct = async () => {
         try {
           const id = category[0]._id
-          const existingProduct = listProduct.find(item => item.id === id);
           
-          if (!existingProduct) {
             const res = await categoryService.getDetailsCategory(id)
-            setListProduct([
-              ...listProduct,
-              {
-                'id': res._id,
-                'product': res.product
-              }
-            ])
-          }
+            if(res.product) {
+              setListProduct(
+                 res?.product
+              )
+            }
 
         }catch( err) {
           console.log(err)
@@ -62,13 +62,9 @@ function HomeProduct() {
         
         if (!existingProduct) {
           const res = await categoryService.getDetailsCategory(id)
-          setListProduct([
-            ...listProduct,
-            {
-              'id': res._id,
-              'product': res.product
-            }
-          ])
+          setListProduct(
+            res?.product
+          )
       }
 
       }catch( err) {
@@ -97,16 +93,10 @@ function HomeProduct() {
           </div>
 
           {/* product */}
-          <div className={cx("tab-content", 'tab-product')}>
-                {
-                  listProduct?.map((item, index) => {
-                      return (
-                       <Menu key={index} id={index} onClick={handelAddToCart} activeCategory={activeCategory} product={item}/>
-                      )
-                  })
-                }
-                 
-        </div>
+          <div className={cx("tab-content")}>
+              {/* <Menu onClick={handelAddToCart}  activeCategory={activeCategory} product={listProduct}/> */}
+              <Menu  product={listProduct} onClick={handelAddToCart}/>
+          </div>
        </>
      );
 }

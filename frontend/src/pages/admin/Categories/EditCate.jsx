@@ -29,9 +29,9 @@ function EditCate() {
         editCateApi()
     },[])
 
-    const handleDescriptionCate = (e) => {
-        setDescription(e.target.value)
-    }
+    // const handleDescriptionCate = (e) => {
+    //     setDescription(e.target.value)
+    // }
 
     const handleNameCate = (e) => {
         setName(e.target.value)
@@ -51,8 +51,8 @@ function EditCate() {
         <h2>Sửa danh mục</h2>
         <form onSubmit={handleSubmitEdit}>
             <Input type={'text'} onChange={handleNameCate} value={name} id={'exampleInputEmail1'}  placeholder={'Tên danh mục'} >Tên danh mục</Input>
-            <Input type={'text'} onChange={handleDescriptionCate} value={description} id={'exampleInputPassword1'} placeholder={'Chi tiết danh mục'} >Tên danh mục</Input>
-            <button className="btn btn-primary">Submit</button>
+            {/* <Input type={'text'} onChange={handleDescriptionCate} value={description} id={'exampleInputPassword1'} placeholder={'Chi tiết danh mục'} >Tên danh mục</Input> */}
+            <button className="btn btn-primary">Hoàn Tất</button>
         </form>
     </div> 
 );

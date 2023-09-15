@@ -18,7 +18,8 @@ const publicRouter = {
     productDetail: '/products/:slug',
     cart: '/cart',
     order: '/checkout/:id',
-    listOrders: '/order'
+    listOrders: '/order',
+    profile: '/profile',
 }
 
 export {

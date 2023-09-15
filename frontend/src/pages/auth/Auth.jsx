@@ -17,8 +17,6 @@ const state = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    phone: 0,
-    image: "",
     address: "",
   };
 };
@@ -46,7 +44,7 @@ function Auth() {
     dispatch(loginStart());
     try {
       const res = await authService.loginUser({ email, password });
-      
+      console.log(res);
       if (res) {
         dispatch(loginSuccess(res));
         navigate(config.publicRouter.home)
@@ -56,14 +54,14 @@ function Auth() {
     }
   };
 
-  const handleSubmitRegister = async (e) => {
-    e.preventDefault();
+  const handleSubmitRegister = async () => {
     dispatch(registerStart());
     try {
       const res = await authService.registerUser(stateRegister);
       if (res) {
         dispatch(registerSuccess(res));
       }
+      console.log(res)
     } catch (err) {
       console.log(err);
     }
@@ -79,12 +77,11 @@ function Auth() {
   return (
     <div className="auth">
       <h1 className="pb-4 text-center header">
-        Weekly Coding Challenge #1: Sign in/up Form
       </h1>
       <div ref={divRef} className="container ">
         <div className="form-container signUp-container">
           <form action="" onSubmit={handleSubmitRegister}>
-            <h3 className="pb-3">Create Account</h3>
+            <h3 className="pb-3 ">Đăng ký</h3>
             <div className="d-flex mb-3 icon">
               <a className="mr-3" href="#">
                 <i className="fab fa-facebook"></i>
@@ -96,7 +93,7 @@ function Auth() {
                 <i className="fab fa-linkedin-in"></i>
               </a>
             </div>
-            <div className="form-group w-100">
+            <div className="form-group  mt-4  w-100">
               <input
                 onChange={handleChangInput}
                 name="name"
@@ -105,7 +102,7 @@ function Auth() {
                 placeholder="Name"
               />
             </div>
-            <div className="form-group w-100">
+            <div className="form-group  w-100">
               <input
                 onChange={handleChangInput}
                 name="email"
@@ -114,7 +111,7 @@ function Auth() {
                 placeholder="Email"
               />
             </div>
-            <div className="form-group w-100">
+            <div className="form-group  w-100">
               <input
                 onChange={handleChangInput}
                 name="password"
@@ -123,25 +120,7 @@ function Auth() {
                 placeholder="Password"
               />
             </div>
-            <div className="form-group w-100">
-              <input
-                onChange={handleChangInput}
-                name="confirmPassword"
-                type="password"
-                className="form-control"
-                placeholder="Password"
-              />
-            </div>
-            <div className="form-group w-100">
-              <input
-                onChange={handleChangInput}
-                name="image"
-                type="file"
-                className="form-control"
-                placeholder=""
-              />
-            </div>
-            <div className="form-group w-100">
+            <div className="form-group  w-100">
               <input
                 onChange={handleChangInput}
                 name="phone"
@@ -150,23 +129,23 @@ function Auth() {
                 placeholder="Phone"
               />
             </div>
-            <div className="form-group w-100">
+            <div className="form-group  w-100">
               <input
                 onChange={handleChangInput}
                 name="address"
                 type="text"
                 className="form-control"
-                placeholder="Địa chỉ"
+                placeholder="Address"
               />
             </div>
             <button type="submit" className="btn btn-custom">
-              SIGN UP
+             ĐĂNG KÝ
             </button>
           </form>
         </div>
         <div className="form-container">
           <form action="" onSubmit={handleSubmitLogin}>
-            <h3 className="pb-3">Sign in</h3>
+            <h3 className="pb-3">Đăng nhập</h3>
             <div className="d-flex mb-3 icon">
               <a className="mr-3" href="#">
                 <i className="fab fa-facebook"></i>
@@ -178,8 +157,8 @@ function Auth() {
                 <i className="fab fa-linkedin-in"></i>
               </a>
             </div>
-            <h6 className="text">or use your account</h6>
-            <div className="form-group w-100">
+            <h6 className="text">Hãy nhập đầy đủ thông tin</h6>
+            <div className="form-group mt-4 w-100">
               <input
                 onChange={(e) => setEmail(e.target.value)}
                 type="text"
@@ -187,7 +166,7 @@ function Auth() {
                 placeholder="Email"
               />
             </div>
-            <div className="form-group w-100">
+            <div className="form-group  w-100">
               <input
                 onChange={(e) => setPassword(e.target.value)}
                 type="password"
@@ -195,9 +174,8 @@ function Auth() {
                 placeholder="Password"
               />
             </div>
-            <div className="forgot-pass mb-3">Forgot your password?</div>
             <button type="submit" className="btn btn-custom">
-              SIGN IN
+              Đăng nhập
             </button>
           </form>
         </div>

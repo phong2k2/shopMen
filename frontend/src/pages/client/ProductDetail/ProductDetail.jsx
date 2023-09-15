@@ -59,14 +59,14 @@ function ProductDetail() {
         }
        
     }
-    console.log(detailProduct)
+
     //Add to Cart
     const handleAddToCart =  () => {
         if(detailProduct) {
             dispatch(addToCart({
                 orderItem : {
                     name: detailProduct?.name,
-                    image: detailProduct?.image,
+                    image: detailProduct?.image[0],
                     amount: amount,
                     price: detailProduct?.price,
                     discount: detailProduct?.discount,
@@ -119,9 +119,16 @@ function ProductDetail() {
                                         <div className={cx('product-gallery')}>
                                             <div className={cx('div-detail')}>
                                                 <ul className={cx('slide-product')}>
-                                                    <li className={cx('gallery-item')}>
-                                                        <img src={`http://localhost:3000/${detailProduct?.image}`} alt="" />
-                                                    </li>
+                                                    {
+                                                        detailProduct?.image.map((image, index) => {
+                                                            return (
+                                                                <li key={index} className={cx('gallery-item')}>
+                                                                    <img src={`http://localhost:3000/${image}`} alt="" />
+                                                                </li>
+                                                            )
+                                                        })
+                                                    }
+                                                    
                                                 </ul>
                                             </div>
                                         </div>

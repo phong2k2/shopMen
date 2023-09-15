@@ -4,11 +4,14 @@ import { publicRoutes } from "./routes/routes";
 import { privateRoutes } from "@/routes/routes";
 import PublicLayout from '@/customRoutes/PublicLayout'
 import PrivateLayout from '@/customRoutes/PrivateLayout'
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
   return (
     <Router>
+      <ToastContainer />
     <div>
       <Routes>
         {publicRoutes.map((route, index) => {

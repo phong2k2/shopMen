@@ -5,11 +5,14 @@ const ProductController = {
     // Add Product
     createProduct: async (req, res) => {
         try {
+            const imgProduct = req.files.map(file => {
+                return file.filename
+            }) 
             let info = {
                 name: req.body.name,
                 price: req.body.price,
                 discount: req.body.discount,
-                image: req.file.filename,
+                image: imgProduct,
                 countInStock: req.body.countInStock,
                 description: req.body.description,
                 hot: req.body.hot,
@@ -27,16 +30,32 @@ const ProductController = {
     // Upadte product 
     updateProduct: async (req, res) => {
         try {
+            const imgProduct = req.files.map(file => {
+                return file.filename
+            }) 
+
+            let info = {
+                name: req.body.name,
+                price: req.body.price,
+                discount: req.body.discount,
+                image: imgProduct,
+                countInStock: req.body.countInStock,
+                description: req.body.description,
+                hot: req.body.hot,
+                category: req.body.category
+            }
+
             const proId = req.params.id
-            const newPro = req.body
-            if(!newPro && !proId) {
+            if(!proId) {
                 return res.status(404).json({
                     status: 404,
                     message: 'Id product not found'
                 })
             }
-            const response = await ProductService.updateProduct(proId, newPro)
-            res.status(200).json(response)
+            if(info) {
+                const response = await ProductService.updateProduct(proId, info)
+                res.status(200).json(response)
+            }
         }catch (err) {
             res.status(500).json(err)
         }

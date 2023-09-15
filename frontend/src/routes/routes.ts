@@ -18,6 +18,7 @@ import Order from '@/pages/client/Order/Order';
 import ListOrders from '@/pages/client/ListOrders/ListOrders';
 import Orders from '@/pages/admin/Orders';
 import DetailOrder from '@/pages/admin/DetailOrder';
+import Profile from '@/pages/client/Profile';
 
 const privateRoutes = [
     {
@@ -93,6 +94,11 @@ const publicRoutes = [
         component: ListOrders,
         layout: HeaderOnly
     },
+    {
+        path: config.publicRouter.profile,
+        component: Profile,
+        layout: HeaderOnly
+    }
 ]
 
 export {

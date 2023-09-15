@@ -16,7 +16,6 @@ const UserSchema = new Schema({
     },
     address: {
         type: String,
-        required: true,
     },
     phone: {
         type: Number,
@@ -24,7 +23,6 @@ const UserSchema = new Schema({
     },
     image: {
         type: String,
-        required: true,
     },
     admin: {
         type: Boolean,

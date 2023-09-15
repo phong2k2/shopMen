@@ -7,6 +7,7 @@ const OrderSchema = new Schema({
             name: {type: String,required: true},
             amount: {type: Number,required: true}, 
             price: {type: Number,required: true},
+            image: { type: String, required: true },
             discount: { type: Number },
             product: {
                 type: mongoose.Schema.Types.ObjectId,
@@ -26,7 +27,11 @@ const OrderSchema = new Schema({
     shippingPrice: {type: String, required: true},
     totalPrice: {type: String, required: true},
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    status: {type: String, default: 'pending'},    
+    status: {
+        type: String, 
+        enum: ['processing', 'confirmed', 'shipped', 'complete', 'cancelled'],
+        default: 'processing'
+    },    
 },{
     timestamps: true,
 })

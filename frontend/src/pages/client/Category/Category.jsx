@@ -3,11 +3,13 @@ import styles from './Category.module.scss'
 import ReactPaginate from 'react-paginate';
 import { Link, NavLink, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 import * as categoryService from "@/services/adminServices/categoryService";
 import { formatPrice } from '@/components/formatData/formatData';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { IconCart } from "@/components/Icons/icon";
+import { addToCart, getTotals } from "@/redux/cartSlice";
 
 
 const cx = classNames.bind(styles)
@@ -16,17 +18,19 @@ function Category() {
     const [nameTitle, setNameTitle] = useState('')
     const [data, setData] = useState([]);
     const [pageNumber, setPageNumber] = useState(0);
+    const dispatch = useDispatch()
     const limit = 10
 
     const pageCount = useMemo(() => {
         return Math.ceil(data?.countProduct / limit);
-    }, [data.countProduct, limit]);
+    }, [data?.countProduct, limit]);
+
      useEffect(() => {
         const getNameCategory = async () => {
             try {
                 const res = await categoryService.getDetailCategory({slug, limit, pageNumber })
                 setData(res)
-                setNameTitle(res.data)
+                setNameTitle(res?.data)
             }catch (err) {
                 console.log(err)
             }
@@ -36,6 +40,21 @@ function Category() {
 
      const handlePageChange = ({ selected }) => {
         setPageNumber(selected);
+      };
+
+      const handelAddToCart = (product) => {
+        if(product) {
+          dispatch(addToCart({
+            orderItem: {
+              name: product?.name,
+              image: product?.image,
+              amount: 1, 
+              price: product?.price,
+              product: product?._id
+            }
+          }))
+          dispatch(getTotals());
+        }
       };
     return ( 
         <section className={cx('collections')}>
@@ -80,7 +99,7 @@ function Category() {
                             <div className={cx('col-md-6')}>
                                 <h1>{nameTitle?.name}</h1>
                             </div>
-                            <div className={cx('col-md-6', 'select')}>
+                            {/* <div className={cx('col-md-6', 'select')}>
                                 <div className={cx('option')}>
                                     <span>
                                         <select name="" id="">
@@ -89,7 +108,7 @@ function Category() {
                                         </select>
                                     </span>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* List Product */}
@@ -103,7 +122,7 @@ function Category() {
                                                         <Link to={`/products/${itemPro?.slug}`}>
                                                             <picture>
                                                                 <source media="(max-width: 767px)" />
-                                                                <img src={`http://localhost:3000/${itemPro?.image}`} alt="Anh" />
+                                                                <img src={`http://localhost:3000/${itemPro?.image[0]}`} alt="Anh" />
                                                             </picture>
                                                         </Link>
                                                     </div>
@@ -121,7 +140,7 @@ function Category() {
                                                                     <del>1000</del>
                                                                 </span> */}
                                                             </div>
-                                                            <button className={cx("add-cart")}>
+                                                            <button onClick={handelAddToCart} className={cx("add-cart")}>
                                                                 <IconCart width={'1.6rem'}/>
                                                                 <span>Thêm</span>
                                                             </button>

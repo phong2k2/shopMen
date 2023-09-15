@@ -61,7 +61,7 @@ function HomeUsers() {
                             </td>
                             <td>
                                 {/* <Link to={`/admin/product/${pro._id}`} >Sửa</Link> */}
-                                <button onClick={() => handleClickDelete(pro?._id)}>Xóa</button>
+                                <button className='btn btn-danger ml-3' onClick={() => handleClickDelete(pro?._id)}>Xóa</button>
                             </td>
                         </tr>
                     )

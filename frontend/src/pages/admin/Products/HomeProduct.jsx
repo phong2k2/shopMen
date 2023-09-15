@@ -52,11 +52,11 @@ function HomeProduct() {
                             <th scope="row">{index + 1}</th>
                             <td>{pro?.name}</td>
                             <td>
-                                <img className='w-25' src={pro?.image} alt="" />
+                                <img className='img-thumbnail' src={`http://localhost:3000/${pro?.image[0]}`} alt="" />
                             </td>
                             <td>
-                                <Link to={`/admin/product/${pro._id}`} >Sửa</Link>
-                                <button onClick={() => handleDeleteProduct(pro?._id)}>Xóa</button>
+                                <Link className='btn btn-primary' to={`/admin/product/${pro._id}`} >Sửa</Link>
+                                <button className='btn btn-danger ml-3' onClick={() => handleDeleteProduct(pro?._id)}>Xóa</button>
                             </td>
                         </tr>
                     )

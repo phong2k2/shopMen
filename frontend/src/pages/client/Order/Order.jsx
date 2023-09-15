@@ -6,12 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import * as userService from '@/services/adminServices/userService'
 import { createAxios } from "@/utils/httpRfreshRequest";
 import { loginSuccess } from "@/redux/authSlice";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import * as orderService from '@/services/orderService'
+import config from "@/config";
 import { formatPrice } from "@/components/formatData/formatData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import config from "@/config";
+import { clearCart, getTotals } from "@/redux/cartSlice";
 
 const cx = classNames.bind(styles)
 function Order() {
@@ -25,6 +26,7 @@ function Order() {
     const [wards, setWards] = useState([])
     const [wardId, setWardId] = useState()
     const [city, setCity] = useState('')
+    const navigate = useNavigate()
 
     const [shippingAddress, setShippingAddress] = useState({
         username: '',
@@ -133,10 +135,15 @@ function Order() {
                 phone: shippingAddress?.phone,
                 shippingPrice: diliveryPrice,
                 totalPrice: totalPrice,
-                user: user?.data?._id,
+                user: id,
             }
             const res = await orderService.createOrder(user.accessToken, formData, axiosJWT)
             console.log(res)
+            if(res.data) {
+                navigate('/order')
+                dispatch(clearCart())
+                dispatch(getTotals())
+            }
         }catch(err) {
             console.log(err)
         }

@@ -8,10 +8,7 @@ const CategorySchema = new Schema({
         type: String,
         required: true,
     },
-    hot: {
-        type: Number,
-        default: ''
-    },
+    
     slug: {
         type: String,
         slug: 'name',

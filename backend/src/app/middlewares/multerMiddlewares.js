@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
         cb(null, 'src/public/images'); // Thư mục lưu trữ tệp tin tải lên
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname)); // Đặt tên cho tệp tin
+        cb(null,file.fieldname + '-' + Date.now() + file.originalname.match(/\..*$/)[0],); // Đặt tên cho tệp tin
     },
 });
 
@@ -23,6 +23,6 @@ const upload = multer({
         }
         cb('Give proper file format to upload');
     },
-}).single('image'); // 'image' là tên của trường form-data chứa hình ảnh
+}).array('images', 12); // 'image' là tên của trường form-data chứa hình ảnh
 
 module.exports = upload;

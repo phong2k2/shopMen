@@ -11,10 +11,10 @@ const  cx = classNames.bind(styles)
 
 function AdminLayout({children}) {
     return (
-        <div id="wrapper" className={cx('wrapper')}>
+        <div id="wrapper" className={cx('wrapper ')}>
                 <Sidebar/>
             <div id="content-wrapper" className="d-flex flex-column">
-                <div id="content" className={cx('contents')}>
+                <div id="content" className={cx('contents  h-100')}>
                     <Header/>
                     {children}
                 </div>

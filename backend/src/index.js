@@ -22,6 +22,15 @@ app.use(express.urlencoded({
 }));
 app.use(express.json());
 
+// Middleware để xử lý method spoofing
+app.use((req, res, next) => {
+  if (req.body && req.body._method) {
+    req.method = req.body._method.toUpperCase();
+    delete req.body._method;
+  }
+  next();
+});
+
 app.use(express.static(path.join(__dirname, 'public/images')));
 
 app.engine('.hbs', engine({

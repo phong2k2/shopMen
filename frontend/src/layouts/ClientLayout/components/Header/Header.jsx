@@ -29,15 +29,24 @@ function Header() {
 
 
   const userMenus = [
-    
     {
       title: 'Quản Trị website',
       check: user?.currentUser?.data?.admin,
       to: config.privateRouter.dashboard
     },
     {
-      title: 'Đăng xuất',
+      title: 'Đơn hàng',
+      to: config.publicRouter.listOrders,
       check: true
+    },
+    {
+      title: 'Hồ sơ',
+      check: true
+    },
+    {
+      title: 'Đăng xuất',
+      check: true,
+      logout: true,
     },
   ]
 

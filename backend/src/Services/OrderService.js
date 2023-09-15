@@ -115,8 +115,92 @@ const getDetailOrder = (id) => {
     })
 }
 
+const updateStatusOrder = (id, newStatus) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            
+            const checkOrder = await Order.find({_id: id});
+            if(!checkOrder) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The Orders is not defined'
+                })
+            }
+            const updateStatusOrder = await Order.findOneAndUpdate(
+                { _id: id }, 
+                { $set: { status: newStatus } }, 
+                { new: true } 
+            );
+
+            console.log(updateStatusOrder.status);
+
+            resolve({
+                status: 'OK',
+                message: 'SUCESSS',
+                data: updateStatusOrder.status
+            })
+        }catch (err) {
+            reject(err)
+        }
+    })
+}
+
+const cancerOrder = (id) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            const order = await Order.findById(id);
+
+            if(!order) {
+                return reject({
+                    status: 'ERR',
+                    message: 'Order does not exist'
+                })
+            }
+
+            if(order.status === 'shipped' || order.status === 'complete'){
+                return reject({
+                    status: 'ERR',
+                    message: 'Orders that have been shipped or completed cannot be canceled'
+                })
+            }
+
+            order.status = 'cancelled';
+            await order.save();
+
+            resolve({
+                status: 'OK',
+                message: 'The order has been successfully canceled',
+            })
+        }catch (err) {
+            reject(err)
+        }
+    })
+}
+
+
+const deleteOrder = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await Order.deleteOne({_id: id})
+            resolve({
+                status: 'Success',
+                message: 'Delete Success',
+            })
+        }catch (err) {
+            reject({
+                status: 'Error',
+                message: 'Failed to update category',
+                error: err
+            });
+        }
+    })
+}
+
 module.exports = {
     createOrder,
     getAllOrders,
-    getDetailOrder
+    getDetailOrder,
+    updateStatusOrder,
+    cancerOrder,
+    deleteOrder
 }  

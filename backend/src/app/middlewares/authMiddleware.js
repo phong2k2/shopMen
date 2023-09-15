@@ -4,11 +4,12 @@ const middlewareController = {
     verifyToken: (req, res, next) => {
 
         const authHeader = req.headers['authorization'];
-        console.log(authHeader)
 
+        console.log(authHeader)
         if(authHeader) {
             const accessToken = authHeader.split(" ")[1]
             jwt.verify(accessToken, process.env.JWT_ACCESS_KEY, (err, user) => {
+                
                 if(err) {
                     return res.status(404).json({
                         message: 'The token does not exist',
@@ -24,6 +25,7 @@ const middlewareController = {
     },
     authUserMiddleware: (req, res, next) => {
         middlewareController.verifyToken(req, res, () => {
+            console.log(req.params.id)
             if(req.user.id === req.params.id || req.user.admin) {
                 next()
             }else {

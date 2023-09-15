@@ -1,12 +1,11 @@
 import * as response from '@/utils/httpRequest'
 
-export const registerUser = async ({name ,email, password, confirmPassword, phone, image, address}) => {
+export const registerUser = async ({name ,email, password, phone, image, address}) => {
     try {
         const res = await response.post('/auth/register', {
             name,
             email,
             password,
-            confirmPassword,
             phone,
             image,
             address

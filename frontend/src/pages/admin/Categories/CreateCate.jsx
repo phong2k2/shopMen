@@ -6,17 +6,15 @@ import Input from "@/components/Input";
 
 function CreateCate() {
     const [name, setName] = useState('')
-    const [hot, setHot] = useState('')
+    // const [hot, setHot] = useState('')
     const navigate = useNavigate()
     const handleSubmitCreate = (e) => {
         e.preventDefault()
         const createCateApi = async () => {
             try {
                 const res = await categoryService.createCategory({
-                    name,
-                    hot
+                    name
                 })
-                console.log(res)
                 if(res) {
                     navigate(config.privateRouter.indexCategory)
                 }
@@ -31,7 +29,7 @@ function CreateCate() {
        <div className="mx-2">
             <form onSubmit={handleSubmitCreate}>
                 <Input type={'text'} onChange={(e) => setName(e.target.value)} id={'exampleInputEmail1'} placeholder={'Nhập tên danh mục'} >Tên danh mục</Input>
-                <div className="form-group">
+                {/* <div className="form-group">
                     <label>Hot</label>
                     <select
                         onChange={(e) => setHot(e.target.value)}
@@ -43,8 +41,8 @@ function CreateCate() {
                         <option value="0">Hot</option>
                         <option value="1">Bình thường</option>
                     </select>
-                </div>
-                <button className="btn btn-primary">Submit</button>
+                </div> */}
+                <button className="btn btn-primary">Hoàn Tất</button>
             </form>
        </div>
     );

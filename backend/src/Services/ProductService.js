@@ -49,7 +49,7 @@ const createProduct = (data) => {
 }
 
 // Update product
-const updateProduct = (id, newPro) => {
+const updateProduct = (id, info) => {
     return new Promise(async (resolve, reject) => {
         try {
             const checkProduct = await Product.find({_id: id})
@@ -59,7 +59,7 @@ const updateProduct = (id, newPro) => {
                     message: 'The product is not defined'
                 })
             }
-            const updateProduct = await Product.findOneAndUpdate({_id: id}, newPro, {new: true})
+            const updateProduct = await Product.findOneAndUpdate({_id: id}, info, {new: true})
             resolve({
                 status: 'Success',
                 message: 'Successful request',

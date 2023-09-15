@@ -1,24 +1,19 @@
-import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import * as orderService from "@/services/orderService"
-import styles from './Orders.module.scss'
 import { loginSuccess } from "@/redux/authSlice";
 import { createAxios } from "@/utils/httpRfreshRequest";
+import { formatPrice } from "@/components/formatData/formatData";
 
-const cx = classNames.bind(styles)
 function Orders() {
     const [listOrders, setListOrders] = useState([])
     const user = useSelector(state => state.auth?.login?.currentUser)
     const dispatch = useDispatch()
     const axiosJWT = createAxios(user, dispatch, loginSuccess)
-    
-    console.log( listOrders)
+    const accessToken = user?.accessToken
 
     useEffect(() => {
         const getAllOrder = async () => {
-            const accessToken = user?.accessToken
             try {
                 const res = await orderService.getAllOrder(accessToken, axiosJWT)
                 if(res) {
@@ -31,6 +26,27 @@ function Orders() {
         getAllOrder()
     },[])
 
+    const handleChangeStatusOrder = async (event, id) => {
+        const newStatus = event.target.value
+        try {
+            const res = await orderService.updateStatus(accessToken, id, newStatus, axiosJWT)
+            if(res) {
+                window.location = ''
+            }
+        }catch (err) {
+            console.log(err)
+        }
+    }
+
+    const handleDeleteOrder = async (id) => {
+        try {
+            const res = await orderService.deleteOrder(accessToken, id, axiosJWT)
+            console.log(res)
+        }catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <div>
             <table className="table table-hover">
@@ -41,7 +57,7 @@ function Orders() {
                         <th scope="col">Điện thoại</th>
                         <th scope="col">Tổng tiền</th>
                         <th scope="col">Trạng thái</th>
-                        <th rowSpan={2} scope="col">Hành động</th>
+                        <th rowSpan={2} scope="col" className="text-center">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,9 +68,21 @@ function Orders() {
                                     <td>{index + 1}</td>
                                     <td>{item?.shippingAddress?.fullName}</td>
                                     <td>{item?.shippingAddress?.phone}</td>
-                                    <td>{item?.totalPrice}</td>
-                                    <td>{item?.status}</td>
-                                    <td><a href={`/admin/order/detail/${item?._id}`}>Chi tiết</a></td>
+                                    <td>{formatPrice(item?.totalPrice)}</td>
+                                    <td>
+                                        <select  value={item?.status}  onChange={(event)=> handleChangeStatusOrder(event, item?._id)} name="" id="">
+                                            <option value="processing">Đang xử lý</option>
+                                            <option value="confirmed">Đang xác nhận</option>
+                                            <option value="shipped">Đang vận chuyển</option>
+                                            <option value="complete">Hoàn thành</option>
+                                            <option value="cancelled">Hủy</option>
+                                        </select>
+                                    </td>
+                                    <td className="text-center">
+                                        <a className='btn btn-primary ml-3' href={`/admin/order/detail/${item?._id}`}>Chi tiết</a>
+                                        <button onClick={()=> handleDeleteOrder(item?._id)} className='btn btn-danger ml-3'>Xóa</button>
+                                    </td>
+                                    <td></td>
                                 </tr>
                             )
                         })

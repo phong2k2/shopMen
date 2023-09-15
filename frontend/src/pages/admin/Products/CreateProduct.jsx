@@ -10,7 +10,9 @@ function CreateProduct() {
     const [listCate, setListCate] = useState([]);
     const [stateProduct, setStateProduct] = useState("");
     const navigate = useNavigate()
-    
+
+    console.log('stateProduct',stateProduct)
+  // Add Product
   const handleCreateProduct = (e) => {
     e.preventDefault();
     const formData = new FormData()
@@ -19,9 +21,19 @@ function CreateProduct() {
       'countInStock', 'description', 'hot','category',
     ];
     propertiesToAppend.forEach(property => {
-      formData.append(property, stateProduct[property]);
+      if(property === 'image') {
+        const images = stateProduct['images']
+        for(const image of images) {
+            formData.append('images', image)
+        }
+      }else {
+        formData.append(property, stateProduct[property]);
+      }
     });
-    
+
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
     const createProductApi = async () => {
       try {
         const res = await productService.createProduct(formData);
@@ -50,14 +62,18 @@ function CreateProduct() {
       getAllCategory();
     }, []);
 
+    const handelMoreImages = (e) => {
+      console.log(e.target.files)
+    }
+
   // Lấy data từ form
   const handleOnchangeInformation = (e) => {
     const type = e.target.name;
     let value;
 
     switch (type) {
-      case "image":
-        value = e.target.files[0];
+      case "images":
+        value = Array.from(e.target.files);
         break;
       default:
         value = e.target.value;
@@ -70,7 +86,7 @@ function CreateProduct() {
   };
   return (
     <div className="mx-2">
-      <form onSubmit={handleCreateProduct} encType="multipart/form-data">
+      <form onSubmit={handleCreateProduct} encType="multipart/form-data" className="h-2">
         <Input type={'text'} onChange={handleOnchangeInformation} name={"name"} id={'exampleInputEmail1'} placeholder={'Tên sản phẩm'} >Tên Sản phẩm</Input>
         <div className="form-group">
           <label>Danh Mục</label>
@@ -121,7 +137,7 @@ function CreateProduct() {
         </div> */}
         <Input type={'number'} onChange={handleOnchangeInformation} name={"countInStock"} id={'exampleInputName1'} placeholder={'Số lượng sản phẩm'} >Số lượng</Input>
 
-        <Input type={'file'} onChange={handleOnchangeInformation} name={"image"} >Hình Ảnh</Input>
+        <Input type={'file'} name={'images'}  multiple={'multiple'} onChange={handleOnchangeInformation}>Hình Ảnh</Input>
 
         <div className="form-group">
           <label>Mô tả sản phẩm</label>
@@ -133,7 +149,34 @@ function CreateProduct() {
             required
           ></textarea>
         </div>
-        <button className="btn btn-primary">Thêm sản phẩm</button>
+
+        {/* Ảnh thêm  */}
+          <div className="form-group">
+              <p>
+                <a className="btn btn-primary col-sm-3" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Thêm ảnh sản phẩm</a>
+              </p>
+              <div className="row">
+                <div className="col">
+                  <div className="collapse multi-collapse" id="multiCollapseExample1">
+                    <h4 className="card-title">
+                    <a className="col-sm-3" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1"></a>
+                    </h4>
+                    <div className="card card-body">
+                      <div className="row">
+                        <div className="col-sm-6">
+                          <div className="form-group">
+                            <label htmlFor="exampleSelectGender">image</label>
+                            <input onChange={handelMoreImages} type="file" name="file[]" accept="image/*" id="file" multiple className="form-control cpu" itemID="exampleInputName1" />                         
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> 
+
+        <button className="btn btn-primary p-2">Thêm sản phẩm</button>
       </form>
     </div>
   );

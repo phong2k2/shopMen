@@ -67,6 +67,8 @@ export const getProductDetail = async ({slug}) => {
 //     }
 // }
 export const createProduct = async (formData) => {
+    console.log(formData)
+
     try {
         const res = await response.post('/admin/product/create', formData)
         return res.data
@@ -87,27 +89,13 @@ export const getEditProduct = async (id) => {
 
 //Update Product
 export const updateProduct = async ({
-    _id,
-    name,
-    price,
-    discount,
-    image,
-    countInStock,
-    description,
-    hot,
-    category
+    formData, id
 }) => {
     try {
-        const res = await response.post(`/admin/product/${_id}`,
-        {
-            name,
-            price,
-            discount,
-            image,
-            countInStock,
-            description,
-            hot,
-            category
+        const res = await response.post(`/admin/product/${id}`,formData,{
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
         })
         return res.data
     }catch(err) {

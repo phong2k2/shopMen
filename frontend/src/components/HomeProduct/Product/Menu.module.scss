@@ -1,6 +1,6 @@
 
 .tab-item {
-    display: none;
+    // display: none;
     cursor: pointer;
 }
 
@@ -9,7 +9,7 @@
     position: relative;
     
     .owl-stage-outer {
-        overflow: hidden;
+        // overflow: hidden;
     }
     
 
@@ -22,7 +22,7 @@
             width: 230px;
             // width: 100%;
             position: relative;
-            overflow: hidden;
+            // overflow: hidden;
             -webkit-animation-duration: 1s;
             animation-duration: 1s;
             animation-fill-mode: both;
@@ -194,6 +194,7 @@
 
 .collection-viewAll{
     text-align: center;
+    margin-top: 50px;
     a {
         display: inline-block;
         z-index: 1;
@@ -222,7 +223,7 @@
         
           &:hover {
             cursor: pointer;
-            color: #fff;
+            color: #ffffff;
           }
         
           &:hover::before {

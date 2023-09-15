@@ -4,8 +4,8 @@ const CategoryController = {
     // ADD Category 
     createCategory: async (req, res) => {
         try {
-            const { name, hot } = req.body
-            if (!name || !hot) {
+            const { name } = req.body
+            if (!name) {
                 return res.status(200).json({
                     status: 'ERR',
                     message: 'The input is required'

@@ -19,12 +19,13 @@ const AuthController = {
                     status: 'ERR',
                     message: 'The input is email'
                 })
-            }else if(password !== confirmPassword) {
-                return res.status(200).json({
-                    status: 'ERR',
-                    message: 'The password is equal confirmPassword'
-                })
             }
+            // else if(password !== confirmPassword) {
+            //     return res.status(200).json({
+            //         status: 'ERR',
+            //         message: 'The password is equal confirmPassword'
+            //     })
+            // }
             const response = await AuthService.registerUser(req.body)
             return res.status(200).json(response)
         }catch(err) {

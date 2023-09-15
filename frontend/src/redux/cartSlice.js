@@ -1,4 +1,7 @@
+import toastify from "@/components/toastify/toastify";
 import { createSlice } from "@reduxjs/toolkit";
+
+
 
 const initialState = {
   cartItems: [],
@@ -16,8 +19,24 @@ const cartSlice = createSlice( {
 
           if(itemOrder) {
             itemOrder.amount += orderItem?.amount
+            toastify({
+              type: 'success',
+              message: "Sản phẩm đã được thêm vào giỏ hàng",
+              options: {
+                position: "top-right",
+                theme: "dark",
+              }
+            })
           }else {
             state.cartItems.push(orderItem)
+            toastify({
+              type: 'success',
+              message: "Sản phẩm đã được thêm vào giỏ hàng",
+              options: {
+                position: "top-right",
+                theme: "dark",
+              }
+            })
           }
         },
         decreaseCart(state, action) {
@@ -36,6 +55,14 @@ const cartSlice = createSlice( {
                 (item) => item.product !== idProduct
               )
               state.cartItems = nextCartItems;
+              toastify({
+                type: 'success',
+                message: "Xóa thành công",
+                options: {
+                  position: "top-right",
+                  theme: "dark",
+                }
+              })
         },
          getTotals(state) {
           let { total, quantity } = state.cartItems.reduce(
