@@ -30,8 +30,6 @@ export const loginUser = async ({email, password}) => {
 
 export const logOut = async (accessToken, axiosJWT) => {
     try {
-        console.log(accessToken)
-
         const res = await axiosJWT.post('/auth/logout',null, {
             headers: {
                 Authorization: `Bearer ${accessToken}`

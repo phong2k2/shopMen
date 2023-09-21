@@ -27,43 +27,52 @@ function HomeProduct() {
     const handleDeleteProduct = async (id) => {
         try {
             const res = await productService.deleteProduct(id)
-            console.log(res)
-            window.location.href = '/admin/product/index'
+            if(res) {
+                const productAfterDelete = listProduct.filter((val) => {
+                    return val._id !== id
+                })
+                setListProduct(productAfterDelete)
+            }
         }catch (err) {
             console.log(err)
         }
     }
 
     return ( 
-        <table className="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">STT</th>
-                    <th scope="col">Tên Sản phẩm</th>
-                    <th scope="col">Hình ảnh</th>
-                    <th rowSpan={2} scope="col">Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    listProduct.map((pro, index) => {
-                    return (
-                        <tr key={index} >
-                            <th scope="row">{index + 1}</th>
-                            <td>{pro?.name}</td>
-                            <td>
-                                <img className='img-thumbnail' src={`http://localhost:3000/${pro?.image[0]}`} alt="" />
-                            </td>
-                            <td>
-                                <Link className='btn btn-primary' to={`/admin/product/${pro._id}`} >Sửa</Link>
-                                <button className='btn btn-danger ml-3' onClick={() => handleDeleteProduct(pro?._id)}>Xóa</button>
-                            </td>
+        <div className='main-panel'>
+            <div className='content-wrapper'>
+                <table className="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">STT</th>
+                            <th scope="col">Tên Sản phẩm</th>
+                            <th scope="col">Hình ảnh</th>
+                            <th rowSpan={2} scope="col">Hành động</th>
                         </tr>
-                    )
-                    })
-                }
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody>
+                        {
+                            listProduct.map((pro, index) => {
+                            return (
+                                <tr key={index} >
+                                    <th scope="row">{index + 1}</th>
+                                    <td>{pro?.name}</td>
+                                    <td>
+                                        <img className='img-thumbnail' src={`http://localhost:3000/${pro?.image}`} alt="" />
+                                    </td>
+                                    <td>
+                                        <Link className='btn btn-primary mr-2' to={`/admin/variant/${pro?._id}`} >Biến Thể</Link>
+                                        <Link className='btn btn-primary' to={`/admin/product/${pro._id}`} >Sửa</Link>
+                                        <button className='btn btn-danger ml-2' onClick={() => handleDeleteProduct(pro?._id)}>Xóa</button>
+                                    </td>
+                                </tr>
+                            )
+                            })
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
      );
 }
 

@@ -10,7 +10,7 @@ const AuthController = {
             const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
             const isCheckEmail = reg.test(email)
             if(!name && !email && !password && !confirmPassword && !phone) {
-                return res.status(200).json({
+                return res.status(401).json({
                     status: 'Error',
                     message: 'The input is required'
                 })

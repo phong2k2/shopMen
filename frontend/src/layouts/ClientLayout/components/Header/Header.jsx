@@ -13,6 +13,8 @@ import Menu from "@/components/Menu/Menu";
 import  config from "@/config";
 import { loginSuccess, logoutFailed, logoutStart, logoutSuccess } from "@/redux/authSlice";
 import Button from "@/components/Button";
+import Search from "../Search/Search";
+import toastify from "@/components/toastify/toastify";
 
 const cx = classNames.bind(styles);
 function Header() {
@@ -23,11 +25,6 @@ function Header() {
   const listCategory = useSelector(state => state.category.allCategory)
   const cart = useSelector(state => state.cart)
 
-
-
-
-
-
   const userMenus = [
     {
       title: 'Quản Trị website',
@@ -35,15 +32,15 @@ function Header() {
       to: config.privateRouter.dashboard
     },
     {
+      title: 'Hồ sơ',
+      check: true,
+      to: config.publicRouter.profile
+    },
+    {
       title: 'Đơn hàng',
       to: config.publicRouter.listOrders,
       check: true
-    },
-    {
-      title: 'Hồ sơ',
-      check: true
-    },
-    {
+    },{
       title: 'Đăng xuất',
       check: true,
       logout: true,
@@ -53,11 +50,14 @@ function Header() {
   const handleClickLogout = async () => {
     dispatch(logoutStart())
       try {
-        const accessToken =user?.currentUser?.accessToken
+        const accessToken = user?.currentUser?.accessToken
           const res = await authService.logOut(accessToken, axiosJWT);
           if (res) {
               dispatch(logoutSuccess())
-              window.location.reload()
+              toastify({
+                type: 'success',
+                message: "Đã đăng xuất"
+              })
           }
       }catch(err) {
           dispatch(logoutFailed())
@@ -103,7 +103,7 @@ function Header() {
                 </div>
               </div>
     
-              <div className={cx("col-md-7 col-sm-7 col-lg-7", "wrap-header-4")}>
+              <div className={cx("col-md-6 col-sm-6 col-lg-6", "wrap-header-4")}>
                 <nav className={cx("navbar-main")}>
                   <ul className={cx("list-main")}>
                     {
@@ -119,14 +119,13 @@ function Header() {
                 </nav>
               </div>
   
-              <div className={cx("col-md-3 col-sm-3 col-lg-3", "action", "wrap-header-3")}>
+              <div className={cx("col-md-4 col-sm-4 col-lg-4", "action", "wrap-header-3")}>
                 <div className={cx("header-action")}>
                   
                   <div className={cx("action-item")}>
-                      <div className={cx("search-menu")}>
-                        <input type="text" placeholder="Tìm kiếm"/>
-                      </div>
+                      <Search/>
                   </div>
+
   
                   <div className={cx("action-item")}>
                    <div className={cx('div-cart')}>

@@ -10,4 +10,5 @@ route.post('/create', categoryController.createCategory)
 route.put('/:id', categoryController.updateCategory)
 route.delete('/:id', categoryController.deleteCategory)
 
+
 module.exports = route

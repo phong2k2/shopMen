@@ -130,6 +130,9 @@ function ListOrders() {
                                                                                 </div>
                                                                                 <div className={cx('title-product')}>
                                                                                     <h3>{itemProduct?.name}</h3>
+                                                                                    <div className={cx('item-desc')}>
+                                                                                        <span>{`${itemProduct?.size} / ${itemProduct?.color}`}</span>
+                                                                                    </div>
                                                                                     <span>Số lượng: {itemProduct?.amount}</span>
                                                                                 </div>
                                                                             </div>

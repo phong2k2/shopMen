@@ -41,7 +41,12 @@ function Orders() {
     const handleDeleteOrder = async (id) => {
         try {
             const res = await orderService.deleteOrder(accessToken, id, axiosJWT)
-            console.log(res)
+            if(res) {
+                const orderAfterDelete = listOrders.filter((val) => {
+                    return val._id !== id
+                })
+                setListOrders(orderAfterDelete)
+            }
         }catch (err) {
             console.log(err)
         }

@@ -1,0 +1,150 @@
+.wrap {
+    padding: 50px;
+
+    .header-title {
+        display: flex;
+        align-items: center;
+    
+        .image {
+            display: block;
+            padding-right: 10px;
+            
+            img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+
+        .action{
+            .name {
+                font-size: 1.5rem;
+                font-weight: 700;
+                padding-bottom: 2px;
+            }
+
+            .edit-profile {
+                a {
+                    display: block;
+                    font-size: 1.6rem;
+                    font-weight: 400;
+                    color: #888;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+    .padding {
+        padding: 0 40px;
+    }
+    .content-body {
+        width: 100%;
+        padding: 0 40px;
+        box-shadow: 0 2px 8px rgba(0 0 0 / 6%);
+
+        .title-body {
+            padding: 10px 0;
+            border-bottom: 1px solid #aaa8a8;
+
+            h1 {
+                margin: 0;
+                font-size: 2rem;
+                font-weight: 600;
+                color: #333;
+            }
+            div {
+                font-size: 1.4rem;
+                font-weight: 500;
+                color: #555;
+            }
+        }
+
+        .box-content {
+            padding: 50px;
+
+            .information {
+                border-right: 1px solid #aaa8a8;
+            }
+            table {
+                width: 500px;
+                
+                tr {
+                    display: flex;
+                    .title {
+                        text-align: right;
+                        color: rgba(85,85,85,.8);
+                        overflow: hidden;
+                        padding-bottom: 30px;
+                        white-space: nowrap;
+                        min-width: 20%;
+
+                        label {
+                            text-align: right;
+                            color: rgba(85,85,85,.8);
+                            white-space: nowrap;
+                            font-size: 1.4rem;
+                        }
+                    }
+
+                    .info {
+                        box-sizing: border-box;
+                        padding-left: 20px;
+                        padding-bottom: 30px;
+
+                        div {
+                            font-size: 1.3rem;
+                        }
+                    }
+                }
+
+                .box-gender {
+                    display: flex;
+
+                    .info {
+                        display: flex;
+
+                        .gender {
+                            display: flex;
+                            margin-right: 20px;
+                            align-items: center;
+
+                            input {
+                                box-shadow: none !important;
+                            }
+
+                            span {
+                                padding-left: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .content-image {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                
+                .img-right {
+                    width: 100px;
+                    height: 100px;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: contain;
+                    }
+                }
+
+                .upload {
+                    input {
+                        box-shadow: none;
+                        background-color: transparent;
+                    }
+                }
+            }
+        }
+    }
+}

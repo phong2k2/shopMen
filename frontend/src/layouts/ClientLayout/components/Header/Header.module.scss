@@ -1,5 +1,8 @@
 
 .wrapper-header {
+    --search-button-width: 60px;
+
+
     position: fixed;
     right: 0;
     left: 0;
@@ -78,7 +81,7 @@
                         padding-left: 0;
                         background: #ecf2f5;
                         z-index: 90;
-                        min-width: 150px;
+                        min-width: 200px;
                         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
                         border-radius: 4px;
                         display: none;
@@ -170,26 +173,9 @@
                     }   
                 }
             }
-            .search-menu {
-                background-color: #fff;
-                width: 250px;
-                height: 45px;
-                border-radius: 4px;
 
-                input {
-                    background: none;
-                    width: 80%;
-                    height: 100%;
-                    padding: 10px;
-                    font-size: 1.5rem;
-                    color: var(--text-color);
-                    box-shadow: none;
-                    border-radius: 4px;
-                   
-                }
+            
 
-               
-            }
 
             &:hover {
                 cursor: pointer;
@@ -246,7 +232,7 @@
                     left: 0px;
                     background-color: #00b156;
                     width: 0;
-                    height: 5px;
+                    height: 6px;
                     transition: width .2s ease-in-out;
                 }
 

@@ -15,27 +15,22 @@ const cartSlice = createSlice( {
     reducers: {
         addToCart(state, action) {
           const { orderItem} = action.payload
-          const itemOrder = state?.cartItems.find(item => item.product === orderItem.product)
+          const itemOrder = state?.cartItems.find(item => item.product === orderItem.product &&
+            item.color === orderItem.color &&
+            item.size === orderItem.size
+          )
 
           if(itemOrder) {
             itemOrder.amount += orderItem?.amount
             toastify({
               type: 'success',
               message: "Sản phẩm đã được thêm vào giỏ hàng",
-              options: {
-                position: "top-right",
-                theme: "dark",
-              }
             })
           }else {
             state.cartItems.push(orderItem)
             toastify({
               type: 'success',
-              message: "Sản phẩm đã được thêm vào giỏ hàng",
-              options: {
-                position: "top-right",
-                theme: "dark",
-              }
+              message: "Sản phẩm đã được thêm vào giỏ hàng"
             })
           }
         },
@@ -57,11 +52,7 @@ const cartSlice = createSlice( {
               state.cartItems = nextCartItems;
               toastify({
                 type: 'success',
-                message: "Xóa thành công",
-                options: {
-                  position: "top-right",
-                  theme: "dark",
-                }
+                message: "Xóa thành công"
               })
         },
          getTotals(state) {

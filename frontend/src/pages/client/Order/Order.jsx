@@ -43,6 +43,7 @@ function Order() {
         const fetchUserOrder = async () => {
             try {
             const res = await userService.getDetailUser(user.accessToken, id, axiosJWT )
+            console.log(res)
                 setShippingAddress(res.data)
             }catch (err) {
                 console.log(err)
@@ -122,6 +123,7 @@ function Order() {
             [e.target.name] : e.target.value,
         })
     }
+
 
     //Tạo đơn hàng
     const handleClickCreateOrder = async () => {
@@ -217,8 +219,8 @@ function Order() {
                                                                 <select  value={provinceId} onChange={(e) =>  setProvinceId(e.target.value)} className={cx('field-input')} name="" id="">
                                                                     <option value="">Chọn tỉnh / thành</option>
                                                                     {
-                                                                        provinces?.map((province) => {
-                                                                            return <option key={province?.province_id} value={province?.province_id}>{province?.province_name}</option>
+                                                                        provinces?.map((province, index) => {
+                                                                            return <option key={index} value={province?.province_id}>{province?.province_name}</option>
                                                                         } )
                                                                     }
                                                                 </select>
@@ -249,8 +251,8 @@ function Order() {
                                                                 <select onChange={(e)=> setWardId(e.target.value)} className={cx('field-input')} name="" id="">
                                                                     <option value="">Chọn phường / xã</option>
                                                                     {
-                                                                        wards?.map(wardItem => {
-                                                                            return <option key={wardItem?.ward_id} value={wardItem?.ward_id}>{wardItem?.ward_name}</option>
+                                                                        wards?.map((wardItem, index )=> {
+                                                                            return <option key={index} value={wardItem?.ward_id}>{wardItem?.ward_name}</option>
                                                                         })
                                                                     }
                                                                 </select>
@@ -270,7 +272,7 @@ function Order() {
                                                 <div className={cx('section-content')}>
                                                     <div className={cx('radio-wrapper')}>
                                                      <div className={cx('radio-content')}>
-                                                        <input type="radio" className={'radio-input'} />
+                                                        <input checked type="radio" className={'radio-input'} />
                                                         <span className={cx('radio-label')}>Giao hàng tận nơi</span>
                                                         <span className={cx('radio-price')}>{formatPrice(37000)}</span>
                                                      </div>
@@ -285,7 +287,7 @@ function Order() {
                                                 <div className={cx('section-content')}>
                                                     <div className={cx('radio-wrapper')}>
                                                       <div className={cx('radio-content')}>
-                                                        <input type="radio" className={'radio-input'} />
+                                                        <input checked type="radio" className={'radio-input'} />
                                                         <span className={cx('radio-label')}>Thanh toán khi giao hàng</span>
                                                       </div>
                                                     </div>
@@ -320,9 +322,9 @@ function Order() {
 
                                             <tbody>
                                                 {
-                                                    cart?.cartItems?.map(proItem => {
+                                                    cart?.cartItems?.map((proItem, index) => {
                                                         return (
-                                                            <tr className={cx('tr-title')} key={proItem?.product}>
+                                                            <tr className={cx('tr-title')} key={index}>
                                                                 <td className={cx('product-img')}>
                                                                     <div className={cx('product-thumbnail-wrapper')}>
                                                                         <img  src={`http://localhost:3000/${proItem?.image}`}  alt="" />
@@ -331,6 +333,9 @@ function Order() {
                                                                 </td>
                                                                 <td className={cx('product-description')}>
                                                                     <span className={cx('name')}>{proItem?.name}</span>
+                                                                    <div className={cx('item-desc')}>
+                                                                        <span>M / Trắng</span>
+                                                                    </div>
                                                                 </td>
                                                                 <td></td>
                                                                 <td className={cx("product-price")}>

@@ -242,8 +242,14 @@ form {
                     color: var(--text-color);
 
                 }
-            }
+                
+                .item-desc {
+                    font-size: 12px;
+                    color: #777;
+                    margin-top: 3px;
+                }
 
+            }
             .product-price {
                 text-align: end;
                 span {

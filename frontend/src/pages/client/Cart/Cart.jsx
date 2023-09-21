@@ -109,6 +109,7 @@ function Cart() {
                                                 <div className={cx('table-cart')}>
                                                     {
                                                         cart?.cartItems?.map((cartItem, index) => {
+                                                            console.log(cartItem)
                                                             return (
                                                                 <div key={index} className={cx('item-cart')}>
                                                                     <div className={cx('left')}>
@@ -118,7 +119,10 @@ function Cart() {
                                                                     </div>
                                                                     <div className={cx('right')}>
                                                                         <div className={cx('item-info')}>
-                                                                            <h3>{cartItem.name}</h3>
+                                                                            <h3>{cartItem?.name}</h3>
+                                                                             <div className={cx('item-desc')}>
+                                                                                <span>{`${cartItem?.size} / ${cartItem?.color}`}</span>
+                                                                            </div>
                                                                         </div>
                                                                         <div className={cx('item-quantity')}>
                                                                             <input type="button" value='-' onClick={()=> handleChangeCount('decrease',cartItem?.product, cartItem?.amount === 1)} className={cx('qty-btn')}/>

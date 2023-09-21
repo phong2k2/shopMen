@@ -1,7 +1,41 @@
+const express = require('express');
 const Product = require('../app/model/Product');
 const Category = require('../app/model/Category');
 const Subcategory = require('../app/model/SubCategory');
-const { updateCategory } = require('./CategoryService');
+const ProductColor = require('../app/model/ProductColor');
+const ProductSize = require('../app/model/ProductSize');
+const path = require('path');
+const fs = require('fs');
+
+//Search Product
+const searchProduct =  ({q, page, limit}) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            const skipPage = (page-1) * limit
+            const products = await Product.find({name: {$regex: q, $options: "i"}})
+            .sort({createdAt: -1, updatedAt: -1})
+            .limit(limit)
+            .skip(skipPage)
+
+
+            const total = await Product.countDocuments({
+                name: { $regex: q, $options: "i" },
+            });
+            resolve({
+                status: 'Success',
+                message: 'Search successfully',
+                total: total,
+                data: products
+            })
+        }catch (err) {
+            reject({
+                status: 'Error',
+                message: 'Failed to search product',
+                error: err
+            })
+        }
+    })
+}
 
 // Add Product
 const createProduct = (data) => {
@@ -52,13 +86,27 @@ const createProduct = (data) => {
 const updateProduct = (id, info) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const checkProduct = await Product.find({_id: id})
+
+            const checkProduct = await Product.findOne({_id: id})
             if (checkProduct === null) {
                 resolve({
                     status: 'ERR',
                     message: 'The product is not defined'
                 })
             }
+
+            // Xóa ảnh cũ
+            if ( checkProduct.image !== info.image) {
+                const oldImagePath = path.join('src/public/images', checkProduct.image);
+                
+                console.log('__dirname', fs.existsSync(oldImagePath))
+                if (fs.existsSync(oldImagePath)) {
+                    // Xóa ảnh cũ
+                    fs.unlinkSync(oldImagePath);
+                    console.log('Old image deleted:', oldImagePath);
+                }
+            }
+
             const updateProduct = await Product.findOneAndUpdate({_id: id}, info, {new: true})
             resolve({
                 status: 'Success',
@@ -169,11 +217,10 @@ const getDetailsProduct = (slug) => {
 // Get Product Detail Id
 const getDetailsProductId = (id) => {
     return new Promise( async (resolve, reject) => {
-        console.log(id)
         try {
             const product = await Product.findOne({
                 _id: id,
-            })
+            }).populate('category')
             
             if(product === null) {
                 resolve({
@@ -181,14 +228,14 @@ const getDetailsProductId = (id) => {
                     message: 'The product is not defined'
                 })
             }
-            const listProduct = {
-                ...product._doc,
-                'image': `http://localhost:3000/${product._doc.image}`
-            }
+            // const listProduct = {
+            //     ...product._doc,
+            //     'image': `http://localhost:3000/${product._doc.image}`
+            // }
             resolve({
                 status: 'OK',
                 message: 'SUCESS',
-                data: listProduct
+                data: product
             })
         }catch (err) {
             reject({
@@ -204,6 +251,7 @@ const getDetailsProductId = (id) => {
 const deleteProduct = (id) => {
     return new Promise( async (resolve, reject) => {
         try {
+            
             const checkDeleteProduct = await Product.findOne({_id: id});
             if (!checkDeleteProduct) {
                 return reject({
@@ -211,6 +259,11 @@ const deleteProduct = (id) => {
                     message: 'No products found',
                 })
             }
+            await Category.updateMany(
+                { product: id },
+                { $pull: { product: id } }
+              );
+
             await Product.findOneAndDelete({_id: id})
              resolve({
                 status: 'OK',
@@ -226,11 +279,173 @@ const deleteProduct = (id) => {
     })
 }
 
+// Create variant
+const createColor = (valueColor) => {
+    return new Promise( async (resolve, reject) => {
+        const { color, image, product} = valueColor
+        try {
+            const existingColor = await ProductColor.findOne({
+                color: color,
+                product: product,
+            });
+
+            if(existingColor) {
+                return reject({
+                    status: 'Error',
+                    message: 'Variations already exist',
+                })
+            }
+            
+
+            const newColor = await ProductColor.create({
+                color,
+                image,
+                product
+            })
+         
+
+            if(newColor) {
+                resolve({
+                    status: 'Success',
+                    message: 'Successful request',
+                    data: newColor
+                })
+            }
+        }catch(err) {
+            reject({
+                status: 'Error',
+                message: 'Failed to crate variant',
+                error: err
+            })
+        }
+    })
+}
+
+// get Product Color
+const getProductColor = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allColor = await ProductColor.find({
+                product: id
+            })
+            resolve({
+                status: 'Success',
+                message: 'Successful request',
+                data: allColor
+            })
+        }catch(err) {
+            reject(err)
+        }
+    })
+}
+
+const deleteColor = (id) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            const checkColor = await ProductColor.findOne({_id: id});
+            if(!checkColor) {
+                return resolve({
+                    message: 'Not found color'
+                })
+            }
+            await ProductColor.findOneAndDelete({_id: id});
+            resolve({
+                status: 'Success',
+                message: 'Delete Successful',
+            })
+        }catch (err) {
+            reject(err)
+        }
+    })
+}
+
+// Create size
+const createSize = (valueSize) => {
+    return new Promise(async (resolve, reject) => {
+        const {size, product} = valueSize
+        try {
+            const existingVariant = await ProductSize.findOne({
+                size: size,
+                product: product,
+            });
+
+            if(existingVariant) {
+                return reject({
+                    status: 'Error',
+                    message: 'Variations already exist',
+                })
+            }
+
+            const newSize = await ProductSize.create({
+                size,
+                product
+            })
+               
+            if(newSize) {
+                resolve({
+                    status: 'Success',
+                    message: 'Successful request',
+                    data: newSize
+                })
+            }
+        }catch(err) {
+            reject(err);
+        }
+    })
+}
+
+
+// get Product Color
+const getProductSize = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allSize = await ProductSize.find({
+                product: id
+            })
+            resolve({
+                status: 'Success',
+                message: 'Successful request',
+                data: allSize
+            })
+        }catch(err) {
+            reject(err)
+        }
+    })
+}
+
+//Delete size
+const deleteSize = (id) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            const checkColor = await ProductSize.findOne({_id: id});
+            if(!checkColor) {
+                return resolve({
+                    message: 'Not found color'
+                })
+            }
+            await ProductSize.findOneAndDelete({_id: id});
+            resolve({
+                status: 'Success',
+                message: 'Delete Successful',
+            })
+        }catch (err) {
+            reject(err)
+        }
+    })
+}
+
 module.exports = {
     createProduct,
     updateProduct,
     getAllProducts,
     deleteProduct,
     getDetailsProduct,
-    getDetailsProductId
+    getDetailsProductId,
+    createColor,
+    getProductColor,
+    deleteColor,
+    createSize,
+    getProductSize,
+    deleteSize,
+    searchProduct
 }

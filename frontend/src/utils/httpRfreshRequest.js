@@ -15,19 +15,25 @@ const refreshToken = async () => {
 
 export const createAxios = (user, dispatch, stateSuccess) => {
     axiosInstance.interceptors.request.use( async (config) => {
-            let date = new Date();
-            const decodedToken = jwt_decode(user?.accessToken);
-            if (decodedToken.exp < date.getTime() / 1000) {
-                const data = await refreshToken();
+            if (user && user.accessToken) { 
+                const decodedToken = jwt_decode(user?.accessToken);
+                let date = new Date();
+                if (decodedToken.exp < date.getTime() / 1000) {
+                    try {
+                        const data = await refreshToken();
 
-                const refreshUser = {
-                    ...user,
-                    accessToken: data.accessToken,
-                };
-                 dispatch(stateSuccess(refreshUser));
-                config.headers['token'] = 'Bearer ' + data.accessToken;
+                        const refreshUser = {
+                            ...user,
+                            accessToken: data.accessToken,
+                        };
+                        dispatch(stateSuccess(refreshUser));
+                        config.headers['token'] = 'Bearer ' + data.accessToken;
+                    }catch (err) {
+                        console.error('Làm mới token thất bại:', err);
+                    }
+                }
             }
-            return config;
+        return config;
         },
         (err) => {
             return Promise.reject(err);

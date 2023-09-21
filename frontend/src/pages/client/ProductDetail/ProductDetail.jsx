@@ -1,5 +1,5 @@
 import classNames from "classnames/bind"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as productService from "@/services/adminServices/productService";
@@ -12,8 +12,36 @@ function ProductDetail() {
     const { slug } = useParams()
     const [ detailProduct, setDetailProduct] = useState(null)
     const [ amount, setAmount] = useState(1)
+    const [ color, setColor] = useState([])
+    const [size, setSize] = useState([])
+    const [selectedColor, setSelectedColor] = useState('');
+    const [selectedSize, setSelectedSize] = useState('');
     const dispatch = useDispatch()
-    
+    const colorRef = useRef([])
+
+    const colorMapping = {
+        "Đen": "#000",
+        "Xanh": "#0c2461",
+        "Trắng": "#ffff",
+        "Cam": "#c47a4a ",
+    };
+
+    console.log(size)
+    useEffect(()=> {
+        if(color && size) {
+            setSelectedColor(color[0])
+            setSelectedSize(size[0])
+        }
+    },[color, size])
+
+    const handleChangeSelectColor = (item) => {
+        setSelectedColor(item);
+    }
+
+    const handleChangeSelectSize = (item) => {
+        setSelectedSize(item);
+    }
+
     useEffect(() => {
         const productDetail = async () => {
             try {
@@ -27,6 +55,32 @@ function ProductDetail() {
         }
         productDetail()
     },[])
+
+    //Get size & color
+    useEffect(() => {
+        const getProductColor = async () => {
+            try {
+                const res = await productService.getProductColor(detailProduct?._id)
+                if(res) {
+                    setColor(res)
+                }
+            }catch (err) {
+                console.log(err)
+            }
+        }
+        const getProductSize = async () => {
+            try {
+                const res = await productService.getProductSize(detailProduct?._id)
+                if(res) {
+                    setSize(res)
+                }
+            }catch (err) {
+                console.log(err)
+            }
+        }
+        getProductColor()
+        getProductSize()
+    },[detailProduct?._id])
 
     const handleChangeCount = (type, limited) => {
         if(type === 'decrease') {
@@ -66,17 +120,20 @@ function ProductDetail() {
             dispatch(addToCart({
                 orderItem : {
                     name: detailProduct?.name,
-                    image: detailProduct?.image[0],
+                    image: selectedColor?.image[0],
                     amount: amount,
                     price: detailProduct?.price,
                     discount: detailProduct?.discount,
-                    product: detailProduct?._id
+                    color: selectedColor?.color,
+                    size: selectedSize?.size,
+                    product: detailProduct?._id,
                 }
             }))
             dispatch(getTotals());
         }
         
     }
+    
 
     return ( 
         <div className={cx('product-detail')}>
@@ -120,15 +177,14 @@ function ProductDetail() {
                                             <div className={cx('div-detail')}>
                                                 <ul className={cx('slide-product')}>
                                                     {
-                                                        detailProduct?.image.map((image, index) => {
+                                                        selectedColor?.image?.map((urlImgae, index) => {
                                                             return (
                                                                 <li key={index} className={cx('gallery-item')}>
-                                                                    <img src={`http://localhost:3000/${image}`} alt="" />
+                                                                <img src={`http://localhost:3000/${urlImgae}`} alt="" />
                                                                 </li>
                                                             )
                                                         })
                                                     }
-                                                    
                                                 </ul>
                                             </div>
                                         </div>
@@ -148,6 +204,55 @@ function ProductDetail() {
                                         
                                             <div className={cx('select-action')}>
                                                 {/* Biến thể */}
+                                                <div className={cx('variant')}>
+                                                    <div className={cx('color')}>
+                                                        <div className={cx('select-swap')}>
+                                                            
+                                                            {
+                                                                color?.map((itemColor, index) => {
+                                                                    const colorStyle = {
+                                                                        backgroundColor: colorMapping[itemColor?.color] || '#defaultcolor',
+                                                                    };
+                                                                    return (
+                                                                        <div
+                                                                            ref={colorRef}
+                                                                             key={index} 
+                                                                             className={cx('swatch-element',
+                                                                             selectedColor?.color === itemColor?.color ? 'selector' : ''
+                                                                        )}>
+                                                                            <input onChange={()=> handleChangeSelectColor(itemColor)}  checked={selectedColor?.color === itemColor?.color} value={itemColor?.color} id={`swatch-1-${itemColor?.color}`} name="gender"  type="radio" />
+                                                                            <label htmlFor={`swatch-1-${itemColor?.color}`} className={cx('block-select')}>
+                                                                                <span style={colorStyle}>{itemColor?.color}</span>
+                                                                            </label>
+                                                                        </div>
+
+                                                                    )
+                                                                })
+                                                            }
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div className={cx('size')}>
+                                                        <div className={cx('select-swap')}>
+
+                                                            {size?.map((itemSize, index) => {
+                                                                return (
+                                                                <div
+                                                                key={index}
+                                                                className={cx('swatch-element', selectedSize?.size === itemSize?.size ? 'active-size' : '' )}
+                                                                >
+                                                                    <input  id={`swatch-1-${itemSize?.size}`} onChange={()=>handleChangeSelectSize(itemSize)} name="option1" value={itemSize?.size}  type="radio" />
+                                                                    <label htmlFor={`swatch-1-${itemSize?.size}`} className={cx('block-select-size')}>
+                                                                        <span>{itemSize?.size}</span>
+                                                                    </label>
+                                                                </div>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                                 <div className={cx('quantity')}>
                                                     <input type="button" value='-'onClick={() => handleChangeCount('decrease', amount ===1)} className={cx('qty-btn')}/>
                                                     <input type="text" value={amount}  onChange={handleChangeAmount} onBlur={handleBlur} className={cx('quantity-selector')}/>

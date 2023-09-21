@@ -76,7 +76,7 @@ export const deleteOrder = async (accessToken, id , axiosJWT) => {
                 Authorization: `Bearer ${accessToken}`
             }
         })
-        return res.data 
+        return res
     }catch(err) {
         console.log(err)
     }

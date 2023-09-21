@@ -1,6 +1,5 @@
 const Category = require('../app/model/Category')
 const Product = require('../app/model/Product')
-const Subcategory = require('../app/model/SubCategory')
 
 const createCategory = (newCategory) => {
     return new Promise(async (resolve, reject) => {
@@ -154,6 +153,11 @@ const updateCategory = (id, data) => {
 const deleteCategory = (id) => {
     return new Promise( async (resolve, reject) => {
         try {
+            await Product.updateMany(
+                { category: id },
+                { category: null }
+            );
+
             await Category.deleteOne({_id: id})
             resolve({
                 status: 'Success',

@@ -13,13 +13,13 @@ function MenuItem({proItem, onClick}) {
 
 
     return ( 
-        <div className={cx("col-md-3", "owl-item")}>
+        <div className={cx( "owl-item")}>
             <div className={cx('product-items')}>
             <div className={cx("product-img")}>
                 <Link to={`/products/${proItem?.slug}`}>
                 <img
                     className={cx("image-resize")}
-                    src={`http://localhost:3000/${proItem?.image[0]}`}
+                    src={`http://localhost:3000/${proItem?.image}`}
                 />
                 </Link>
             </div>

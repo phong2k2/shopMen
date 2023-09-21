@@ -8,7 +8,8 @@ const privateRouter = {
     editProduct: '/admin/product/:id',
     indexUser: '/admin/user/index',
     order: '/admin/order/index',
-    detailOrder: '/admin/order/detail/:id'
+    detailOrder: '/admin/order/detail/:id',
+    variant: '/admin/variant/:id',
 }
 
 const publicRouter = {
@@ -20,6 +21,7 @@ const publicRouter = {
     order: '/checkout/:id',
     listOrders: '/order',
     profile: '/profile',
+    search: '/search',
 }
 
 export {

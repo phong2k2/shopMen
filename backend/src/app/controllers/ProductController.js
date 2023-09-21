@@ -1,23 +1,16 @@
 const ProductService = require('../../Services/ProductService')
 
 
+
 const ProductController = {
     // Add Product
     createProduct: async (req, res) => {
         try {
-            const imgProduct = req.files.map(file => {
-                return file.filename
-            }) 
-            let info = {
-                name: req.body.name,
-                price: req.body.price,
-                discount: req.body.discount,
-                image: imgProduct,
-                countInStock: req.body.countInStock,
-                description: req.body.description,
-                hot: req.body.hot,
-                category: req.body.category
+            const info = {
+                ...req.body,
+                image: req.file.filename,
             }
+            
             if(info){
                 const response = await ProductService.createProduct(info)
                 res.status(200).json(response)
@@ -30,19 +23,10 @@ const ProductController = {
     // Upadte product 
     updateProduct: async (req, res) => {
         try {
-            const imgProduct = req.files.map(file => {
-                return file.filename
-            }) 
-
-            let info = {
-                name: req.body.name,
-                price: req.body.price,
-                discount: req.body.discount,
-                image: imgProduct,
-                countInStock: req.body.countInStock,
-                description: req.body.description,
-                hot: req.body.hot,
-                category: req.body.category
+            const urlImage = req.body.image ? req.body.image : req.file.filename 
+            const infoUpdate = {
+                ...req.body,
+                image: urlImage
             }
 
             const proId = req.params.id
@@ -52,8 +36,8 @@ const ProductController = {
                     message: 'Id product not found'
                 })
             }
-            if(info) {
-                const response = await ProductService.updateProduct(proId, info)
+            if(infoUpdate) {
+                const response = await ProductService.updateProduct(proId, infoUpdate)
                 res.status(200).json(response)
             }
         }catch (err) {
@@ -132,7 +116,123 @@ const ProductController = {
         }
     },
 
-    
+    // Create color
+    createColor: async (req, res) => {
+        try {
+            const imgColor = req.files.map(file => {
+                return file.filename
+            }) 
+            
+            const valueColor = {
+                ...req.body,
+                image: imgColor
+            }
+            const response = await ProductService.createColor(valueColor)
+            res.status(200).json(response)
+        }catch(err) {
+            res.status(500).json(err)
+        }
+    },
+
+    //Get  color
+    getProductColor: async (req, res) => {
+        try {
+            const id = req.params.id
+            if(!id) {
+                return res.status(404).json({
+                    status: 'Error',
+                    message: 'The id is required',
+                })
+            }
+            const response = await ProductService.getProductColor(id)
+            res.status(200).json(response)
+        }catch (err) {
+            res.status(500).json(err)
+        }
+    },
+
+    //Delete Color
+    deleteColor: async (req, res) => {
+        try {
+            const id = req.params.id
+            if(!id) {
+                return res.status(404).json({
+                    status: 'Error',
+                    message: 'The id is required',
+                })
+            }
+            const response = await ProductService.deleteColor(id)
+            res.status(200).json(response)
+        }catch (err) {
+            res.status(500).json(err)
+        }
+    },
+
+    // Create Size
+    createSize: async (req, res) => {
+        console.log(req.body)
+        try {
+            const response = await ProductService.createSize(req.body)
+            res.status(200).json(response)
+        }catch(err) {
+            res.status(500).json(err)
+        }
+    },
+
+    // Get Size
+    getProductSize: async (req, res) => {
+        try {
+            const id = req.params.id
+            if(!id) {
+                return res.status(404).json({
+                    status: 'Error',
+                    message: 'The id is required',
+                })
+            }
+            const response = await ProductService.getProductSize(id)
+            res.status(200).json(response)
+        }catch (err) {
+            res.status(500).json(err)
+        }
+    },
+
+    deleteSize:async(req, res) => {
+        try {
+            const id = req.params.id
+            if(!id) {
+                return res.status(404).json({
+                    status: 'Error',
+                    message: 'The id is required',
+                })
+            }
+            const response = await ProductService.deleteSize(id)
+            res.status(200).json(response)
+        }catch (err) {
+            res.status(500).json(err)
+        }
+    },
+
+    //Search Product
+    searchProduct: async (req, res) => {
+        try {
+            const {q, page, type} = req.query
+            if(!q && !type) {
+                return res.status(404).json({
+                    status: 'Error',
+                    message: 'Request not received',
+                })
+            }
+            const props = {
+                'less': 5,
+                'more': 10
+            }
+            const limit = props[type]
+            const response = await ProductService.searchProduct({q, page, limit})
+            res.status(200).json(response)
+        }catch (err) {
+            res.status(500).json(err)
+        }
+    }
 }
 
 

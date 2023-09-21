@@ -4,7 +4,6 @@ const middlewareController = {
     verifyToken: (req, res, next) => {
 
         const authHeader = req.headers['authorization'];
-
         console.log(authHeader)
         if(authHeader) {
             const accessToken = authHeader.split(" ")[1]
@@ -25,7 +24,6 @@ const middlewareController = {
     },
     authUserMiddleware: (req, res, next) => {
         middlewareController.verifyToken(req, res, () => {
-            console.log(req.params.id)
             if(req.user.id === req.params.id || req.user.admin) {
                 next()
             }else {

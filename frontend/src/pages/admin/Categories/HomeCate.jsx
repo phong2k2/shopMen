@@ -26,8 +26,13 @@ function HomeCate() {
         try{
             if(id) {
                 const res = await categoryService.deleteCategory({id})
-                setListCate(res)
-                window.location.reload()
+                console.log(res)
+                if(res) {
+                    const categoryAfterDelete = listCate.filter((val) => {
+                        return val._id !== id
+                    })
+                    setListCate(categoryAfterDelete)
+                }
             }
         }catch(err) {
             console.log(err)

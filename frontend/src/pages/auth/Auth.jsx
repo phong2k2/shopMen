@@ -10,6 +10,7 @@ import {
 } from "@/redux/authSlice";
 import { useNavigate } from "react-router-dom";
 import config from "@/config";
+import toastify from "@/components/toastify/toastify";
 
 const state = () => {
   return {
@@ -48,20 +49,30 @@ function Auth() {
       if (res) {
         dispatch(loginSuccess(res));
         navigate(config.publicRouter.home)
+        toastify({
+          type: 'success',
+          message: "Đăng nhập thành công"
+        })
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleSubmitRegister = async () => {
+  const handleSubmitRegister = async (e) => {
+    e.preventDefault();
     dispatch(registerStart());
     try {
       const res = await authService.registerUser(stateRegister);
+      console.log(res)
       if (res) {
         dispatch(registerSuccess(res));
+        toastify({
+          type: 'success',
+          message: "Đăng ký thành công"
+        })
+        window.location.reload()
       }
-      console.log(res)
     } catch (err) {
       console.log(err);
     }
@@ -191,7 +202,7 @@ function Auth() {
                 className="mt-3 btn btn-custom--tem btn-left signIn"
                 onClick={handleClickSignIn}
               >
-                Sing in
+                Log in
               </button>
             </div>
             <div className=" ovelaypane overlay-right">
@@ -202,7 +213,7 @@ function Auth() {
                 className="mt-3 btn btn-custom--tem signUp"
                 onClick={handleClickSingup}
               >
-                Sing up
+                Sign up
               </button>
             </div>
           </div>

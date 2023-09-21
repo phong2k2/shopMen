@@ -19,6 +19,9 @@ import ListOrders from '@/pages/client/ListOrders/ListOrders';
 import Orders from '@/pages/admin/Orders';
 import DetailOrder from '@/pages/admin/DetailOrder';
 import Profile from '@/pages/client/Profile';
+import VariantProduct from '@/pages/admin/Products/VariantProduct';
+import ListProSearch from '@/pages/client/ListProSearch/ListProSearch';
+
 
 const privateRoutes = [
     {
@@ -58,6 +61,10 @@ const privateRoutes = [
     {
         path: config.privateRouter.detailOrder,
         component: DetailOrder
+    },
+    {
+        path: config.privateRouter.variant,
+        component: VariantProduct
     }
 ]
 
@@ -72,7 +79,8 @@ const publicRoutes = [
     },{
         path: config.publicRouter.auth,
         component: Auth,
-        layout: HeaderOnly
+        layout: HeaderOnly,
+        auth: true
     },
     {
         path: config.publicRouter.productDetail,
@@ -98,6 +106,11 @@ const publicRoutes = [
         path: config.publicRouter.profile,
         component: Profile,
         layout: HeaderOnly
+    },
+    {
+        path: config.publicRouter.search,
+        component: ListProSearch,
+        layout: HeaderOnly,
     }
 ]
 

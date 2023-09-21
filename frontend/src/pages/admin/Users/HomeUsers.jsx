@@ -4,7 +4,6 @@ import { createAxios } from "@/utils/httpRfreshRequest";
 import * as userService from '@/services/adminServices/userService'
 import { loginSuccess } from "@/redux/authSlice";
 import { getUsersSuccess } from "@/redux/userSlice";
-import config from "@/config";
 
 function HomeUsers() {
     const user = useSelector((state) => state.auth.login.currentUser)
@@ -31,7 +30,10 @@ function HomeUsers() {
         try {
             const res = await userService.deleteUser(user?.accessToken, id, axiosJWT )
             if(res) {
-                window.location.href = config.privateRouter.indexUser
+                const userAfterDelete = allUsers?.filter((val) => {
+                    return val._id !== id
+                })
+                dispatch(getUsersSuccess(userAfterDelete))
             }
         }catch (err) {
             console.log(err);

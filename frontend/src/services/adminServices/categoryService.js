@@ -23,7 +23,6 @@ export const getDetailsCategory = async (id) => {
 }
 
 export const getDetailCategory = async ({slug, limit, pageNumber}) => {
-    console.log(pageNumber)
     try {
         const res = await response.get('/admin/category/detail/'+ slug, {
             params: {
@@ -79,7 +78,7 @@ export const updateCategory = async ({id, name, description}) => {
 export const deleteCategory = async ({id}) => {
     try {
         const res = await response.distroy(`/admin/category/${id}`)
-        return res.data
+        return res
     }catch(err) {
         console.log(err);
     }

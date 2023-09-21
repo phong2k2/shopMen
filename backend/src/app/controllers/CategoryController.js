@@ -37,7 +37,6 @@ const CategoryController = {
         try {
             const slug = req.params.slug
             const { limit, page} = req.query
-                console.log(limit, page)
             if(!slug) {
                 return res.status(412).json({
                     status: 'ERR',

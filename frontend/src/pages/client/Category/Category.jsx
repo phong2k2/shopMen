@@ -116,13 +116,13 @@ function Category() {
                                 {
                                     nameTitle?.product?.map((itemPro, index) => {
                                         return(
-                                            <div key={index} className={cx(' col-md-3')}>
+                                            <div key={index} className={cx('col-md-3 mt-5')}>
                                                 <div className={cx('product-block')}>
                                                     <div className={cx('product-img')}>
                                                         <Link to={`/products/${itemPro?.slug}`}>
                                                             <picture>
                                                                 <source media="(max-width: 767px)" />
-                                                                <img src={`http://localhost:3000/${itemPro?.image[0]}`} alt="Anh" />
+                                                                <img src={`http://localhost:3000/${itemPro?.image}`} alt="Anh" />
                                                             </picture>
                                                         </Link>
                                                     </div>
