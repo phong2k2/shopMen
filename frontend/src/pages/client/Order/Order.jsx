@@ -9,31 +9,38 @@ import { loginSuccess } from "@/redux/authSlice";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import * as orderService from '@/services/orderService'
 import config from "@/config";
-import { formatPrice } from "@/components/formatData/formatData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { clearCart, getTotals } from "@/redux/cartSlice";
+import OrderInformation from "./OrderInformation/OrderInformation";
+import DeliveryInformation from "./DeliveryInformation/DeliveryInformation";
+import { useDeliveryInfo } from "@/hook/useContext";
 
 const cx = classNames.bind(styles)
 function Order() {
     const { id } = useParams();
     const dispatch = useDispatch()
-
-    const [provinces, setProvinces] = useState([])
-    const [provinceId ,setProvinceId] = useState()
-    const [districts ,setDistricts] = useState([])
-    const [districtId, setDistrictId] = useState()
-    const [wards, setWards] = useState([])
-    const [wardId, setWardId] = useState()
-    const [city, setCity] = useState('')
     const navigate = useNavigate()
+
+    const {
+        provinces,
+        setProvinces,
+        provinceId,
+        districts,
+        setDistricts,
+        districtId,
+        wards,
+        setWards,
+        wardId,
+        city,
+        setCity,
+      } = useDeliveryInfo();
 
     const [shippingAddress, setShippingAddress] = useState({
         username: '',
         email: '',
         phone: '',
         address: '',
-        city: '',
       })
     const cart = useSelector((state) => state.cart)
     const user = useSelector((state) => state.auth.login?.currentUser)
@@ -53,40 +60,23 @@ function Order() {
     },[])
 
     useEffect(() => {
-        const fetchPublicProduct = async () => {
-            try {
-                const res = await apiGetProvinces()
-                setProvinces(res)
-            }catch (err) {
-                console.log(err)
-            }
-        }
-        fetchPublicProduct()
-    },[])
-
-    useEffect(() => {
-        const fetchPublicDistrict = async () => {
-            try {
-                const res = await apiGetDistricts(provinceId)
-                setDistricts(res)
-            }catch (err) {
-                console.log(err)
-            }
-        }
-        fetchPublicDistrict()
-    },[provinceId])
-
-    useEffect(() => {
-        const fetchApiWard = async () => {
-            try {
-                const res = await apiGetWard(districtId)
-                setWards(res)
-            }catch (err) {
-                console.log(err)
-            }
-        }
-        fetchApiWard()
-    },[districtId])
+        const fetchData = async () => {
+          try {
+            const [provinces, districtsRes, wardsRes] = await Promise.all([
+                apiGetProvinces(),
+                apiGetDistricts(provinceId),
+                apiGetWard(districtId),
+            ]);
+            setProvinces(provinces)
+            setDistricts(districtsRes);
+            setWards(wardsRes);
+          } catch (err) {
+            console.error(err);
+          }
+        };
+      
+        fetchData();
+      }, [provinceId, districtId]);
 
     useEffect(() => {
         const selectedProvince = provinces.find((province) => province.province_id === provinceId);
@@ -126,22 +116,21 @@ function Order() {
 
 
     //Tạo đơn hàng
-    const handleClickCreateOrder = async () => {
+    const handleClickCreateOrder = async (values) => {
         try {
             const formData = {
                 orderItems: cart?.cartItems,
-                fullName: shippingAddress?.username,
-                address: shippingAddress?.address,
-                email: shippingAddress?.email,
+                fullName: values?.username,
+                address: values?.address,
+                email: values?.email,
                 city: city,
-                phone: shippingAddress?.phone,
+                phone: values?.phone,
                 shippingPrice: diliveryPrice,
                 totalPrice: totalPrice,
                 user: id,
             }
             const res = await orderService.createOrder(user.accessToken, formData, axiosJWT)
-            console.log(res)
-            if(res.data) {
+            if(res?.data) {
                 navigate('/order')
                 dispatch(clearCart())
                 dispatch(getTotals())
@@ -174,132 +163,7 @@ function Order() {
                                 </ul>
                             </div>
                             <div className={cx('main-content')}>
-                                <div className={cx('step')}>
-                                    <div className={cx('step-section')}>
-                                        <h2>Thông tin giao hàng</h2>
-                                        <div className={cx('section-content')}>
-                                            <div className={cx('fieldset')}>
-                                                <div className={cx('field')}>
-                                                    <div className={cx('field-input-wrapper')}>
-                                                        <label className={cx('filed-label')} htmlFor="">Họ và tên</label>
-                                                        <input name="username" onChange={handleChangeShopping} value={shippingAddress?.username} className={cx('field-input')} type="text" />
-                                                    </div>
-                                                </div>
-                                                <div className={cx('field', 'field-two-thirds')}>
-                                                    <div className={cx('field-input-wrapper')}>
-                                                        <label className={cx('filed-label')} htmlFor="">Email</label>
-                                                        <input name="email" value={shippingAddress?.email} onChange={handleChangeShopping} className={cx('field-input')} type="text" />
-                                                    </div>
-                                                </div>
-                                                <div className={cx('field', 'field-two-thirds')}>
-                                                    <div className={cx('field-input-wrapper')}>
-                                                        <label className={cx('filed-label')} htmlFor="">Số điện thoại</label>
-                                                        <input name="phone" value={shippingAddress?.phone} onChange={handleChangeShopping} className={cx('field-input')} type="text" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className={cx('clear')}></div>
-                                        </div>
-
-                                        <div className={cx('section-content')}>
-                                            <div className={cx('fieldset')}>
-                                                <form action="">
-                                                    <div className={cx('content-box')}>
-                                                        <div className={cx('field')}>
-                                                            <div className={cx('field-input-wrapper')}>
-                                                                <label className={cx('filed-label')} htmlFor="">Địa chỉ</label>
-                                                                <input name="address" value={shippingAddress?.address} onChange={handleChangeShopping} className={cx('field-input')} type="text" />
-                                                            </div>
-                                                        </div>
-                                                        <div className={cx('field', 'field-third')}>
-                                                            <div className={cx('field-input-wrapper')}>
-                                                                <label className={cx('filed-label')} htmlFor="field-label">
-                                                                    Tỉnh / thành
-                                                                </label>
-                                                                <select  value={provinceId} onChange={(e) =>  setProvinceId(e.target.value)} className={cx('field-input')} name="" id="">
-                                                                    <option value="">Chọn tỉnh / thành</option>
-                                                                    {
-                                                                        provinces?.map((province, index) => {
-                                                                            return <option key={index} value={province?.province_id}>{province?.province_name}</option>
-                                                                        } )
-                                                                    }
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className={cx('field', 'field-third')}>
-                                                            <div className={cx('field-input-wrapper')}>
-                                                                <label className={cx('filed-label')} htmlFor="field-label">
-                                                                    Quận / huyện
-                                                                </label>
-                                                                <select value={districtId} onChange={(e) => setDistrictId(e.target.value)} className={cx('field-input')} name="" id="">
-                                                                    <option value="">Chọn quận / huyện</option>
-                                                                    {
-                                                                        districts?.map(districtItem => {
-                                                                            return <option key={districtItem?.district_id} value={districtItem?.district_id}>{districtItem?.district_name}</option>
-                                                                        })
-                                                                    }
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
-                                                        <div className={cx('field', 'field-third')}>
-                                                            <div className={cx('field-input-wrapper')}>
-                                                                <label className={cx('filed-label')} htmlFor="field-label">
-                                                                    Phường / xã
-                                                                </label>
-                                                                <select onChange={(e)=> setWardId(e.target.value)} className={cx('field-input')} name="" id="">
-                                                                    <option value="">Chọn phường / xã</option>
-                                                                    {
-                                                                        wards?.map((wardItem, index )=> {
-                                                                            return <option key={index} value={wardItem?.ward_id}>{wardItem?.ward_name}</option>
-                                                                        })
-                                                                    }
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                            <div className={cx('clear')}></div>
-                                        </div>
-                                        
-                                        <div className={cx('change-pick')}>
-                                            <div className={cx('section-shipping')}>
-                                                <div className={cx('section-header')}>
-                                                    <h2>Phương thức vận chuyển</h2>
-                                                </div>
-                                                <div className={cx('section-content')}>
-                                                    <div className={cx('radio-wrapper')}>
-                                                     <div className={cx('radio-content')}>
-                                                        <input checked type="radio" className={'radio-input'} />
-                                                        <span className={cx('radio-label')}>Giao hàng tận nơi</span>
-                                                        <span className={cx('radio-price')}>{formatPrice(37000)}</span>
-                                                     </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                                                    
-                                            <div className={cx('section-payment')}>
-                                                <div className={cx('section-content')}>
-                                                    <h2>Phương thức thanh toán</h2>
-                                                </div>
-                                                <div className={cx('section-content')}>
-                                                    <div className={cx('radio-wrapper')}>
-                                                      <div className={cx('radio-content')}>
-                                                        <input checked type="radio" className={'radio-input'} />
-                                                        <span className={cx('radio-label')}>Thanh toán khi giao hàng</span>
-                                                      </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className={cx('step-footer')}>
-                                        <button onClick={handleClickCreateOrder}>Hoàn tất đơn hàng</button>
-                                    </div>
-                                </div>
+                                <DeliveryInformation shippingAddress={shippingAddress} diliveryPrice={diliveryPrice} onChange={handleChangeShopping} onClick={handleClickCreateOrder}/>
                             </div>
                         </div>
 
@@ -307,68 +171,7 @@ function Order() {
                     </div>
                     <div className={cx('col-md-6')}>
                         <div className={cx('sidebar-wrapper')}>
-                                <div className={cx('sidebar-content')}>
-                                    <h2>Thông tin đơn hàng</h2>
-                                    <div className={cx('order-summary-selection')}>
-                                        <table className={cx('product-table')}>
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col"></th>
-                                                    <th scope="col"></th>
-                                                    <th scope="col"></th>
-                                                    <th scope="col"></th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody>
-                                                {
-                                                    cart?.cartItems?.map((proItem, index) => {
-                                                        return (
-                                                            <tr className={cx('tr-title')} key={index}>
-                                                                <td className={cx('product-img')}>
-                                                                    <div className={cx('product-thumbnail-wrapper')}>
-                                                                        <img  src={`http://localhost:3000/${proItem?.image}`}  alt="" />
-                                                                    </div>
-                                                                    <span className={cx('product-thumbnail-quantity')}>{proItem?.amount}</span>
-                                                                </td>
-                                                                <td className={cx('product-description')}>
-                                                                    <span className={cx('name')}>{proItem?.name}</span>
-                                                                    <div className={cx('item-desc')}>
-                                                                        <span>M / Trắng</span>
-                                                                    </div>
-                                                                </td>
-                                                                <td></td>
-                                                                <td className={cx("product-price")}>
-                                                                    <span>{formatPrice(proItem?.price)}</span>
-                                                                </td>
-                                                            </tr>
-                                                        )
-                                                    })
-                                                }
-                                                
-                                            </tbody>
-                                        </table>
-                                        <div className={cx('payment-lines')}>
-                                            <div className={cx('title')}>
-                                                <p>
-                                                    Tạm tính
-                                                    <span>{formatPrice(cart?.cartTotalAmount)}</span>
-                                                </p>
-                                                <p>
-                                                    Phí vận chuyển
-                                                    <span>{formatPrice(diliveryPrice)}</span>
-                                                </p>
-                                            </div>
-                                            <div className={cx('total')}>
-                                                <h2>Tổng cộng
-                                                    <span>
-                                                        {formatPrice(totalPrice)}
-                                                    </span>
-                                                </h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                              <OrderInformation cart={cart} diliveryPrice={diliveryPrice} totalPrice={totalPrice}/>
                             </div>  
                         </div>
                     </div>

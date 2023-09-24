@@ -1,0 +1,140 @@
+.step {
+    width: 100%;
+
+    .step-section {
+        p {
+            font-size: 1.2rem;
+            margin-left: 2px;
+        }
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .section-content {
+        margin-bottom: 15px;
+
+        .fieldset {
+            
+        }
+    }
+}
+
+.change-pick {
+
+    .section-header h2 {
+        font-size: 1.4rem;
+        font-weight: 400;
+        color: var(--text-color);
+        padding-bottom: 10px;
+    }
+
+    .section-content {
+        .radio-wrapper {
+            box-shadow: 0 0 0 1px #d9d9d9;
+
+            .radio-content {
+                padding: 20px;
+                display: flex;
+                align-items: center;
+
+                input {
+                    width: 18px;
+                    height: 18px;
+                    box-shadow: 0 0 0 0 #338dbc inset;
+                    transition: all 0.2s ease-in-out;
+                    position: relative;
+                    cursor: pointer;
+                    vertical-align: -4px;
+                    outline: 0;
+                    border: solid 1px #d9d9d9;
+                }
+
+                .radio-label {
+                    padding-left: 10px;
+                    font-size: 1.3rem;
+                    color: var(--text-color);
+                }
+
+                .radio-price {
+                    margin-left: auto;
+                    font-size: 1.3rem;
+                    color: var(--text-color);
+                }
+            }
+        }
+    }
+}
+
+
+form {
+    padding: 0;
+    height: 0;
+}
+
+.field {
+    width: 100%;
+    float: left;
+    padding: 0.45em;
+    box-sizing: border-box;
+}
+
+.field-input-wrapper {
+    position: relative;
+}
+
+.filed-label {
+    font-size: 1rem;
+    font-weight: 400;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding-left: 8px;
+    color: var(--text-color);
+    margin-top: 2px;
+}
+
+.field-input {
+    box-shadow: 0 0 0 1px #d9d9d9;
+    transition: all 0.2s ease-out;
+    background-color: white;
+    color: #333333;
+    border-radius: 4px;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 22px 10px 7px 0.8em;
+    font-size: 1.2rem;
+}
+
+.field-two-thirds {
+    width: 49.66667% !important;
+}
+
+.field-third {
+    width: 33.33333% !important;
+}
+
+.clear {
+    clear: both;
+}
+
+.step-footer {
+    button {
+        padding: 15px 20px;
+        border-radius: 4px;
+        font-size: 1.5rem;
+        font-weight: 400;
+        float: right;
+        background-color: var(--black);
+        color: #fff;
+        font-weight: 600;
+
+        &:hover {
+            opacity: .7;
+        }
+    }
+}

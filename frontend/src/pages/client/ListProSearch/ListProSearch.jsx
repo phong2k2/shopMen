@@ -1,19 +1,21 @@
 import classNames from "classnames/bind";
 import styles from './ListProSearch.module.scss'
-import { Link, NavLink,useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import { formatPrice } from '@/components/formatData/formatData';
 import * as searchServices from '@/services/searchServices'
-import { IconCart } from "@/components/Icons/icon";
+import { useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useDispatch } from "react-redux";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import ReactPaginate from "react-paginate";
+import ProductItem from "@/components/ProductItem";
+import { addToCart, getTotals } from "@/redux/cartSlice";
 
 const cx = classNames.bind(styles)
 function ListProSearch() {
     const params = {};
     const [listSearch, setListSearch] = useState([])
     const [page, setPage] = useState(1)
+    const dispatch = useDispatch()
     let [searchParams, setSearchParams] = useSearchParams();
 
     const pageCount = useMemo(() => {
@@ -43,6 +45,22 @@ function ListProSearch() {
     const handlePageChange = ({selected}) => {
         setPage(selected);
     }
+
+    const handelAddToCart = (product, discountedPrice) => {
+        if(product) {
+            dispatch(addToCart({
+            orderItem: {
+                name: product?.name,
+                image: product?.image,
+                amount: 1, 
+                price: discountedPrice,
+                product: product?._id
+            }
+            }))
+            dispatch(getTotals());
+        }
+    };
+
     return ( 
         <section className={cx('collections')}>
                 <div className={cx('main-content')}>
@@ -91,38 +109,7 @@ function ListProSearch() {
                                     {
                                         listSearch?.data?.map((itemPro, index) => {
                                             return(
-                                                <div key={index} className={cx(' col-md-3 mt-5')}>
-                                                    <div className={cx('product-block')}>
-                                                        <div className={cx('product-img')}>
-                                                            <Link to={`/products/${itemPro?.slug}`}>
-                                                                <picture>
-                                                                    <source media="(max-width: 767px)" />
-                                                                    <img src={`http://localhost:3000/${itemPro?.image}`} alt="Anh" />
-                                                                </picture>
-                                                            </Link>
-                                                        </div>
-
-                                                        <div className={cx('product-detail')}>
-                                                            <div  className={cx("pro-name")}>
-                                                                <NavLink className={cx("conformName")} to={`/products/${itemPro?.slug}`}>
-                                                                {itemPro?.name}
-                                                                </NavLink>
-                                                            </div>
-                                                            <div className={cx("box-pro-detail")}>
-                                                                <div className={cx('product-price', 'conformName')}>
-                                                                    {formatPrice(itemPro?.price)}
-                                                                    {/* <span className={cx('price-del')}>
-                                                                        <del>1000</del>
-                                                                    </span> */}
-                                                                </div>
-                                                                <button  className={cx("add-cart")}>
-                                                                    <IconCart width={'1.6rem'}/>
-                                                                    <span>Thêm</span>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <ProductItem key={index} itemPro={itemPro} onClick={handelAddToCart}/>
                                             )
                                         })
                                     }

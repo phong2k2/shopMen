@@ -42,12 +42,12 @@ const AuthController = {
             const isCheckEmail = reg.test(email);
 
             if(!email && !password) {
-                return res.status(200).json({
+                return res.status(401).json({
                     status: 'ERR',
                     message: 'The input is required'
                 })
             }else if(!isCheckEmail) {
-                return res.status(200).json({
+                return res.status(401).json({
                     status: 'ERR',
                     message: 'The input is email'
                 })

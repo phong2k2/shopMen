@@ -153,6 +153,10 @@
         .action-item{
             margin-right: 20px;
 
+            a {
+                display: block;
+            }
+
             .div-cart {
                 position: relative;
                 .count-cart {

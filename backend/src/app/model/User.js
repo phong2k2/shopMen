@@ -25,9 +25,13 @@ const UserSchema = new Schema({
     image: {
         type: String,
     },
-    admin: {
-        type: Boolean,
-        default: false,
+    status: {
+        type: Number,
+        default: 0,
+    },
+    role: {
+        type: Number,
+        default: 0,
     }
 },{
     timestamps: true,

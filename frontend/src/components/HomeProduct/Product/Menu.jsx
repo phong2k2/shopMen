@@ -12,7 +12,7 @@ import CustomNextArrow from './ButtonSlider/CustomNextArrow';
 
 const cx = classNames.bind(styles)
 function Menu({ product, onClick, slug}) {
-  const slicedProducts = product?.slice(0, 7);
+  const slicedProducts = product?.slice(0, 10);
 
   let settings = {
     dots: false,

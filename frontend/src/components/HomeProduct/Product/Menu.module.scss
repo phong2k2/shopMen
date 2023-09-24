@@ -32,15 +32,22 @@
                 box-shadow: 2px 2px 11px hsla(0,3%,7%,.1);
                 border-radius: 4px;
 
-                
-        
                 .product-img{
                     width: 100%;
                     position: relative;
                     border-radius: 4px;
+                    padding: 10px;
+                    background: #fff;
+                    overflow: hidden;
                     
+                    &:hover .image-resize{
+                        -webkit-transform: scale(1.1);
+                        transform: scale(1.1);
+                    }
+
                     img{
                         border-radius: 4px;
+                        margin: 0 auto;
                     }
         
                     .image-resize{

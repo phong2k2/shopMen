@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import * as categoryService from "@/services/adminServices/categoryService";
 import Menu from "./Product/Menu";
 import { addToCart, getTotals } from "@/redux/cartSlice";
-// import { useNavigate } from "react-router-dom";
-
 
 
 const cx = classNames.bind(styles)
@@ -15,16 +13,16 @@ function HomeProduct() {
   const [listProduct, setListProduct] = useState([]); // Initialize with an empty array
   const [activeCategory, setActiveCategory] = useState(0); 
   const dispatch = useDispatch()
-  const slug = category[activeCategory].slug
+  const slug = category?.length && category[activeCategory]?.slug 
 
-  const handelAddToCart = (product) => {
+  const handelAddToCart = (product, discountedPrice) => {
     if(product) {
       dispatch(addToCart({
         orderItem: {
           name: product?.name,
           image: product?.image,
           amount: 1, 
-          price: product?.price,
+          price: discountedPrice,
           product: product?._id,
           size: 'S',
           color: 'Trắng'
@@ -42,7 +40,7 @@ function HomeProduct() {
       const id = category[0]._id
       
         const res = await categoryService.getDetailsCategory(id)
-        if(res.product) {
+        if(res?.product) {
           setListProduct(
               res?.product
           )

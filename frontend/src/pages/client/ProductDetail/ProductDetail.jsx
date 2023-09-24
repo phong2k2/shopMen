@@ -1,5 +1,5 @@
 import classNames from "classnames/bind"
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as productService from "@/services/adminServices/productService";
@@ -19,14 +19,10 @@ function ProductDetail() {
     const dispatch = useDispatch()
     const colorRef = useRef([])
 
-    const colorMapping = {
-        "Đen": "#000",
-        "Xanh": "#0c2461",
-        "Trắng": "#ffff",
-        "Cam": "#c47a4a ",
-    };
+    const discountedPrice = useMemo(() => {
+        return Math.ceil(detailProduct?.price - detailProduct?.discount)
+    },[detailProduct])
 
-    console.log(size)
     useEffect(()=> {
         if(color && size) {
             setSelectedColor(color[0])
@@ -120,9 +116,9 @@ function ProductDetail() {
             dispatch(addToCart({
                 orderItem : {
                     name: detailProduct?.name,
-                    image: selectedColor?.image[0],
+                    image: selectedColor?.image[0] || detailProduct?.image,
                     amount: amount,
-                    price: detailProduct?.price,
+                    price: discountedPrice,
                     discount: detailProduct?.discount,
                     color: selectedColor?.color,
                     size: selectedSize?.size,
@@ -133,8 +129,15 @@ function ProductDetail() {
         }
         
     }
-    
 
+    
+    const colorMapping = {
+        "Đen": "#000",
+        "Xanh": "#0c2461",
+        "Trắng": "#ffff",
+        "Cam": "#c47a4a ",
+    };
+    
     return ( 
         <div className={cx('product-detail')}>
             <div className={cx('breadcrumb-shop')}>
@@ -176,14 +179,18 @@ function ProductDetail() {
                                         <div className={cx('product-gallery')}>
                                             <div className={cx('div-detail')}>
                                                 <ul className={cx('slide-product')}>
-                                                    {
+                                                    { selectedColor?.image ?
                                                         selectedColor?.image?.map((urlImgae, index) => {
                                                             return (
                                                                 <li key={index} className={cx('gallery-item')}>
-                                                                <img src={`http://localhost:3000/${urlImgae}`} alt="" />
+                                                                    <img src={`http://localhost:3000/${urlImgae}`} alt="" />
                                                                 </li>
                                                             )
-                                                        })
+                                                        }) :(
+                                                            <li  className={cx('gallery-item')}>
+                                                                <img src={`http://localhost:3000/${detailProduct?.image}`} alt="" />
+                                                            </li>
+                                                            )
                                                     }
                                                 </ul>
                                             </div>
@@ -198,8 +205,8 @@ function ProductDetail() {
                                             </p>
                                         </div>
                                         <div className={cx('product-price')}>
-                                            <span className={cx('pro-price')}>{formatPrice(detailProduct?.price) }</span>
-                                            {/* <del>10000d</del> */}
+                                            <span className={cx('pro-price')}>{formatPrice(discountedPrice) }</span>
+                                            <del>{formatPrice(detailProduct?.discount)}</del>
                                         </div>
                                         
                                             <div className={cx('select-action')}>
@@ -259,9 +266,16 @@ function ProductDetail() {
                                                     <input type="button" value='+' onClick={() => handleChangeCount('increase')} className={cx('qty-btn')}/>
                                                 </div>
                                                 <div className={cx('wrap-addCart')}>
-                                                    <button onClick={handleAddToCart} className={cx('cart-btn')}>
-                                                        <span>Thêm vào giỏ hàng</span>
-                                                    </button>
+                                                    {detailProduct?.countInStock > 0 ? (
+                                                       <button onClick={handleAddToCart} className={cx('cart-btn')}>
+                                                         <span>Thêm vào giỏ hàng</span>
+                                                        </button>
+                                                    ): (
+                                                        <button className={cx('cart-btn','out-row')}>
+                                                            <span>Sản phẩm hết hàng</span>
+                                                         </button>
+                                                    )} 
+                                                    
                                                 </div>
                                             </div>
                                         
@@ -271,7 +285,7 @@ function ProductDetail() {
                                             </div>
                                             <div className={cx('content-description')}>
                                                 <span>
-                                                    Sản phẩm đẹp
+                                                    {detailProduct?.description}
                                                 </span>
                                             </div>
                                         </div>

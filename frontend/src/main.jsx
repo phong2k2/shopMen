@@ -5,12 +5,15 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import  { persistor, store } from './redux/store.js'
 import GlobalStyle from '@/components/GlobalStyles'
+import { DeliveryInfoProvider } from './hook/useContext.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}> 
         <GlobalStyle>
-          <App />
+          <DeliveryInfoProvider>
+            <App />
+          </DeliveryInfoProvider>
         </GlobalStyle>
       </PersistGate>
       </Provider>,

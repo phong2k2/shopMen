@@ -6,11 +6,15 @@ import { Link, NavLink } from 'react-router-dom';
 
 import { formatPrice } from '@/components/formatData/formatData';
 import { IconCart } from '@/components/Icons/icon';
+import { useMemo } from 'react';
 
 
 const cx = classNames.bind(styles)
 function MenuItem({proItem, onClick}) {
 
+    const discountedPrice = useMemo(() => {
+        return Math.ceil(proItem?.price - proItem?.discount)
+    },[proItem])
 
     return ( 
         <div className={cx( "owl-item")}>
@@ -30,13 +34,13 @@ function MenuItem({proItem, onClick}) {
                 </h2>
                 <div className={cx("box-pro-detail")}>
                     <div className={cx("pro-price")}>
-                    {formatPrice(proItem?.price) }
-                    {/* <span className={cx("pro-price-del")}>
-                        <del>295,000d</del>
-                    </span> */}
+                    {formatPrice(discountedPrice) }
+                    <span className={cx("pro-price-del")}>
+                        <del>{formatPrice(proItem?.discount)}</del>
+                    </span>
                     </div>
 
-                    <button onClick={() => onClick(proItem)} className={cx("add-cart")}>
+                    <button onClick={() => onClick(proItem, discountedPrice)} className={cx("add-cart")}>
                     <IconCart width={'1.6rem'}/>
                     <span>Thêm</span>
                     </button>

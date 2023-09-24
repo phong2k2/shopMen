@@ -8,8 +8,8 @@ function PrivateRoutes({children}) {
     let Layout
     const user = useSelector((state) => state.auth.login.currentUser)
     
-    const roleAdmin = user?.data?.admin
-    if(roleAdmin) {
+    const roleAdmin = user?.data?.role
+    if(roleAdmin === 1) {
         Layout = AdminLayout
     }else {
        Layout = Unauthorized

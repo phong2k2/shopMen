@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const  generalAccessToken =  (user) => {
     const accessToken = jwt.sign({
         id: user?._id,
-        admin: user?.admin
+        admin: user?.role === 1
     },
     process.env.JWT_ACCESS_KEY,
     {
@@ -16,7 +16,7 @@ const  generalAccessToken =  (user) => {
 const generalRefreshToken = (user) => {
     const refreshToken = jwt.sign({
         id: user?._id,
-        admin: user?.admin
+        admin: user?.role === 1
     },
     process.env.JWT_REFRESH_TOKEN,
     {

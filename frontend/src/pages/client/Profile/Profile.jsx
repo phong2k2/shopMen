@@ -1,24 +1,27 @@
 import classNames from "classnames/bind"
 import styles from "./Profile.module.scss"
+import { useSelector } from "react-redux";
 
 const cx = classNames.bind(styles)
 function Profile() {
+    const user = useSelector((state) => state?.auth?.login?.currentUser?.data)
+    console.log(user)
     return ( 
         <div className={cx('container', 'wrap')}>
             <div className={cx('row')}>
-                {/* <div className={cx('col-md-2')}>
+                <div className={cx('col-md-2')}>
                     <div className={cx('header-title')}>
                         <a className={cx('image')}>
                             <img src="http://thuthuatphanmem.vn/uploads/2018/09/11/hinh-anh-dep-6_044127357.jpg" alt="" />
                         </a>
                         <div className={cx('action')}>
-                            <div className={cx('name')}>boy252002</div>
+                            <div className={cx('name')}>{user?.username}</div>
                             <div className={cx('edit-profile')}>
                                 <a href="">Sửa Hồ Sơ</a>
                             </div>
                         </div>
                     </div>
-                </div>   */}
+                </div>  
     
                 <div className={cx('col-md-10')}>
                     <div className={cx('content-body')}>
@@ -29,36 +32,31 @@ function Profile() {
 
                         <div className={cx('box-content')}>
                             <div className={cx('row')}>
-                                <div className={cx('col-md-7')}>
+                                <div className={cx('col-md-12')}>
                                     <div className={cx('information')}>
                                         <table>
                                             <tr>
                                                 <td className={cx('title')}> <label htmlFor="">Họ và tên: </label></td>    
-                                                <td className={cx('info')}><div>boy252002</div></td>
+                                                <td className={cx('info')}><div>{user?.username}</div></td>
                                             </tr>   
                                             <tr>
                                                 <td className={cx('title')}><label htmlFor="">Email:</label></td>
-                                                <td className={cx('info')}><div>ducphong252002@gmail.com</div></td>
+                                                <td className={cx('info')}><div>{user?.email}</div></td>
                                             </tr> 
                                             <tr>
                                                 <td className={cx('title')}><label htmlFor="">Số điện thoại:</label></td>
-                                                <td className={cx('info')}><div>0237332931</div></td>
+                                                <td className={cx('info')}><div>{user?.phone}</div></td>
                                             </tr>
                                             <tr className={cx('box-gender')}>
-                                                <td className={cx('title')}><label htmlFor="">Giới tính:</label></td>
+                                                <td className={cx('title')}><label htmlFor="">Địa chỉ:</label></td>
                                                 <td className={cx('info')}>
-                                                    <div className={cx('gender')}>
-                                                        <input type="checkbox" />
-                                                        <span>Nam</span>
-                                                    </div>
-                                                    <div className={cx('gender')}>
-                                                        <input type="checkbox" />
-                                                        <span>Nữ</span>
-                                                    </div>
-                                                    <div className={cx('gender')}>
-                                                        <input type="checkbox" />
-                                                        <span>Khác</span>
-                                                    </div>
+                                                   <div>{user?.address}</div>
+                                                </td>
+                                            </tr>
+                                            <tr className={cx('box-gender')}>
+                                                <td className={cx('title')}><label htmlFor="">Vai trò:</label></td>
+                                                <td className={cx('info')}>
+                                                   <div>{user?.role === 0 ? 'Thành viên' : 'Quản trị viên'}</div>
                                                 </td>
                                             </tr>
                                         </table>    

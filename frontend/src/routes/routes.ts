@@ -11,6 +11,7 @@ import Home from '@/pages/client/Home/Home';
 import Auth from '@/pages/auth/Auth';
 import HeaderOnly from '@/layouts/ClientLayout/HeaderOnly';
 import HomeUsers from '@/pages/admin/Users/HomeUsers';
+import EditUser from '@/pages/admin/Users/EditUser';
 import Category from '@/pages/client/Category/Category';
 import ProductDetail from '@/pages/client/ProductDetail/ProductDetail';
 import Cart from '@/pages/client/Cart/Cart';
@@ -21,6 +22,7 @@ import DetailOrder from '@/pages/admin/DetailOrder';
 import Profile from '@/pages/client/Profile';
 import VariantProduct from '@/pages/admin/Products/VariantProduct';
 import ListProSearch from '@/pages/client/ListProSearch/ListProSearch';
+// import ResetPersistButton from '@/Persitor';
 
 
 const privateRoutes = [
@@ -55,6 +57,10 @@ const privateRoutes = [
         component: HomeUsers
     },
     {
+        path: config.privateRouter.editUser,
+        component: EditUser
+    },
+    {
         path: config.privateRouter.order,
         component: Orders
     },
@@ -66,6 +72,7 @@ const privateRoutes = [
         path: config.privateRouter.variant,
         component: VariantProduct
     }
+    
 ]
 
 const publicRoutes = [
@@ -112,6 +119,12 @@ const publicRoutes = [
         component: ListProSearch,
         layout: HeaderOnly,
     }
+    // ,
+    // {
+    //     path: config.publicRouter.persistor,
+    //     component: ResetPersistButton,
+    //     layout: HeaderOnly,
+    // }
 ]
 
 export {

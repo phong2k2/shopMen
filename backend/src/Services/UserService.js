@@ -47,6 +47,38 @@ const getDetailUser = (id) => {
     })
 }
 
+const updateUser = (id, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            console.log(id, data)
+            const checkUser = await User.findOne({
+                _id: id
+            })
+            if (checkUser === null) {
+                resolve({
+                    status: 'ERR',
+                    message: 'The user is not defined'
+                })
+            }
+
+            const updatedUser = await User.findByIdAndUpdate(id, data, { new: true })
+            const { password, ...other} = updatedUser._doc
+            console.log(other)
+            resolve({
+                status: 'OK',
+                message: 'SUCCESS',
+                data: other
+            })
+        } catch (err) {
+            reject({
+                status: 'Error',
+                message: 'Failed to delete User',
+                error: err
+            })
+        }
+    })
+}
+
 const deleteUser = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -75,5 +107,6 @@ const deleteUser = (id) => {
 module.exports = {
     getAllUser,
     deleteUser,
-    getDetailUser
+    getDetailUser,
+    updateUser
 }

@@ -31,6 +31,20 @@ export const getDetailUser = async (accessToken, id, axiosJWT) => {
     }
 }
 
+
+export const updateUser = async (accessToken, formData, id, axiosJWT) => {
+    try{
+        const res = await axiosJWT.put(`user/update-user/${id}`, formData, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        })
+    return res.data
+    }catch (err) {
+        console.log(err)
+    }
+}
+
 export const deleteUser = async (accessToken, id, axiosJWT) => {
     try {
         const res = await axiosJWT.delete('/user/' + id, {

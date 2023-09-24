@@ -1,0 +1,117 @@
+.sidebar-content {
+    h2 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .order-summary-selection {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            font-size: 1em;
+            margin-bottom: 10px;
+            
+            
+            .product-img {
+                width: 60px;
+                height: 60px;
+                border-radius: 8px;
+                background: #fff;
+                position: relative;
+
+                .product-thumbnail-wrapper {
+                    width: 100%;
+                    height: 100%;
+                    position: relative;
+                    overflow: hidden;
+                    border-radius: 8px;
+
+                    img {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        max-width: 100%;
+                        max-height: 100%;
+                        margin: auto;
+                    }
+                }
+
+                .product-thumbnail-quantity {
+                    font-size: 1rem;
+                    font-weight: 500;
+                    white-space: nowrap;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background-color: rgba(153,153,153,0.9);
+                    color: #fff;
+                    position: absolute;
+                    right: -0.75em;
+                    top: -0.75em;
+                    z-index: 2;
+                    text-align: center;
+                    padding: 2px;
+                }
+            }
+
+            .product-description {
+                padding-left: 15px;
+
+                span {
+                    font-size: 1.4rem;
+                    color: var(--text-color);
+
+                }
+                
+                .item-desc {
+                    font-size: 12px;
+                    color: #777;
+                    margin-top: 3px;
+                }
+
+            }
+            .product-price {
+                text-align: end;
+                span {
+                    font-size: 1.4rem;
+                    color: var(--text-color);
+                    font-weight: 400;
+                }
+            }
+
+           
+        }
+
+        .payment-lines {
+            width: 100%;
+
+            .title {
+                margin-bottom: 20px;
+                border-bottom: 1px solid #dfdcdc;
+                p {
+                    font-size: 1.4rem;
+                    color: var(--text-color);
+                    span {
+                        float: right;
+                    }
+                }
+            }
+
+            .total{
+                h2 {
+                    font-size: 1.8rem;
+                    font-weight: 400;
+                    color: var(--text-color);
+                    span {
+                        font-weight: 600;
+                        float: right;
+                    }
+                }
+            }
+        }
+    }
+}

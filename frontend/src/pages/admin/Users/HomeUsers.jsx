@@ -4,6 +4,7 @@ import { createAxios } from "@/utils/httpRfreshRequest";
 import * as userService from '@/services/adminServices/userService'
 import { loginSuccess } from "@/redux/authSlice";
 import { getUsersSuccess } from "@/redux/userSlice";
+import { Link } from "react-router-dom";
 
 function HomeUsers() {
     const user = useSelector((state) => state.auth.login.currentUser)
@@ -51,19 +52,19 @@ function HomeUsers() {
             </thead>
             <tbody>
                 {
-                    allUsers?.map((pro, index) => {
+                    allUsers?.map((user, index) => {
                     return (
                         <tr key={index} >
                             <th scope="row">{index + 1}</th>
-                            <td>{pro?.username}</td>
+                            <td>{user?.username}</td>
                             <td>
                                 {
-                                    pro?.admin ? 'Admin' : 'User'
+                                    user?.role === 1 ? 'Admin' : 'User'
                                 }
                             </td>
                             <td>
-                                {/* <Link to={`/admin/product/${pro._id}`} >Sửa</Link> */}
-                                <button className='btn btn-danger ml-3' onClick={() => handleClickDelete(pro?._id)}>Xóa</button>
+                                <Link className='btn btn-primary ml-3' to={`/admin/user/${user?._id}`} >Sửa</Link>
+                                <button className='btn btn-danger ml-3' onClick={() => handleClickDelete(user?._id)}>Xóa</button>
                             </td>
                         </tr>
                     )

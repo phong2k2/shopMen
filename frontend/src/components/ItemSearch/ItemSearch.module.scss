@@ -1,0 +1,44 @@
+.content-item {
+    display: flex;
+    cursor: pointer;
+    margin-left: 8px;
+    border-bottom: 1px solid #493b3b;
+    margin-top: 10px;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    .img-item {
+        width: 80px;
+        height: 80px;
+        margin: 0 15px 10px 0;
+        display: block;
+
+        img {
+            width: 100%;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 4px;
+        }
+    }
+
+    .div-text {
+
+        .text-search {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+            line-height: 1.5rem;
+            padding-bottom: 2px;
+            a {
+                text-decoration: none;
+            }
+        }
+
+        strong {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, .9);
+        }
+    }
+}

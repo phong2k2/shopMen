@@ -7,6 +7,7 @@ const privateRouter = {
     createProduct: '/admin/product/create',
     editProduct: '/admin/product/:id',
     indexUser: '/admin/user/index',
+    editUser: '/admin/user/:id',
     order: '/admin/order/index',
     detailOrder: '/admin/order/detail/:id',
     variant: '/admin/variant/:id',
@@ -22,6 +23,7 @@ const publicRouter = {
     listOrders: '/order',
     profile: '/profile',
     search: '/search',
+    // persistor: '/persistor'
 }
 
 export {

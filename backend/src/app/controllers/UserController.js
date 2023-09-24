@@ -27,6 +27,26 @@ const UserController = {
             })
         }
     },
+    updateUser: async (req, res) => {
+        try {
+            const urlImage = req.body.image ? req.body.image : req.file.filename 
+            const infoUpdate = {
+                ...req.body,
+                image: urlImage
+            }
+            const userId = req.params.id
+        if (!userId) {
+            return res.status(401).json({
+                status: 'ERR',
+                message: 'The userId is required'
+            })
+        }
+        const response = await UserService.updateUser(userId, infoUpdate)
+        return res.status(200).json(response)
+        }catch(err) {
+            return res.status(500).json(err)
+        }
+    },
     deleteUser: async (req, res) => {
         try {
             const id = req.params.id

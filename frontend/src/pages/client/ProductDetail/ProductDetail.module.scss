@@ -244,7 +244,7 @@
                     font-weight: bold;
                     z-index: 1;
                     position: relative;
-                    color: var(--text-color) !important;
+                    color: var(--white) !important;
                     padding: 15px 40px;
                     outline: none;
                     border: 1px solid var(--grey);
@@ -268,13 +268,19 @@
                     
                       &:hover {
                         cursor: pointer;
-                        color: #fff;
+                        span {
+                            color: #000;
+                        }
                       }
                     
                       &:hover::before {
                         transform-origin: center left;
                         transform: scaleY(1);
                       }
+                }
+
+                .out-row {
+                    opacity: 0.6;
                 }
             }
 

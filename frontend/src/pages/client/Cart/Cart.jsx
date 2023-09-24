@@ -15,8 +15,6 @@ function Cart() {
     const dispatch = useDispatch()
     const user = useSelector(state => state.auth.login?.currentUser?.data)
 
-    console.log(cart)
-    
     useEffect(() => {
         dispatch(getTotals());
     }, [cart, dispatch]);
@@ -109,7 +107,6 @@ function Cart() {
                                                 <div className={cx('table-cart')}>
                                                     {
                                                         cart?.cartItems?.map((cartItem, index) => {
-                                                            console.log(cartItem)
                                                             return (
                                                                 <div key={index} className={cx('item-cart')}>
                                                                     <div className={cx('left')}>

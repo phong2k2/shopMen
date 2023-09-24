@@ -28,7 +28,7 @@ function Header() {
   const userMenus = [
     {
       title: 'Quản Trị website',
-      check: user?.currentUser?.data?.admin,
+      check: user?.currentUser?.data?.role,
       to: config.privateRouter.dashboard
     },
     {
@@ -131,10 +131,10 @@ function Header() {
                    <div className={cx('div-cart')}>
                       <a href={config.publicRouter.cart}>
                           <IconCart className={cx('icon-cart')}/>
+                          <div className={cx('count-cart')}>
+                            <span>{cart?.cartTotalQuantity}</span>
+                          </div>
                       </a>
-                      <div className={cx('count-cart')}>
-                        <span>{cart?.cartTotalQuantity}</span>
-                      </div>
                    </div>
                   </div>
                 </div>

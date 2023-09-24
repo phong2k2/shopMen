@@ -1,15 +1,14 @@
 import classNames from "classnames/bind";
 import styles from './Category.module.scss'
 import ReactPaginate from 'react-paginate';
-import { Link, NavLink, useParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import * as categoryService from "@/services/adminServices/categoryService";
-import { formatPrice } from '@/components/formatData/formatData';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { IconCart } from "@/components/Icons/icon";
 import { addToCart, getTotals } from "@/redux/cartSlice";
+import ProductItem from "@/components/ProductItem";
 
 
 const cx = classNames.bind(styles)
@@ -42,14 +41,14 @@ function Category() {
         setPageNumber(selected);
       };
 
-      const handelAddToCart = (product) => {
+      const handelAddToCart = (product, discountedPrice) => {
         if(product) {
           dispatch(addToCart({
             orderItem: {
               name: product?.name,
               image: product?.image,
               amount: 1, 
-              price: product?.price,
+              price: discountedPrice,
               product: product?._id
             }
           }))
@@ -116,39 +115,7 @@ function Category() {
                                 {
                                     nameTitle?.product?.map((itemPro, index) => {
                                         return(
-                                            <div key={index} className={cx('col-md-3 mt-5')}>
-                                                <div className={cx('product-block')}>
-                                                    <div className={cx('product-img')}>
-                                                        <Link to={`/products/${itemPro?.slug}`}>
-                                                            <picture>
-                                                                <source media="(max-width: 767px)" />
-                                                                <img src={`http://localhost:3000/${itemPro?.image}`} alt="Anh" />
-                                                            </picture>
-                                                        </Link>
-                                                    </div>
-
-                                                    <div className={cx('product-detail')}>
-                                                        <div  className={cx("pro-name")}>
-                                                            <NavLink className={cx("conformName")} to={`/products/${itemPro?.slug}`}>
-                                                               {itemPro?.name}
-                                                            </NavLink>
-                                                        </div>
-                                                        <div className={cx("box-pro-detail")}>
-                                                            <div className={cx('product-price', 'conformName')}>
-                                                                {formatPrice(itemPro?.price)}
-                                                                {/* <span className={cx('price-del')}>
-                                                                    <del>1000</del>
-                                                                </span> */}
-                                                            </div>
-                                                            <button onClick={handelAddToCart} className={cx("add-cart")}>
-                                                                <IconCart width={'1.6rem'}/>
-                                                                <span>Thêm</span>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
+                                            <ProductItem key={index} itemPro={itemPro} onClick={handelAddToCart}/>
                                         )
                                     })
                                 }

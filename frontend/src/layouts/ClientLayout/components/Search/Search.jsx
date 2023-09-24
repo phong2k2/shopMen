@@ -7,7 +7,7 @@ import * as searchServices from '@/services/searchServices'
 import HeaderTippy from '@tippyjs/react/headless';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import ProductItem from "@/components/ProductItem";
+import ItemSearch from "@/components/ItemSearch";
 import { Link, useNavigate } from "react-router-dom";
 
 const cx = classNames.bind(styles)
@@ -69,13 +69,13 @@ function Search() {
     return ( 
         <HeaderTippy
             interactive="true"
-            visible={showResult && searchResult.length > 0}
+            visible={showResult && searchResult?.length > 0}
             render={(attrs) => (
                     <ul className={cx('result-search')} tabIndex="-1" {...attrs}>
                     {
                         searchResult?.map((item, index) => {
                             return (
-                                <ProductItem key={index} data={item}/>
+                                <ItemSearch key={index} data={item}/>
                             )
                         })
                     }

@@ -28,7 +28,7 @@
 
 .form-container form {
    
-    padding: 50px 50px !important;
+    padding: 15px 50px !important;
     height: 100%;
 }
 
@@ -141,9 +141,14 @@ h3 {
     outline: none !important;
 }
 
+.form-container .form-group p {
+    font-size: 1.2rem;
+    margin-left: 2px;
+}
+
 .form-container .form-group input {
-    padding: 20px !important;
-    font-size: 1.5rem !important;
+    // padding: 20px !important;
+    // font-size: 1.6rem !important;
 }
 
 .signUp-container {
