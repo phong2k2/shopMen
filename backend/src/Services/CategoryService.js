@@ -3,7 +3,7 @@ const Product = require('../app/model/Product')
 
 const createCategory = (newCategory) => {
     return new Promise(async (resolve, reject) => {
-        const {name} = newCategory
+        const {name, displayInSlider} = newCategory
         try {
             const checkCategory = await Category.findOne({name: name})
             if(checkCategory !== null) {
@@ -13,7 +13,8 @@ const createCategory = (newCategory) => {
                 })
             }
             const newCategory = await Category.create({
-                name
+                name,
+                displayInSlider
             })
             if(newCategory) {
                 resolve({
@@ -121,6 +122,35 @@ const getDetailCategory = ({slug, limit, page}) => {
     })
 }
 
+const getCategorySlide = () => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            const categoriesForSlider = await Category.find({
+                displayInSlider: 1
+              });
+
+            if(categoriesForSlider === null) {
+                return reject({
+                    status: 'Error',
+                    message: 'Failed to get pro in categories',
+                    error: err
+                })
+            }
+            resolve({
+                status: 'Success',
+                message: 'Successful request',
+                data: categoriesForSlider
+            })
+        }catch(err) {
+            reject({
+                status: 'Error',
+                message: 'Failed to get categories',
+                error: err
+            })
+        }
+    })
+}
+
 const updateCategory = (id, data) => {
     return new Promise( async (resolve, reject) => {
         try {
@@ -176,6 +206,7 @@ const deleteCategory = (id) => {
 module.exports = {
     getAllCategories,
     getACategory,
+    getCategorySlide,
     createCategory,
     updateCategory,
     deleteCategory,

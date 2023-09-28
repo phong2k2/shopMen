@@ -23,12 +23,63 @@ const getSubCategory = () => {
     })
 }
 
+// Get An SubCategory
+
+const getDetailSubCategory = (id) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            const subCategory = await SubCategory.findOne({
+                _id:id
+            })
+            if(subCategory) [
+                resolve({
+                    status: 'Success',
+                    message: 'Successful request',
+                    data: subCategory
+                })
+            ]
+        }catch (err) {
+            reject({
+                status: 'Error',
+                message: 'Failed to get',
+                error: err
+            })
+        }
+    })
+}
+
+// Get SubCategory By category
+const getSubCategoryByCategory = (id) => {
+    return new Promise( async (resolve, reject) => {
+        try {
+            const subCategory = await SubCategory.find({
+                $and: [
+                    {category: id}
+                ]
+            }).populate('category', ['name'])
+            if(subCategory) [
+                resolve({
+                    status: 'Success',
+                    message: 'Successful request',
+                    data: subCategory
+                })
+            ]
+        }catch (err) {
+            reject({
+                status: 'Error',
+                message: 'Failed to get',
+                error: err
+            })
+        }
+    })
+}
+
 // Add SubCategory Service
-const createSubCategory = ({name, description, category} ) => {
+const createSubCategory = ({name, category} ) => {
     return new Promise( async (resolve, reject) => {
         try {
             const checkSubCate = await SubCategory.findOne({ name: name })
-            if(checkSubCate !== null) {
+            if(checkSubCate) {
                 return reject({
                     status: 'Error',
                     message: 'The name subcategory is already'
@@ -36,7 +87,7 @@ const createSubCategory = ({name, description, category} ) => {
             }
             const newSubCategory = await SubCategory.create({
                 name,
-                description
+                category
             })
             if (newSubCategory) {
                 // Add subcategory to category
@@ -89,10 +140,10 @@ const updateSubCategory = (id, data) => {
 const deleteSubCategory = (id) => {
     return new Promise(async (resolve, reject) => {
         try {
-            await Category.updateMany(
-                {subcategories: id},
-                {$pull: {subcategories: id}}
-            )
+            // await Category.updateMany(
+            //     {subcategories: id},
+            //     {$pull: {subcategories: id}}
+            // )
             await SubCategory.findByIdAndDelete({_id: id})
             resolve({
                 status: 'Success',
@@ -110,7 +161,9 @@ const deleteSubCategory = (id) => {
 
 module.exports = {
     getSubCategory,
+    getDetailSubCategory,
     createSubCategory,
     updateSubCategory,
-    deleteSubCategory
+    deleteSubCategory,
+    getSubCategoryByCategory
 }

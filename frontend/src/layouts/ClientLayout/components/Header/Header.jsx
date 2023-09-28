@@ -15,6 +15,7 @@ import { loginSuccess, logoutFailed, logoutStart, logoutSuccess } from "@/redux/
 import Button from "@/components/Button";
 import Search from "../Search/Search";
 import toastify from "@/components/toastify/toastify";
+import CategoryItem from "@/components/CategoryItem";
 
 const cx = classNames.bind(styles);
 function Header() {
@@ -111,6 +112,7 @@ function Header() {
                         return (
                           <li key={index} className={cx("has-sub")}>
                             <NavLink className={cx('text-nav')} to={'/'+ category?.slug}>{category.name}</NavLink>
+                            <CategoryItem idCate={category?._id}/>
                          </li>
                         )
                       })

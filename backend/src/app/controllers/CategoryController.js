@@ -71,6 +71,17 @@ const CategoryController = {
             })
         }
     },
+
+    getCategorySlide: async (req, res) => {
+        try {
+            const response = await CategoryService.getCategorySlide()
+            res.status(200).json(response)
+        }catch (err) {
+            res.status(500).json({
+                message: err
+            });
+        }
+    },
     // Update Category
     updateCategory: async (req, res) => {
         try {

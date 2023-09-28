@@ -8,6 +8,8 @@ route.post('/create', upload.uploadSingle, productController.createProduct);
 route.get('/', productController.getAllProducts);
 route.get('/product-detail/:slug', productController.getDetailsProduct)
 route.get('/product-detailId/:id', productController.getDetailsProductId)
+route.get('/sub-category/:slug', productController.getProductBySubCategory)
+route.get('/category/:slug', productController.getProductByCategory)
 route.put('/:id', upload.uploadSingle, productController.updateProduct);
 route.delete('/:id', productController.deleteProduct);
 
@@ -18,7 +20,6 @@ route.delete('/deleteColor/:id', productController.deleteColor)
 route.post('/createSize', productController.createSize)
 route.get('/size/:id', productController.getProductSize)
 route.delete('/deleteSize/:id', productController.deleteSize)
-
 
 route.get('/search', productController.searchProduct)
 

@@ -1,74 +1,86 @@
 import classNames from "classnames/bind";
 import styles from "./HomeProduct.module.scss"
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import * as categoryService from "@/services/adminServices/categoryService";
+import * as productService from "@/services/adminServices/productService";
 import Menu from "./Product/Menu";
 import { addToCart, getTotals } from "@/redux/cartSlice";
 
 
 const cx = classNames.bind(styles)
 function HomeProduct() {
-  const category = useSelector(state => state.category.allCategory)
   const [listProduct, setListProduct] = useState([]); // Initialize with an empty array
   const [activeCategory, setActiveCategory] = useState(0); 
+  const [hideSlugProduct, setHideSlugProduct] = useState();
+  const [categorySlider, setCategorySlider] = useState([])
   const dispatch = useDispatch()
-  const slug = category?.length && category[activeCategory]?.slug 
+  const slug = categorySlider?.length ? categorySlider[activeCategory]?.slug : '' 
+  const limit = 10
 
-  const handelAddToCart = (product, discountedPrice) => {
-    if(product) {
-      dispatch(addToCart({
-        orderItem: {
-          name: product?.name,
-          image: product?.image,
-          amount: 1, 
-          price: discountedPrice,
-          product: product?._id,
-          size: 'S',
-          color: 'Trắng'
-        }
-      }))
-      dispatch(getTotals());
 
+  useEffect(()=> {
+    if(categorySlider) {
+      setHideSlugProduct(categorySlider[0])
     }
-  };
+  },[categorySlider])
 
-    
+  useEffect(() => {
+    const fetchApiHomeProduct = async () => {
+      try {
+        const res = await categoryService.getCategorySlideHome()
+        setCategorySlider(res)
+      }catch (err){
+        console.log(err)
+      }
+    }
+    fetchApiHomeProduct()
+  },[])
+  
   useEffect(() => {
   const getFirstProduct = async () => {
     try {
-      const id = category[0]._id
-      
-        const res = await categoryService.getDetailsCategory(id)
-        if(res?.product) {
-          setListProduct(
-              res?.product
-          )
-        }
-
+      const slug = hideSlugProduct?.slug
+        const res = await productService.getProductByCategory(slug, limit)
+        setListProduct(res?.product)
     }catch( err) {
       console.log(err)
     }
   }
   getFirstProduct()
-}, [])
+}, [hideSlugProduct])
 
 const handleClickCate = async (category, index) => {
     try {
-      const id = category?._id
+      const slug = category?.slug
       setActiveCategory(index)
-      const existingProduct = listProduct.find(item => item.id === id);
-      
-      if (!existingProduct) {
-        const res = await categoryService.getDetailsCategory(id)
-        setListProduct(
-          res?.product
-        )
-    }
-
+      // const existingProduct = listProduct.find(item => item.slug === slug);
+      // if (!existingProduct) {
+        const res = await productService.getProductByCategory(slug, limit)
+        setListProduct(res?.product)
+      // }
     }catch( err) {
       console.log(err)
     }
+};
+
+// Add to cart
+const handelAddToCart = (product, discountedPrice) => {
+  if(product) {
+    dispatch(addToCart({
+      orderItem: {
+        name: product?.name,
+        image: product?.image,
+        amount: 1, 
+        price: discountedPrice,
+        product: product?._id,
+        size: 'S',
+        color: 'Trắng'
+      }
+    }))
+    dispatch(getTotals());
+
+  }
 };
 
 return ( 
@@ -78,7 +90,7 @@ return (
         <div className={cx("tab-title")}>
           <ul className={cx("box-tabs")}>
             {
-                category?.map((category, index) => {
+                categorySlider?.map((category, index) => {
                     return(
                     <li key={index} onClick={() => handleClickCate(category, index)} className={cx("tab-item", {"active": activeCategory === index})}>
                         <a>{category?.name}</a>
@@ -92,7 +104,6 @@ return (
 
       {/* product */}
       <div className={cx("tab-content")}>
-          {/* <Menu onClick={handelAddToCart}  activeCategory={activeCategory} product={listProduct}/> */}
           <Menu  product={listProduct} onClick={handelAddToCart} slug={slug}/>
       </div>
     </>

@@ -6,14 +6,16 @@ import Input from "@/components/Input";
 
 function CreateCate() {
     const [name, setName] = useState('')
-    // const [hot, setHot] = useState('')
+    const [hideSlider, setHideSlider] = useState(0)
     const navigate = useNavigate()
+
     const handleSubmitCreate = (e) => {
         e.preventDefault()
         const createCateApi = async () => {
             try {
                 const res = await categoryService.createCategory({
-                    name
+                    name,
+                    hideSlider
                 })
                 if(res) {
                     navigate(config.privateRouter.indexCategory)
@@ -29,19 +31,19 @@ function CreateCate() {
        <div className="mx-2">
             <form onSubmit={handleSubmitCreate}>
                 <Input type={'text'} onChange={(e) => setName(e.target.value)} id={'exampleInputEmail1'} placeholder={'Nhập tên danh mục'} >Tên danh mục</Input>
-                {/* <div className="form-group">
-                    <label>Hot</label>
+                <div className="form-group">
+                    <label>Hiển thị slider</label>
                     <select
-                        onChange={(e) => setHot(e.target.value)}
                         className="form-control show-cti form-select list"
-                        name="hot"
+                        name="hideSlider"
                         id="cate"
+                        onChange={(e) => setHideSlider(e.target.value)}
                     >
-                        <option value="">Chọn</option>
-                        <option value="0">Hot</option>
-                        <option value="1">Bình thường</option>
+                        <option value="">Chọn hiển thị slider</option>
+                        <option value="0">Ẩn</option>
+                        <option value="1">Hiển thị</option>
                     </select>
-                </div> */}
+                </div>
                 <button className="btn btn-primary">Hoàn Tất</button>
             </form>
        </div>

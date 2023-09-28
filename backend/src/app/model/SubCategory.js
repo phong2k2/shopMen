@@ -1,29 +1,26 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const slug = require('mongoose-slug-updater');
 
-const SubcategorySchema = new Schema({
+const SubCategorySchema = new Schema({
   name: {
     type: String,
     required: true,
-    trim: true,
-    unique: true
   },
-  description: {
+  slug: {
     type: String,
-    required: true
+    slug: 'name',
+    unique: true
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category' // Reference to the Category model
+    ref: 'Category',
+    required: true
   },
-  product: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product'
-  }]
 },{
     timestamps: true,
 });
+mongoose.plugin(slug);
+const SubCategory = mongoose.model('SubCategory', SubCategorySchema);
 
-const Subcategory = mongoose.model('Subcategory', SubcategorySchema);
-
-module.exports = Subcategory;
+module.exports = SubCategory;

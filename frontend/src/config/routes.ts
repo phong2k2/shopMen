@@ -3,6 +3,8 @@ const privateRouter = {
     indexCategory: '/admin/category/index',
     createCategory: '/admin/category/create',
     editCategory: '/admin/category/:id',
+    indexSubCategory: '/admin/cate-item/:id',
+    editSubCategory: '/admin/cate-item/edit/:id',
     indexProduct: '/admin/product/index',
     createProduct: '/admin/product/create',
     editProduct: '/admin/product/:id',

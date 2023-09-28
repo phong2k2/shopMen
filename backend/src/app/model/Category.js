@@ -18,6 +18,10 @@ const CategorySchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
     }],
+    displayInSlider: {
+        type: Number,
+        default: 0
+    },
 },{
     timestamps: true,
 })

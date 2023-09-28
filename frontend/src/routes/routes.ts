@@ -12,7 +12,7 @@ import Auth from '@/pages/auth/Auth';
 import HeaderOnly from '@/layouts/ClientLayout/HeaderOnly';
 import HomeUsers from '@/pages/admin/Users/HomeUsers';
 import EditUser from '@/pages/admin/Users/EditUser';
-import Category from '@/pages/client/Category/Category';
+import Category from '@/pages/client/Product/Product';
 import ProductDetail from '@/pages/client/ProductDetail/ProductDetail';
 import Cart from '@/pages/client/Cart/Cart';
 import Order from '@/pages/client/Order/Order';
@@ -22,6 +22,8 @@ import DetailOrder from '@/pages/admin/DetailOrder';
 import Profile from '@/pages/client/Profile';
 import VariantProduct from '@/pages/admin/Products/VariantProduct';
 import ListProSearch from '@/pages/client/ListProSearch/ListProSearch';
+import SubCategory from '@/pages/admin/SubCategories/HomeSubCate';
+import EditSubCate from '@/pages/admin/SubCategories/EditSubCate';
 // import ResetPersistButton from '@/Persitor';
 
 
@@ -40,6 +42,12 @@ const privateRoutes = [
     },{
         path: config.privateRouter.editCategory,
         component: EditCate
+    },{
+        path: config.privateRouter.indexSubCategory,
+        component: SubCategory
+    },{
+        path: config.privateRouter.editSubCategory,
+        component: EditSubCate
     },{
         path: config.privateRouter.indexProduct,
         component: HomeProduct

@@ -1,10 +1,12 @@
 import classNames from "classnames/bind"
 import styles from "./Profile.module.scss"
 import { useSelector } from "react-redux";
+import Image from "@/components/Image";
 
 const cx = classNames.bind(styles)
 function Profile() {
     const user = useSelector((state) => state?.auth?.login?.currentUser?.data)
+
     console.log(user)
     return ( 
         <div className={cx('container', 'wrap')}>
@@ -12,7 +14,11 @@ function Profile() {
                 <div className={cx('col-md-2')}>
                     <div className={cx('header-title')}>
                         <a className={cx('image')}>
-                            <img src="http://thuthuatphanmem.vn/uploads/2018/09/11/hinh-anh-dep-6_044127357.jpg" alt="" />
+                        <Image
+                            className={cx('user-avatar')}
+                            src={user?.image}
+                            fallBack="https://fullstack.edu.vn/static/media/fallback-avatar.155cdb2376c5d99ea151.jpg"
+                        />
                         </a>
                         <div className={cx('action')}>
                             <div className={cx('name')}>{user?.username}</div>
@@ -32,25 +38,31 @@ function Profile() {
 
                         <div className={cx('box-content')}>
                             <div className={cx('row')}>
-                                <div className={cx('col-md-12')}>
+                                <div className={cx('col-md-7')}>
                                     <div className={cx('information')}>
                                         <table>
                                             <tr>
                                                 <td className={cx('title')}> <label htmlFor="">Họ và tên: </label></td>    
-                                                <td className={cx('info')}><div>{user?.username}</div></td>
+                                                <td className={cx('info')}>
+                                                    <input type="text" className="input-info" value={user?.username}/>
+                                                </td>
                                             </tr>   
                                             <tr>
                                                 <td className={cx('title')}><label htmlFor="">Email:</label></td>
-                                                <td className={cx('info')}><div>{user?.email}</div></td>
+                                                <td className={cx('info')}>
+                                                    <input type="text" className="input-info" value={user?.email}/>
+                                                </td>
                                             </tr> 
                                             <tr>
                                                 <td className={cx('title')}><label htmlFor="">Số điện thoại:</label></td>
-                                                <td className={cx('info')}><div>{user?.phone}</div></td>
+                                                <td className={cx('info')}>
+                                                    <input type="text" className="input-info" value={user?.phone}/>
+                                                </td>
                                             </tr>
                                             <tr className={cx('box-gender')}>
                                                 <td className={cx('title')}><label htmlFor="">Địa chỉ:</label></td>
                                                 <td className={cx('info')}>
-                                                   <div>{user?.address}</div>
+                                                    <input type="text" className="input-info" value={user?.address}/>
                                                 </td>
                                             </tr>
                                             <tr className={cx('box-gender')}>
@@ -63,12 +75,18 @@ function Profile() {
                                     </div>
                                 </div>
 
-                                {/* <div className={cx('col-md-5')}>
+                                <div className={cx('col-md-5')}>
                                     <div className={cx('content-image')}>
-                                        <div className={cx('img-right')}><img src="https://hinhanhdephd.com/wp-content/uploads/2017/06/anh-nguoi-dep-hinh-nguoi-mau-de-thuong-nhat-qua-dat-13.jpg" alt="" /></div>
+                                        <div className={cx('img-right')}>
+                                            <Image
+                                                className={cx('user-avatar')}
+                                                src={user?.image}
+                                                fallBack="https://fullstack.edu.vn/static/media/fallback-avatar.155cdb2376c5d99ea151.jpg"
+                                            />
+                                        </div>
                                         <div className={cx('upload')}><input type="file" /></div>
                                     </div>
-                                </div> */}
+                                </div>
                             </div>
                         </div>
                     </div>

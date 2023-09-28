@@ -71,7 +71,6 @@
 
                     &:hover>ul {
                         display: block;
-                        
                     }  
                     
                     ul {
@@ -206,6 +205,7 @@
         }
 
         .has-sub{
+            position: relative;
             text-decoration: none;
             color: var(--text-color);
             margin:0 10px;
@@ -216,6 +216,9 @@
             text-align: center;
             min-width: 50px;
 
+            &:hover>ul {
+                transform: rotate3d(0,0,0,0deg);
+            }
             .text-nav {
                 position: relative;
                 display: block;
@@ -229,20 +232,20 @@
                 text-decoration: none;
                 color: #fff;
 
-                &::before {
-                    content: '';
-                    position: absolute;
-                    bottom: 0;
-                    left: 0px;
-                    background-color: #00b156;
-                    width: 0;
-                    height: 6px;
-                    transition: width .2s ease-in-out;
-                }
+                // &::before {
+                //     content: '';
+                //     position: absolute;
+                //     bottom: 0;
+                //     left: 0px;
+                //     background-color: #00b156;
+                //     width: 0;
+                //     height: 6px;
+                //     transition: width .2s ease-in-out;
+                // }
 
-                &:hover::before {
-                    width: calc(100%);
-                }
+                // &:hover::before {
+                //     width: calc(100%);
+                // }
             }
 
             &:hover {

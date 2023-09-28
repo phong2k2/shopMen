@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import * as productService from "@/services/adminServices/productService";
 import * as categoryService from "@/services/adminServices/categoryService";
+import * as subCategoryService from "@/services/subCategoryService"
 import { useNavigate } from "react-router-dom";
 import config from "@/config";
 import Input from "@/components/Input";
@@ -10,6 +11,8 @@ function CreateProduct() {
     const [listCate, setListCate] = useState([]);
     const [stateProduct, setStateProduct] = useState("");
     const navigate = useNavigate()
+    const [selectedCategoryId, setSelectedCategoryId] = useState('');
+    const [subCategory, setSubCategory] = useState([])
 
     // console.log('stateProduct',stateProduct)
 
@@ -17,20 +20,9 @@ function CreateProduct() {
   const handleCreateProduct = (e) => {
     e.preventDefault();
     const formData = new FormData()
-    const propertiesToAppend = [
-      'name', 'price', 'image', 'discount',
-      'countInStock', 'description', 'hot','category',
-    ];
-    propertiesToAppend.forEach(property => {
-      // if(property === 'image') {
-      //   const images = stateProduct['images']
-      //   for(const image of images) {
-      //       formData.append('images', image)
-      //   }
-      // }else {
-        formData.append(property, stateProduct[property]);
-      // }
-    });
+    for( let name in stateProduct) {
+      formData.append(name, stateProduct[name]);
+    }
 
     // formData.forEach((value, key) => {
     //   console.log(key, value);
@@ -63,6 +55,20 @@ function CreateProduct() {
       };
       getAllCategory();
     }, []);
+
+    //Get Subcategory
+    useEffect(() => {
+      const fetchGetSubCategory = async () => {
+        try {
+          const res = await subCategoryService.getSubCategoryByCategory(selectedCategoryId)
+          setSubCategory(res)
+        }catch (err) {
+          console.log(err)
+        }
+      } 
+      fetchGetSubCategory()
+    },[selectedCategoryId])
+    
   // Lấy data từ form
   const handleOnchangeInformation = (e) => {
     const type = e.target.name;
@@ -73,6 +79,10 @@ function CreateProduct() {
         // value = Array.from(e.target.files);
         value = e.target.files[0];
         break;
+      case "category":
+        setSelectedCategoryId(e.target.value)
+        value = e.target.value;
+        break
       default:
         value = e.target.value;
         break;
@@ -105,10 +115,28 @@ function CreateProduct() {
                 id="cate"
               >
                 <option value="">Chọn danh mục</option>
-                {listCate.map((cate, index) => {
+                {listCate?.map((cate, index) => {
                   return (
-                    <option key={index} value={cate._id}>
-                      {cate.name}
+                    <option key={index} value={cate?._id}>
+                      {cate?.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Danh Mục Con</label>
+              <select
+                onChange={handleOnchangeInformation}
+                className="form-control show-cti form-select list"
+                name="subCategory"
+                id="cate"
+              >
+                <option value="">Chọn danh mục con</option>
+                {subCategory?.map((cate, index) => {
+                  return (
+                    <option key={index} value={cate?._id}>
+                      {cate?.name}
                     </option>
                   );
                 })}

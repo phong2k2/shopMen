@@ -54,9 +54,9 @@ function HomeCate() {
                 return (
                     <tr key={index} >
                         <th scope="row">{index + 1}</th>
-                        <td>{cate?.name}</td>
+                        <td><Link to={`/admin/cate-item/${cate?._id}`}>{cate?.name}</Link></td>
                         <td>
-                            <Link className='btn btn-primary' to={`/admin/category/${cate._id}`} >Sửa</Link>
+                            <Link className='btn btn-primary' to={`/admin/category/${cate?._id}`} >Sửa</Link>
                             <button className='btn btn-danger ml-3' onClick={() => handleDeleteCate(cate?._id)} >Xóa</button>
                         </td>
                     </tr>

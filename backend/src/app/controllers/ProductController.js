@@ -1,4 +1,5 @@
 const ProductService = require('../../Services/ProductService')
+const Product = require('../model/Product')
 
 
 
@@ -8,8 +9,10 @@ const ProductController = {
         try {
             const info = {
                 ...req.body,
+                
                 image: req.file.filename,
             }
+            console.log(info)
             
             if(info){
                 const response = await ProductService.createProduct(info)
@@ -54,28 +57,16 @@ const ProductController = {
             res.status(500).json(err)
         }
     },
-
-    // Get product by category
-    // getProductsByCategory: async (req, res) => {
-    //     try {
-    //         const response = await ProductService.getProductsByCategory(req.params.slug)
-    //         res.status(200).json(response)
-    //     }catch(err) {
-    //         res.status(500).json(err)
-    //     }
-    // },
-
     
     // Get Details Product
     getDetailsProduct: async (req, res) => {
-        
-        if(req.params.slug === null) {
-            return res.status(412).json({
-                status: 'ERR',
-                message: 'The input is required'
-            })
-        }
         try {
+            if(req.params.slug === null) {
+                return res.status(412).json({
+                    status: 'ERR',
+                    message: 'The input is required'
+                })
+            }
             const response = await ProductService.getDetailsProduct(req.params.slug)
             res.status(200).json(response)
         }catch(err) {
@@ -83,15 +74,51 @@ const ProductController = {
         }
     },
 
+    // Get Product By Category
+    getProductByCategory: async (req, res) => {
+        try {
+            const slug = req.params.slug
+            const { limit, page} = req.query
+            if(!slug ) {
+                return res.status(412).json({
+                    status: 'ERR',
+                    message: 'The input is required'
+                })
+            }
+            const response = await ProductService.getProductByCategory(slug, limit, page)
+            res.status(200).json(response)
+        }catch(err) {
+            res.status(404).json(err)
+        }
+    },
+
+    // Get Product By Sub Category
+    getProductBySubCategory: async (req, res) => {
+        try {
+            const slug = req.params.slug
+            const { limit, page} = req.query
+            if(!slug || !limit || !page) {
+                return res.status(412).json({
+                    status: 'ERROR',
+                    message: 'The input is required'
+                })
+            }
+            const response = await ProductService.getProductBySubCategory(slug, limit, page)
+            res.status(200).json(response)
+        }catch (err) {
+            res.status(500).json(err)
+        }
+    },
+
     // Get Details Product Id
     getDetailsProductId: async (req, res) => {
-        if(req.params.id === null) {
-            return res.status(412).json({
-                status: 'ERR',
-                message: 'The input is required'
-            })
-        }
         try {
+            if(req.params.id === null) {
+                return res.status(412).json({
+                    status: 'ERR',
+                    message: 'The input is required'
+                })
+            }
             const response = await ProductService.getDetailsProductId(req.params.id)
             res.status(200).json(response)
         }catch(err) {
@@ -232,8 +259,13 @@ const ProductController = {
         }catch (err) {
             res.status(500).json(err)
         }
-    }
+    },
+
+    //////
+    
 }
+
+
 
 
 

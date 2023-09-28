@@ -134,7 +134,11 @@ const getAllProducts = ({limit = 10, page, sort, filter}) => {
                 const label = filter[0]
                 const allObjectsFilter = await Product.find({
                     [label]:{'$regex': filter[1]}
-                }).limit(limit).sort({createdAt: -1, updatedAt: -1})
+                })
+                .limit(limit)
+                .sort({createdAt: -1, updatedAt: -1})
+                .populate('category')
+                .populate('subCategory')
 
                 resolve({
                     status: 'Success',
@@ -148,7 +152,14 @@ const getAllProducts = ({limit = 10, page, sort, filter}) => {
             if(sort) {
                 const objectSort = {}
                 objectSort[sort[0]] = sort[1]
-                const allProductSort = await Product.find().limit(limit).skip((page * limit) - limit).sort(objectSort).sort({createdAt: -1, updatedAt: -1})
+                const allProductSort = await Product.find()
+                .limit(limit)
+                .skip((page * limit) - limit)
+                .sort(objectSort)
+                .sort({createdAt: -1, updatedAt: -1})
+                .populate('category')
+                .populate('subCategory')
+
                 resolve({
                     status: 'Success',
                     message: 'Successful request',
@@ -158,9 +169,17 @@ const getAllProducts = ({limit = 10, page, sort, filter}) => {
             }   
             
             if(!limit) {
-                allProducts = await Product.find().sort({createdAt: -1, updatedAt: -1})
+                allProducts = await Product.find()
+                .sort({createdAt: -1, updatedAt: -1})
+                .populate('category')
+                .populate('subCategory')
             }else {
-                allProducts = await Product.find().limit(limit).skip((page - 1) * limit).sort({createdAt: -1, updatedAt: -1})
+                allProducts = await Product.find()
+                .limit(limit)
+                .skip((page - 1) * limit)
+                .sort({createdAt: -1, updatedAt: -1})
+                .populate('category')
+                .populate('subCategory')
             }
 
             resolve({
@@ -215,15 +234,15 @@ const getDetailsProduct = (slug) => {
 
 
 // Get Product Detail Id
-const getDetailsProductId = (id) => {
+const getDetailsProductId = ( id) => {
     return new Promise( async (resolve, reject) => {
         try {
             const product = await Product.findOne({
                 _id: id,
-            }).populate('category')
+            })
             
             if(product === null) {
-                resolve({
+                reject({
                     status: 'ERR',
                     message: 'The product is not defined'
                 })
@@ -238,6 +257,77 @@ const getDetailsProductId = (id) => {
                 data: product
             })
         }catch (err) {
+            reject({
+                status: 'Error',
+                message: 'Failed to get Product Detail',
+                error: err
+            })
+        }
+    })
+}
+
+//Get Product By Category
+const getProductByCategory = (slug, limit, page) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const skipPage = page  * limit 
+            const category = await Category.findOne({ slug: slug });
+            if(category) {
+                const productCount = await Product.countDocuments({ category: category._id });
+                const product = await Product.find({
+                    $and: [
+                    { category: category._id }
+                ]})
+                .skip(skipPage)
+                .limit(limit)
+                .sort({ createdAt: -1 })
+
+                resolve({
+                    status: 'OK',
+                    message: 'SUCCESS',
+                    data: {
+                        totalProducts: productCount,
+                        product,
+                        nameCategory: category?.name
+                    }
+                })
+            }
+        }catch(err) {
+            reject({
+                status: 'Error',
+                message: 'Failed to get Product Detail',
+                error: err
+            })
+        }
+    })
+}
+
+// Get Product By Sub Category
+const getProductBySubCategory = (slug, limit, page) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const skipPage = page  * limit 
+            const subcategory = await Subcategory.findOne({ slug: slug });
+            if(subcategory) {
+                const productCount = await Product.countDocuments({ subCategory: subcategory._id });
+                const product = await Product.find({
+                    $and: [
+                    { subCategory: subcategory._id }
+                ]})
+                .skip(skipPage)
+                .limit(limit)
+                .sort({ createdAt: -1 })
+                resolve({
+                    status: 'OK',
+                    message: 'SUCCESS',
+                    data: {
+                        totalProducts: productCount,
+                        product,
+                        nameCategory: subcategory?.name
+                    }
+                })
+            }
+        }catch(err) {
             reject({
                 status: 'Error',
                 message: 'Failed to get Product Detail',
@@ -447,5 +537,7 @@ module.exports = {
     createSize,
     getProductSize,
     deleteSize,
-    searchProduct
+    searchProduct,
+    getProductBySubCategory,
+    getProductByCategory
 }

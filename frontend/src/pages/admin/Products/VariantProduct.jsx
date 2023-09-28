@@ -154,6 +154,7 @@ function VariantProduct() {
                                         <div className="form-group">
                                             <label form="exampleSelectGender">Màu sắc</label>
                                             <input type="text" value={itemColor?.color} name="color" disabled className="form-control amount" id="exampleInputName1" placeholder=""/>                         
+                                            
                                         </div>
                                       </div>
                                       <div className="col-sm-12">
@@ -207,9 +208,9 @@ function VariantProduct() {
 
           {/* Memory Details */}
           <div className="col-6 grid-margin stretch-card" id="">
-            <div className="row h-100">
+            <div className="row ">
               <div className="col-md-12 mt-1">
-                <div className="card card-body h-100">
+                <div className="card card-body">
                   <h4 className="card-title">Kích thước</h4>
                   {/* ... Memory details */}
                   {listSize?.map((itemSize, index) => {

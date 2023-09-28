@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react'
 import * as productService from '@/services/adminServices/productService'
 import * as categoryService from '@/services/adminServices/categoryService'
+import * as subCategoryService from '@/services/subCategoryService'
 import { useNavigate, useParams } from 'react-router-dom';
 import Input from '@/components/Input/Input';
 import config from '@/config'
@@ -18,6 +19,7 @@ function EditProduct() {
         description: '',
       })
     const [listCate, setListCate] = useState([])
+    const [subListCate, setSubListCate] = useState([])
     const { id } = useParams();
     const navigate = useNavigate()
 
@@ -55,21 +57,39 @@ function EditProduct() {
         getAllCategory()
     },[])
 
+    useEffect(() => {
+        const getAllSubCategory = async () => {
+            try {
+                const id = stateDetailProduct?.category
+                const res = await subCategoryService.getSubCategoryByCategory(id);
+                setSubListCate(res)
+            }catch (err) {
+                console.log(err)
+            }
+        }
+        getAllSubCategory()
+    },[stateDetailProduct?.category])
+
     const handleSubmitEditForm = async (e) => {
         e.preventDefault()
         const formData = new FormData()
-        const propertiesToAppend = [
-          'name', 'price', 'image', 'discount',
-          'countInStock', 'description', 'hot','category',
-        ];
-        propertiesToAppend.forEach(property => {
-            if(property === 'category'){
-                const idCategory = stateDetailProduct[property]._id ||  stateDetailProduct[property]
-                formData.append('category', idCategory);
-            }else {
-                formData.append(property, stateDetailProduct[property]);
-            }
-        });
+        // const propertiesToAppend = [
+        //   'name', 'price', 'image', 'discount',
+        //   'countInStock', 'description', 'hot','category',
+        // ];
+        // propertiesToAppend.forEach(property => {
+        //     if(property === 'category'){
+        //         const idCategory = stateDetailProduct[property]._id ||  stateDetailProduct[property]
+        //         formData.append('category', idCategory);
+        //     }else {
+        //         formData.append(property, stateDetailProduct[property]);
+        //     }
+        // });
+
+        for( let name in stateDetailProduct) {
+            formData.append(name, stateDetailProduct[name]);
+          }
+      
 
         try {
         if (id) {
@@ -113,7 +133,7 @@ function EditProduct() {
                             className="form-control show-cti form-select list"
                             name="category"
                             id="cate"
-                            value={stateDetailProduct?.category?._id}
+                            value={stateDetailProduct?.category}
                             >
                             <option  value="">Chọn danh mục</option>
                             {listCate.map((cate, index) => {
@@ -125,6 +145,25 @@ function EditProduct() {
                                         {cate?.name}
                                     </option>
                                 )
+                            })}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label>Danh Mục Con</label>
+                        <select
+                            onChange={handleChangeEdit}
+                            className="form-control show-cti form-select list"
+                            name="subCategory"
+                            id="cate"
+                            value={stateDetailProduct?.subCategory}
+                        >
+                            <option value="">Chọn danh mục con</option>
+                            {subListCate?.map((cate, index) => {
+                            return (
+                                <option key={index} value={cate?._id}>
+                                {cate?.name}
+                                </option>
+                            );
                             })}
                         </select>
                     </div>

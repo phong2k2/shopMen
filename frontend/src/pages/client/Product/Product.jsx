@@ -1,10 +1,11 @@
 import classNames from "classnames/bind";
-import styles from './Category.module.scss'
+import styles from './Product.module.scss'
 import ReactPaginate from 'react-paginate';
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import * as categoryService from "@/services/adminServices/categoryService";
+// import * as categoryService from "@/services/adminServices/categoryService";
+import * as productService from "@/services/adminServices/productService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { addToCart, getTotals } from "@/redux/cartSlice";
@@ -12,35 +13,55 @@ import ProductItem from "@/components/ProductItem";
 
 
 const cx = classNames.bind(styles)
-function Category() {
+function Product() {
     const { slug } = useParams();
-    const [nameTitle, setNameTitle] = useState('')
-    const [data, setData] = useState([]);
     const [pageNumber, setPageNumber] = useState(0);
+    const [products, setProducts] = useState([])
     const dispatch = useDispatch()
     const limit = 10
 
-    const pageCount = useMemo(() => {
-        return Math.ceil(data?.countProduct / limit);
-    }, [data?.countProduct, limit]);
 
-     useEffect(() => {
-        const getNameCategory = async () => {
+    const pageCount = useMemo(() => {
+        return Math.ceil(products?.totalProducts / limit);
+    }, [products?.totalProducts, limit]);
+    //  useEffect(() => {
+    //     const getNameCategory = async () => {
+    //         try {
+    //             const res = await categoryService.getDetailCategory({slug, limit, pageNumber })
+    //             setData(res)
+    //             setNameTitle(res?.data)
+    //         }catch (err) {
+    //             console.log(err)
+    //         }
+    //     }
+    //     getNameCategory()
+    //  },[slug, pageNumber])
+
+    useEffect(() => {
+    const fetchGetProductByCategory = async () => {
+        try {
+            const res = await productService.getProductByCategory(slug, limit, pageNumber)
+            setProducts(res)
+        }catch (err) {
+            console.log(err)
+        }
+    }
+    fetchGetProductByCategory()
+    },[slug])
+
+    useEffect(() => {
+        const fetchGetProductBySubCategory = async () => {
             try {
-                const res = await categoryService.getDetailCategory({slug, limit, pageNumber })
-                setData(res)
-                setNameTitle(res?.data)
+                const res = await productService.getProductBySubCategory(slug, limit, pageNumber);
+                setProducts(res)
             }catch (err) {
-                console.log(err)
+                console.error(err)
             }
         }
-        getNameCategory()
-     },[slug, pageNumber])
+        fetchGetProductBySubCategory()
+    },[slug])
 
-     const handlePageChange = ({ selected }) => {
-        setPageNumber(selected);
-      };
-
+      // Add to cart
       const handelAddToCart = (product, discountedPrice) => {
         if(product) {
           dispatch(addToCart({
@@ -54,6 +75,10 @@ function Category() {
           }))
           dispatch(getTotals());
         }
+      };
+
+      const handlePageChange = ({ selected }) => {
+        setPageNumber(selected);
       };
     return ( 
         <section className={cx('collections')}>
@@ -80,7 +105,7 @@ function Category() {
                                     <li>
                                         <a>
                                             <span>
-                                            {nameTitle?.name}
+                                            {products?.nameCategory}
                                             </span>
                                         </a>
                                     </li>
@@ -96,7 +121,7 @@ function Category() {
                         {/* Title Product */}
                         <div className={cx('row', 'hed-title')}>
                             <div className={cx('col-md-6')}>
-                                <h1>{nameTitle?.name}</h1>
+                                <h1>{products?.nameCategory}</h1>
                             </div>
                             {/* <div className={cx('col-md-6', 'select')}>
                                 <div className={cx('option')}>
@@ -113,7 +138,7 @@ function Category() {
                         {/* List Product */}
                         <div className={cx('row')}>
                                 {
-                                    nameTitle?.product?.map((itemPro, index) => {
+                                    products?.product?.map((itemPro, index) => {
                                         return(
                                             <ProductItem key={index} itemPro={itemPro} onClick={handelAddToCart}/>
                                         )
@@ -145,4 +170,4 @@ function Category() {
     );
 }
 
-export default Category;
+export default Product;

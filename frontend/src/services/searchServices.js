@@ -2,7 +2,7 @@ import * as response from '@/utils/httpRequest'
 
 export const search = async (q, type = 'less', page = 1) => {
   try {
-    const res = await response.get('/admin/product/search', {
+    const res = await response.get('/product/search', {
       params: {
         q,
         type,

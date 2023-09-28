@@ -4,6 +4,7 @@ const route = express.Router();
 const categoryController = require('../app/controllers/CategoryController');
 
 route.get('/', categoryController.getAllCategories)
+route.get('/slide', categoryController.getCategorySlide)
 route.get('/:id', categoryController.getACategory)
 route.get('/detail/:slug', categoryController.getDetailCategory)
 route.post('/create', categoryController.createCategory)
