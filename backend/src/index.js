@@ -5,10 +5,12 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const {engine} = require('express-handlebars');
 const session = require('express-session');
+const passport = require('passport');
 
-
+const {corsOptions} = require('./configs/cross')
+const {errorHandlingMiddleware} = require('./app/middlewares/errorHandlingMiddlware');
 const route = require('./routes');
-const db = require('./config/db');
+const db = require('./configs/db');
 
 const app = express();
 const port = 3000;
@@ -17,10 +19,10 @@ const port = 3000;
 //connect db
 db.connect();
 
+app.use(express.json());
 app.use(express.urlencoded({
     extended: true,
 }));
-app.use(express.json());
 
 // Middleware để xử lý method spoofing
 app.use((req, res, next) => {
@@ -45,15 +47,15 @@ app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'resources', 'views'));
 //HTTP logger
 app.use(morgan('combined'));
-// app.use(cors());
-app.use(cors({
-    origin: 'http://localhost:5173', // Cho phép tất cả các yêu cầu từ địa chỉ này
-    credentials: true, // Cho phép chia sẻ cookie và dữ liệu xác thực qua các miền
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-  }));
-  
-  
+// Xử lý Cors
+// app.use(cors({
+//     origin: 'http://localhost:5173', // Cho phép tất cả các yêu cầu từ địa chỉ này
+//     credentials: true, // Cho phép chia sẻ cookie và dữ liệu xác thực qua các miền
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     allowedHeaders: ['Content-Type', 'Authorization']
+//   }));
+app.use(cors(corsOptions));
+
   
 app.use(cookieParser());
 app.use(
@@ -63,10 +65,14 @@ app.use(
       saveUninitialized: true,
     })
   );
-
+  app.use(passport.initialize());
+  app.use(passport.session());
 
 //routes init
 route(app);
+
+//Middleware xử lý lỗi tập trung
+app.use(errorHandlingMiddleware)
 
 
 

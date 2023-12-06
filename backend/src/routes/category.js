@@ -1,15 +1,17 @@
 const express = require('express');
-const route = express.Router();
+const router = express.Router();
+const {categoryValidation} = require('../validations/categoryValidation')
+
 
 const categoryController = require('../app/controllers/CategoryController');
+const middlewareController = require('../app/middlewares/authMiddleware')
 
-route.get('/', categoryController.getAllCategories)
-route.get('/slide', categoryController.getCategorySlide)
-route.get('/:id', categoryController.getACategory)
-route.get('/detail/:slug', categoryController.getDetailCategory)
-route.post('/create', categoryController.createCategory)
-route.put('/:id', categoryController.updateCategory)
-route.delete('/:id', categoryController.deleteCategory)
+router.get('/', categoryController.getAllCategories)
+router.get('/:slug', categoryController.getDetailCategory)
+router.get('/:id', categoryController.getCategoryDetail)
+router.post('/',  categoryValidation.createNew, categoryController.createCategory)
+router.put('/:id', categoryController.updateCategory)
+router.delete('/:id', middlewareController.authAdminMiddleWare, categoryController.deleteCategory)
 
 
-module.exports = route
+module.exports = router

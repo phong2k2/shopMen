@@ -6,33 +6,37 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
-    email: {
+    oauth_provider: {
         type: String,
-        required: true,
+        default: null
     },
-    password: {
+    oauth_id: {
         type: String,
-        required: true,
-    },
-    address: {
-        type: String,
-        required: true,
+        default: null
     },
     phone: {
-        type: Number,
+        type: String,
+    },
+    email: {
+        type: String,
         required: true,
     },
     image: {
         type: String,
     },
+    password: {
+        type: String,
+        required: true,
+    },
     status: {
         type: Number,
         default: 0,
     },
-    role: {
-        type: Number,
-        default: 0,
-    }
+    isAdmin: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
 },{
     timestamps: true,
 },

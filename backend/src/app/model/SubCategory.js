@@ -7,6 +7,16 @@ const SubCategorySchema = new Schema({
     type: String,
     required: true,
   },
+  image: {
+    publicId:{
+        type: String,
+        required: true
+    },
+    url: {
+        type: String,
+        required: true
+    }
+},
   slug: {
     type: String,
     slug: 'name',
@@ -16,7 +26,7 @@ const SubCategorySchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
     required: true
-  },
+  }
 },{
     timestamps: true,
 });

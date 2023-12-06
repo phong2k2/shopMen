@@ -133,7 +133,10 @@ function Sidebar() {
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <NavLink to={config.privateRouter.indexUser} className="collapse-item">
+            <NavLink
+              to={config.privateRouter.indexUser}
+              className="collapse-item"
+            >
               Danh sách Người dùng
             </NavLink>
             {/* <NavLink to={config.privateRouter.createProduct} className="collapse-item" >Thêm danh mục</NavLink> */}
@@ -153,74 +156,63 @@ function Sidebar() {
           <i className="fas fa-fw fa-folder"></i>
           <span>Đơn hàng</span>
         </a>
+        <div id="collapsePages" className="collapse">
+          <div className="bg-white py-2 mb-1 collapse-inner rounded">
+            <NavLink className="collapse-item" to={`/admin/order/processing`}>
+              Processing
+            </NavLink>
+          </div>
+          <div className="bg-white py-2 mb-1 collapse-inner rounded">
+            <NavLink className="collapse-item" to={`/admin/order/confirmed`}>
+              Confirmed
+            </NavLink>
+          </div>
+          <div className="bg-white py-2 mb-1 collapse-inner rounded">
+            <NavLink className="collapse-item" to={`/admin/order/shipped`}>
+              Shipped
+            </NavLink>
+          </div>
+          <div className="bg-white py-2 mb-1 collapse-inner rounded">
+            <NavLink className="collapse-item" to={`/admin/order/complete`}>
+              Complete
+            </NavLink>
+          </div>
+          <div className="bg-white py-2 mb-1 collapse-inner rounded">
+            <NavLink className="collapse-item" to={`/admin/order/cancelled`}>
+              Cancelled
+            </NavLink>
+          </div>
+        </div>
+      </li>
+
+      <li className="nav-item">
+        <a
+          className="nav-link collapsed"
+          href="#"
+          data-toggle="collapse"
+          data-target="#collapseMethod"
+          aria-expanded="true"
+          aria-controls="collapseMethod"
+        >
+          <i className="fas fa-fw fa-folder"></i>
+          <span>Phương thức thanh toán</span>
+        </a>
         <div
-          id="collapsePages"
+          id="collapseMethod"
           className="collapse"
           aria-labelledby="headingPages"
           data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
-            <a className="collapse-item" href={config?.privateRouter?.order}>
-              Danh sách đơn hàng
-            </a>
+            <NavLink
+              className="collapse-item"
+              to={config?.privateRouter?.payment}
+            >
+              Danh sách phương thức
+            </NavLink>
           </div>
         </div>
       </li>
-      {/*  */}
-      {/* Divider --> */}
-      <hr className="sidebar-divider" />
-
-      {/*  */}
-      {/* Heading --> */}
-      <div className="sidebar-heading">Addons</div>
-
-      {/*  */}
-      {/* Nav Item - Pages Collapse Menu --> */}
-      
-
-      {/* Nav Item - Charts --> */}
-      <li className="nav-item">
-        <a className="nav-link" href="charts.html">
-          <i className="fas fa-fw fa-chart-area"></i>
-          <span>Charts</span>
-        </a>
-      </li>
-
-      {/* Nav Item - Tables --> */}
-      <li className="nav-item">
-        <a className="nav-link" href="tables.html">
-          <i className="fas fa-fw fa-table"></i>
-          <span>Tables</span>
-        </a>
-      </li>
-
-      {/* Divider --> */}
-      <hr className="sidebar-divider d-none d-md-block" />
-
-      {/*  */}
-      {/* Sidebar Toggler (Sidebar) --> */}
-      <div className="text-center d-none d-md-inline">
-        <button className="rounded-circle border-0" id="sidebarToggle"></button>
-      </div>
-
-      {/* Sidebar Message --> */}
-      <div className="sidebar-card d-none d-lg-flex">
-        <img
-          className="sidebar-card-illustration mb-2"
-          src="img/undraw_rocket.svg"
-          alt="..."
-        />
-        <p className="text-center mb-2">
-          <strong>SB Admin Pro</strong> is packed with premium features,
-          components, and more!
-        </p>
-        <a
-          className="btn btn-success btn-sm"
-          href="https://startbootstrap.com/theme/sb-admin-pro"
-        >
-          Upgrade to Pro!
-        </a>
-      </div>
     </ul>
   );
 }

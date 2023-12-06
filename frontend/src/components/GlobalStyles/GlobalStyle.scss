@@ -1,4 +1,10 @@
 @import 'normalize.css';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;1,500;1,700;1,900&display=swap');
+
+
+$mobile-size: "only screen and (max-width: 768px)";
+$tablet-size: "only screen and (min-width: 768px) and (max-width: 1381px)";
+$desktop-size: "only screen and (min-width: 1382px)";
 
 :root {
     --black: #000;
@@ -7,34 +13,37 @@
     --color-main: #fff;
     --price-color: rgb(230, 153, 153);
     --grey: #333;
-    --color-footer: #d7d7d7
+    --color-footer: #000000;
 
+    --background-color-main: #f9fafa
 
-    --height-body-header: 70px
-    --height-top-header: 30px
-    --width-item-header: 97px
+    --width-site-cart: 480px;
 
     --pd-top-header: calc(var(--height-body-header) + var(--height-top-header));
 
     // font
-  --font-family: 'Quicksand', sans-serif;
+  --font-family: 'SVN-Gilroy', sans-serif;
+  --font-family-text: 'svgGilroy', sans-serif;
 }
 
 html {
     font-size: 62.5%;
-  }
+}
+
 * {
     margin: 0;
-    box-sizing: border-box;
+    box-sizing: border-box !important;
 }
 
 body {
   font-family: var(--font-family);
-  // font-size: 1.6rem;
+  font-size: 1.6rem;
   line-height: 1.5;
   text-rendering: 'optimizespeed';
   overflow-y: overlay;
+  overflow-x: hidden;
 }
+
 
 button,
 input,
@@ -47,7 +56,26 @@ a[href] {
     color: var(var(--text-color));
     text-decoration: none;
 }
-//Font embedded 
+
+// Font embedded 
+@font-face {
+  font-family: Quicksand;
+  src: url('/src/assets/fonts/6xKtdSZaM9iE8KbpRA_hK1QN.woff2');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Quicksand;
+  src: url('/src/assets/fonts/6xKtdSZaM9iE8KbpRA_hK1QN.woff2');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: Quicksand;
+  src: url('/src/assets/fonts/6xKtdSZaM9iE8KbpRA_hK1QN.woff2');
+  font-weight: 800;
+}
+
 @font-face {
   font-family: Space Grotesk;
   src: url('/src//assets//fonts//V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXskPMA.woff2');
@@ -55,17 +83,47 @@ a[href] {
 }
 
 @font-face {
-  font-family: Quicksand;
-  src: url('/src/assets/fonts/6xKtdSZaM9iE8KbpRA_hK1QN.woff2');
-    font-weight: 800;
+  font-family: GT;
+  src: url('/src/assets/fonts/GT.woff');
+  font-weight: 800;
+}
+@font-face {
+  font-family: SVN-Gilroy;
+  src: url('/assets/fonts/SVN-Gilroy\ SemiBold.otf');
+  font-weight: 400;
 }
 
-.container {
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
+@font-face {
+  font-family: SVN-Gilroy;
+  src: url('/assets/fonts/SVN-Gilroy\ SemiBold.otf');
+  font-weight: 600;
 }
+
+@font-face {
+  font-family: SVN-Gilroy;
+  src: url('/assets/fonts/SVN-Gilroy\ SemiBold.otf');
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: svgGilroy;
+  src: url('/assets/fonts/GT.woff');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: CriteriaCF;
+  src: url('/src/assets/fonts/CriteriaCF-ExtraBold.otf');
+  font-weight: 600;
+}
+
+
+// .container {
+//   padding-right: 15px;
+//   padding-left: 15px;
+//   margin-right: auto;
+//   margin-left: auto;
+// }
 
 .conformName {
   white-space: normal;
@@ -79,31 +137,52 @@ a[href] {
 
 
 
-@media only screen and (min-width: 960px) {
-  /* styles for browsers larger than 960px; */
-  .container {
-    max-width: 1440px !important;
-  }
-}
-@media only screen and (min-width: 1440px) {
-  /* styles for browsers larger than 1440px; */
-}
-@media only screen and (min-width: 2000px) {
-  /* for sumo sized (mac) screens */
-}
-@media only screen and (max-device-width: 480px) {
- /* styles for mobile browsers smaller than 480px; (iPhone) */
-}
-@media only screen and (device-width: 768px) {
- /* default iPad screens */
-}
-/* different techniques for iPad screening */
-@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
-/* For portrait layouts only */
+// @media only screen and (min-width: 960px) {
+//   /* styles for browsers larger than 960px; */
+//   .container {
+//     max-width: 1440px !important;
+//   }
+// }
+// @media only screen and (min-width: 1440px) {
+//   /* styles for browsers larger than 1440px; */
+// }
+// @media only screen and (min-width: 2000px) {
+//   /* for sumo sized (mac) screens */
+// }
+// @media only screen and (max-device-width: 480px) {
+//  /* styles for mobile browsers smaller than 480px; (iPhone) */
+// }
+// @media only screen and (device-width: 768px) {
+//  /* default iPad screens */
+// }
+// /* different techniques for iPad screening */
+// @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
+// /* For portrait layouts only */
+// }
+
+// @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {
+// /* For landscape layouts only */
+// }
+
+@media #{$mobile-size} {
+  
 }
 
-@media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {
-/* For landscape layouts only */
+@media #{$tablet-size} {
+  .container {
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 20px;
+  }
+}
+
+@media #{$desktop-size} {
+  .container {
+    width: 1600px;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: 0 50px;
+  }
 }
 
 

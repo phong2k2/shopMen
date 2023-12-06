@@ -1,0 +1,68 @@
+.has-sub{
+    position: relative;
+    text-decoration: none;
+    color: var(--black);
+    margin:0 10px;
+    font-size: 1.9rem;
+    display: inline-block;
+    height: 100%;
+    width: var(--width-item-header);
+    text-align: center;
+    min-width: 50px;
+
+    &:hover>ul {
+        transform: rotate3d(0,0,0,0deg);
+    }
+
+    &:hover .arrowDownIcon {
+        -webkit-transform: rotate(180deg); 
+        -moz-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+         transform: rotate(180deg);
+    }
+    .text-nav {
+        position: relative;
+        display: block;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        letter-spacing: 1.3px;
+        font-weight: 600;
+        font-size: 1.5rem;
+        opacity: .8;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: var(--black);
+
+        
+
+        .arrowDownIcon {
+            margin-left: 2px;
+            margin-bottom: 5px;
+            font-size: 2rem;
+            -webkit-transition: transform .2s;
+            -moz-transition: transform .2s;
+            -o-transition: transform .2s;
+            transition: transform .2s;
+        }
+        // &::before {
+        //     content: '';
+        //     position: absolute;
+        //     bottom: 0;
+        //     left: 0px;
+        //     background-color: #00b156;
+        //     width: 0;
+        //     height: 6px;
+        //     transition: width .2s ease-in-out;
+        // }
+
+        // &:hover::before {
+        //     width: calc(100%);
+        // }
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}

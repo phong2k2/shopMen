@@ -1,13 +1,15 @@
 const express = require('express');
-const route = express.Router();
+const router = express.Router();
 
 const subCategoryController = require('../app/controllers/SubCategoryController')
+const middlewareController = require('../app/middlewares/authMiddleware')
+const upload = require('../app/middlewares/multerMiddlewares');
 
-route.get('/', subCategoryController.getSubCategory)
-route.get('/:id', subCategoryController.getDetailSubCategory)
-route.get('/category/:id', subCategoryController.getSubCategoryByCategory)
-route.post('/create', subCategoryController.createSubCategory)
-route.put('/:id', subCategoryController.updateSubCategory)
-route.delete('/:id', subCategoryController.deleteSubCategory)
+router.get('/', subCategoryController.getSubCategory)
+router.get('/:id', subCategoryController.getSubCategoryDetail)
+router.get('/:categoryId/category', subCategoryController.getAllSubCategoryForCategory)
+router.post('/', middlewareController.authAdminMiddleWare, upload.single('image'), subCategoryController.createSubCategory)
+router.put('/:id', middlewareController.authAdminMiddleWare, upload.single('image'), subCategoryController.updateSubCategory)
+router.delete('/:id', middlewareController.authAdminMiddleWare, subCategoryController.deleteSubCategory)
 
-module.exports = route
+module.exports = router

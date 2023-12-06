@@ -1,16 +1,15 @@
 import Footer from "@/layouts/ClientLayout/components/Footer/Footer";
 import Header from "../components/Header/Header";
-import './HeaderOnly.css'
+import "./HeaderOnly.css";
 
 function HeaderOnly({ children }) {
   return (
-    <div>
+    <div className="main-body">
       <Header />
       <div className="content">{children}</div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
-
 
 export default HeaderOnly;

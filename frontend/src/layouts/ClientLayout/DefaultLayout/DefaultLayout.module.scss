@@ -1,4 +1,12 @@
-  .content {
+.main-body {
+  position: relative;
+  &.sidebar-mover {
+    right: var(--width-site-cart);
+  }
+}
+
+
+.content {
     flex: 1;
     background-color: #f9fafa;
   }

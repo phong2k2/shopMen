@@ -1,83 +1,55 @@
+import HttpRequest from "@/utils/httpRequest";
 
-export const createOrder = async (accessToken, formData, axiosJWT) => {
-    try {
-        const res = await axiosJWT.post(`/order/create`, formData, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        }
-        
-        )
-        return res.data
-    }catch (err) {
-        console.log(err)
-    }
+const axiosJWT = new HttpRequest();
+
+export const createOrder = async (dataOrder) => {
+    const res = await axiosJWT.post(`/orders`, dataOrder)
+    return res?.data
+    
 }
 
-export const getAllOrder = async (accessToken, axiosJWT) => {
+export const getAllOrder = async () => {
     try {
-        const res = await axiosJWT.get('/order/get-all-order', {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-        return res.data
+        const res = await axiosJWT.get('/orders')
+        return res?.data
     }catch (err) {
          console.log(err)
     }
 } 
 
-export const getDetailOrder = async (accessToken, id, axiosJWT) => {
+export const getDetailOrder = async (id) => {
     try {
-        const res = await axiosJWT.get('/order/get-details-order/' + id, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-        return res.data
+        const res = await axiosJWT.get('/orders/' + id)
+        console.log(res)
+        return res
     }catch (err) {
          console.log(err)
     }
 }
 
-export const updateStatus = async (accessToken, id, newStatus, axiosJWT) => {
+export const getAllOrderStatus = async (status) => {
     try {
-        const res = await axiosJWT.post(`/order/${id}/status`, {
-            status: newStatus,
-            _method: 'PATCH'  
-        } ,{
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-        return res.data
-    }catch(err) {
-        console.log(err)
+        const res = await axiosJWT.get(`/orders/status/${status}`)
+        return res?.data
+    }catch (err) {
+         console.log(err)
     }
 }
 
-export const cancerOrder = async (accessToken, id , axiosJWT) => {
-    try {
-        const res = await axiosJWT.post(`/order/cancer/${id}`, null,{
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-        return res.data 
-    }catch(err) {
-        console.log(err)
-    }
+export const updateStatus = async (id, newStatus) => {
+    const res = await axiosJWT.post(`/orders/${id}/update-status`, {
+        status: newStatus,
+        _method: 'PATCH'  
+    })
+    return res?.data
 }
 
-export const deleteOrder = async (accessToken, id , axiosJWT) => {
-    try {
-        const res = await axiosJWT.delete(`/order/delete/${id}`,{
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        })
-        return res
-    }catch(err) {
-        console.log(err)
-    }
+export const cancerOrder = async ( id ) => {
+    const res = await axiosJWT.post(`/orders/${id}/cancer`)
+    return res?.data 
+}
+
+export const deleteOrder = async (id) => {
+    const res = await axiosJWT.delete(`/orders/${id}`)
+    return res
 }

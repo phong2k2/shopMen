@@ -1,103 +1,194 @@
 const AuthService = require('../../Services/AuthService')
-const cookie = require('cookie'); // Import module cookie
 const JwtService = require('../../Services/JwtService')
+const {StatusCodes} = require('http-status-codes')
+const ApiError = require('../../utils/ApiError')
+const config = require('config');
+
 
 const AuthController = {
-    registerUser: async (req, res) => {
+    register: async (req, res, next) => {
         try {
-           
-            const {name, email, password, confirmPassword, phone} = req.body
+            const {email } = req.body
             const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
             const isCheckEmail = reg.test(email)
-            if(!name && !email && !password && !confirmPassword && !phone) {
-                return res.status(401).json({
-                    status: 'Error',
-                    message: 'The input is required'
-                })
-            }else if(!isCheckEmail) {
-                return res.status(200).json({
-                    status: 'ERR',
-                    message: 'The input is email'
-                })
+             if(!isCheckEmail) {
+                throw new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, 'Thông tin đầu vào không phải là email hợp lệ')
             }
-            // else if(password !== confirmPassword) {
-            //     return res.status(200).json({
-            //         status: 'ERR',
-            //         message: 'The password is equal confirmPassword'
-            //     })
-            // }
-            const response = await AuthService.registerUser(req.body)
-            return res.status(200).json(response)
-        }catch(err) {
-            res.status(500).json({
-                message: err
-            })
+            const response = await AuthService.register(req.body)
+            res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+            next(error)
         }
     },
 
-    loginUser: async (req, res) => {
+    login: async (req, res, next) => {
         try {
-            const {email, password} = req.body
+            const {email} = req.body
             const reg =  /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
             const isCheckEmail = reg.test(email);
-
-            if(!email && !password) {
-                return res.status(401).json({
-                    status: 'ERR',
-                    message: 'The input is required'
-                })
-            }else if(!isCheckEmail) {
-                return res.status(401).json({
-                    status: 'ERR',
-                    message: 'The input is email'
-                })
+            if(!isCheckEmail) {
+                throw new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, 'Thông tin đầu vào không phải là email hợp lệ')
             }
-            const response = await AuthService.loginUser(req.body)
+            const response = await AuthService.login(req.body)
             const { refreshToken, ...newResponse } = response
-             res.cookie("refreshToken", refreshToken, {
+            res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 secure: false,
-                sameSite: true,
+                sameSite: false,
                 path: "/"
             })
-
-            res.status(200).json(newResponse)
-        }catch(err) {
-            res.status(500).json({
-                message: err
-            })
+            res.status(StatusCodes.OK).json(newResponse);
+        }catch(error) {
+            next(error)
         }
     },
 
     // Refresh Token
-    requestRefreshToken: async (req, res) => {
+    requestRefreshToken: async (req, res, next) => {
         try {
             const refreshToken = req.cookies.refreshToken;
-            if (!refreshToken) {
-                return res.status(401).json("You're not authenticated")
+            if ( !refreshToken || refreshToken == 'undefined') {
+                throw new ApiError(StatusCodes.UNAUTHORIZED, 'You are not authenticated')
             }
+            
             const response = await JwtService.requestRefreshToken(refreshToken)
             const { newAccessToken, newRefreshToken } = response
-            res.cookie('refreshToken', newRefreshToken, {
+             res.cookie('refreshToken', newRefreshToken, {
                 httpOnly: true,
                 secure: false,
                 path: '/',
                 sameSite: 'strict',
             })
-            res.status(200).json({
+            
+            res.status(StatusCodes.OK).json({
                 accessToken: newAccessToken,
-            })
-        }catch (err) {
-            res.status(500).json({
-                message: err
-            })
+            });
+        }catch (error) {
+            res.clearCookie('refreshToken', {
+                httpOnly: true,
+                secure: false,
+                path: '/',
+                sameSite: 'strict',
+            });
+            next(error)
         }
     },
+
+    // Forgot Password
+    forgotPassword: async (req, res, next) => {
+        try {
+            const {email} = req.body
+            const response = await AuthService.forgotPassword(email)
+            
+            res.status(StatusCodes.OK).json(response);
+        }catch (error) {
+            next(error);
+        }
+    },
+
+    resetPassword: async (req, res, next) => {
+        try {
+            const { userId, code} = req.query
+            const {password, confirmPassword} = req.body 
+            
+            const response = await AuthService.resetPassword(userId, code, password)
+            res.status(StatusCodes.OK).json(response);
+
+        }catch (error) {
+            next(error)
+        }
+    },
+
+    // loginSuccess: async (req, res, next) => {
+    //     try {
+    //         const user = req?.user
+    //         const response = await AuthService.loginSuccess(user)
+    //         const { refreshToken, ...newResponse } = response
+    //         res.cookie("refreshToken", refreshToken, {
+    //             httpOnly: true,
+    //             secure: false,
+    //             sameSite: false,
+    //             path: "/"
+    //         })
+    //         res.status(StatusCodes.OK).json(newResponse);
+    //     }catch (error) {
+    //         next(new ApiError(StatusCodes.FORBIDDEN, error.message))
+    //     }
+    // },
+
     // Logout 
     logOut: async (req, res) => {
-        res.clearCookie('refreshToken')
-        res.status(200).json("Logged out successfully!");
-    }
+        try {
+            res.clearCookie('refreshToken')
+            res.status(StatusCodes.OK).json({message: "Logged out successfully!"});
+        }catch (error) {
+            next(error)
+        }
+    },
+
+    googleOauthHandler : async (req, res, next) => {
+        console.log(123)
+        try {
+          // Get the code from the query
+          const code = req.query.code ;
+          const pathUrl = (req.query.state ) || '/';
+          if (!code) {
+            throw new Error('khong co code')
+          }
+      
+          // Use the code to get the id and access tokens
+          const { id_token, access_token } = await AuthService.getGoogleOauthToken({ code });
+          
+          // Use the token to get the User
+          const { name, verified_email, email, picture } = await AuthService.getGoogleUser({
+            id_token,
+            access_token,
+          });
+      
+          // Check if user is verified
+          if (!verified_email) {
+            // return next(new ApiError('Google account not verified', 403));
+            throw new Error('Google account not verified')
+          }
+      
+          // Update user if user already exist or create new user
+          const user = await AuthService.findAndUpdateUser(
+            { email },
+            {
+                username:name,
+                image: picture,
+                email,
+                oauth_provider: 'Google',
+            },
+            { upsert: true, runValidators: false, new: true, lean: true }
+          );
+
+      
+          if (!user){
+            return res.redirect(`${config.get('origin')}/oauth/error`);
+        }
+          // Create access and refresh token
+        const {accessToken, refreshToken} = await AuthService.signToken(user);
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: false,
+            path: "/"
+        })
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            secure: false,
+            sameSite: false,
+            path: "/"
+        })
+
+          res.redirect(`http://localhost:5173/`);
+        } catch (err) {
+          console.log('Failed to authorize Google User', err);
+          next(err)
+        }
+      }
 }
+
 
 module.exports = AuthController;

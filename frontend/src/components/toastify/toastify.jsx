@@ -1,14 +1,18 @@
 import { toast } from "react-toastify";
 
-const options = {
-  position: "top-right",
-  theme: "dark",
-}
+// const options = {
+//   position: "top-right",
+//   theme: "dark",
+// }
 
-function toastify({ type, message }) {
+function toastify({ type, message, options }) {
   switch (type) {
     case "success":
-      toast.success(message, options);
+      toast.success(message, {
+        position: "top-right",
+        theme: "dark",
+        ...options
+      });
       break;
     case "error":
       toast.error(message, options);

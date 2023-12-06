@@ -1,14 +1,17 @@
 const express = require('express')
-const route = express.Router()
+const router = express.Router()
 
 const orderController = require('../app/controllers/OrderController')
 const middlewareController = require('../app/middlewares/authMiddleware')
 
-route.get('/get-all-order',  orderController.getAllOrders)
-route.get('/get-details-order/:id', middlewareController.authUserMiddleware, orderController.getDetailOrder)
-route.post('/create', middlewareController.verifyToken, orderController.createOrder)
-route.patch('/:id/status', middlewareController.authUserMiddleware, orderController.updateStatusOrder)
-route.post('/cancer/:id', middlewareController.authUserMiddleware, orderController.cancerOrder)
-route.delete('/delete/:id', middlewareController.authUserMiddleware, orderController.deleteOrder)
 
-module.exports = route
+router.get('/',  orderController.getAllOrders)
+router.get('/:id', middlewareController.authAdminMiddleWare, orderController.getOrderDetail)
+router.get('/status/:status', middlewareController.authAdminMiddleWare, orderController.getAllOrderStatus)
+router.post('/', middlewareController.verifyToken, orderController.createOrder)
+router.patch('/:id/update-status', middlewareController.authAdminMiddleWare, orderController.updateStatusOrder)
+router.delete('/:id/cancel', middlewareController.authAdminMiddleWare, orderController.cancerOrder)
+router.delete('/:id', middlewareController.authAdminMiddleWare, orderController.deleteOrder)
+// router.delete('/:id/cancel', middlewareController.authAdminMiddleWare, orderController.cancelOrder)
+
+module.exports = router

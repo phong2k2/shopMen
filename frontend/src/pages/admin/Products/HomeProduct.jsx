@@ -1,81 +1,150 @@
-import {useEffect, useState} from 'react'
-import * as productService from '@/services/adminServices/productService'
-import { Link } from 'react-router-dom'
-
+import * as productService from "@/services/productService";
+import { Link } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
+import {
+  Container,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import EmptyBox from "@/components/EmptyBox";
+import LoadingBackdrop from "@/components/LoadingBackdrop";
+import { useState } from "react";
 
 function HomeProduct() {
+  const [openLoading, setOpenLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const page = 1;
+  const sort = ["name", "asc"];
 
-    const [listProduct, setListProduct] = useState([])
+  // Get All Products
+  const getProductApi = async (context) => {
+    const page = context?.queryKey && context?.queryKey[1];
+    const sort = context?.queryKey && context?.queryKey[2];
+    const res = await productService.getAllProducts({
+      page,
+      sort,
+    });
+    return res;
+  };
 
-    console.log(listProduct)
-    useEffect(() => {
-        const getProductApi = async () => {
-            try {
-                const res = await productService.getAllProducts({
-                    page: 1,
-                    sort: ['name', 'asc']
-                })
-                setListProduct(res)
-            }catch (err) {
-                console.log(err)
-            }
-        }
-        getProductApi()
-    },[])
+  // Delete product
+  const handleDeleteProduct = (id, publicId) => {
+    setOpenLoading(true);
+    deleteProductMutation.mutate({ id, publicId });
+  };
 
-    const handleDeleteProduct = async (id) => {
-        try {
-            const res = await productService.deleteProduct(id)
-            if(res) {
-                const productAfterDelete = listProduct.filter((val) => {
-                    return val._id !== id
-                })
-                setListProduct(productAfterDelete)
-            }
-        }catch (err) {
-            console.log(err)
-        }
-    }
+  const getProductQuery = useQuery({
+    queryKey: ["products", page, sort],
+    queryFn: getProductApi,
+  });
+  const { data: allProduct } = getProductQuery;
 
-    return ( 
-        <div className='main-panel'>
-            <div className='content-wrapper'>
-                <table className="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Loại</th>
-                            <th scope="col">Tên Sản phẩm</th>
-                            <th scope="col">Hình ảnh</th>
-                            <th rowSpan={2} scope="col">Hành động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            listProduct?.map((pro, index) => {
-                                console.log(pro)
-                                return (
-                                    <tr key={index} >
-                                        <th scope="row">{index + 1}</th>
-                                        <td>{pro?.subCategory?.name || pro?.category?.name}</td>
-                                        <td>{pro?.name}</td>
-                                        <td>
-                                            <img className='img-thumbnail' src={`http://localhost:3000/${pro?.image}`} alt="" />
-                                        </td>
-                                        <td>
-                                            <Link className='btn btn-primary mr-2' to={`/admin/variant/${pro?._id}`} >Biến Thể</Link>
-                                            <Link className='btn btn-primary' to={`/admin/product/${pro._id}`} >Sửa</Link>
-                                            <button className='btn btn-danger ml-2' onClick={() => handleDeleteProduct(pro?._id)}>Xóa</button>
-                                        </td>
-                                    </tr>
-                                )
-                            })
+  const deleteProductMutation = useMutation({
+    mutationFn: (data) => {
+      const { id, publicId } = data;
+      const res = productService.deleteProduct(id, publicId);
+      return res;
+    },
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        queryKey: ["products", page, sort],
+        exact: true,
+      });
+      setOpenLoading(false);
+      toast.success(response.message);
+    },
+    onError: (error) => {
+      if (error?.statusCode !== 500) {
+        toast.success(error.message);
+      }
+      setOpenLoading(false);
+    },
+  });
+  return (
+    <>
+      <LoadingBackdrop openLoading={openLoading} />
+      <Container>
+        <Typography variant="h4" sx={{ fontWeight: "bold" }} className="pb-4 ">
+          Sản phẩm
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>#</TableCell>
+                <TableCell>Loại</TableCell>
+                <TableCell>Tên sản phẩm</TableCell>
+                <TableCell>Hình ảnh</TableCell>
+                <TableCell>Hành động</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {allProduct?.map((pro, index) => {
+                return (
+                  <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>
+                      {pro?.subCategory?.name || pro?.category?.name}
+                    </TableCell>
+                    <TableCell>{pro?.name}</TableCell>
+                    <TableCell>
+                      <img
+                        className="img-thumbnail"
+                        src={pro?.image?.url}
+                        alt=""
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Link
+                        className="btn btn-primary mr-2"
+                        to={`/admin/variant/${pro?._id}`}
+                      >
+                        <Tooltip title="Xem chi tiết" placement="top">
+                          <RemoveRedEyeIcon />
+                        </Tooltip>
+                      </Link>
+                      <Link
+                        className="btn btn-primary"
+                        to={`/admin/product/${pro?.slug}`}
+                      >
+                        <Tooltip title="Sửa" placement="top">
+                          <BorderColorIcon />
+                        </Tooltip>
+                      </Link>
+                      <button
+                        className="btn btn-danger ml-2"
+                        onClick={() =>
+                          handleDeleteProduct(pro?._id, pro?.image?.publicId)
                         }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-     );
+                      >
+                        <Tooltip title="Xóa" placement="top">
+                          <DeleteForeverIcon />
+                        </Tooltip>
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          {allProduct?.length <= 0 && (
+            <EmptyBox title="Danh sách sản phẩm trống." />
+          )}
+        </TableContainer>
+      </Container>
+    </>
+  );
 }
 
 export default HomeProduct;

@@ -1,16 +1,14 @@
-import * as response from '@/utils/httpRequest'
+import HttpRequest from "@/utils/httpRequest";
+
+const axiosJWT = new HttpRequest();
 
 export const search = async (q, type = 'less', page = 1) => {
-  try {
-    const res = await response.get('/product/search', {
-      params: {
-        q,
-        type,
-        page
-      },
-    });
-    return res;
-  } catch (error) {
-    console.log(error);
-  }
+  const res = await axiosJWT.get('/products/search', {
+    params: {
+      q,
+      type,
+      page
+    },
+  });
+  return res
 };

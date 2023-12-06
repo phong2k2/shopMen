@@ -1,14 +1,16 @@
+const {StatusCodes} = require('http-status-codes');
 const jwt = require('jsonwebtoken')
-
+const {env} = require('../configs/environment')
+const ApiError = require('../utils/ApiError')
 // create access token
-const  generalAccessToken =  (user) => {
+const  generalAccessToken = (user) => {
     const accessToken = jwt.sign({
         id: user?._id,
-        admin: user?.role === 1
+        isAdmin: user?.isAdmin
     },
-    process.env.JWT_ACCESS_KEY,
+    env.JWT_ACCESS_KEY,
     {
-        expiresIn: "10d"
+        expiresIn: "2d"
     })
     return accessToken
 }
@@ -16,42 +18,33 @@ const  generalAccessToken =  (user) => {
 const generalRefreshToken = (user) => {
     const refreshToken = jwt.sign({
         id: user?._id,
-        admin: user?.role === 1
+        isAdmin: user?.isAdmin
     },
-    process.env.JWT_REFRESH_TOKEN,
+    env.JWT_REFRESH_TOKEN,
     {
-        expiresIn: "30d"
+        expiresIn: "7d"
     })
     return refreshToken
 }
 
 // refreshToken
-const requestRefreshToken = (refreshToken) => {
-   return new Promise( async (resolve, reject) => {
+const requestRefreshToken = async (refreshToken) => {
     try {
-        jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN, (err, user) => {
-            if(err) {
-                return resolve({
-                    message: 'The authentication',
-                    status: 'ERROR'
-                })
+        jwt.verify(refreshToken, env.JWT_REFRESH_TOKEN, (err, user) => {
+            if(error) {
+                throw new ApiError(StatusCodes.Unauthorized, error.message)
             }
             const newAccessToken =  generalAccessToken(user)
-            const newRefreshToken =  generalRefreshToken(user)
-    
-            resolve({
+            const newRefreshToken = generalRefreshToken(user)
+            
+            return {
                 newAccessToken,
                 newRefreshToken,
-            })
-    
+            }
         })
-    }catch(err) {
-        reject({
-            status: 404,
-            error: err
-        })
+    }catch(error) {
+        throw error
     }
-   })
 }
 
 module.exports = {

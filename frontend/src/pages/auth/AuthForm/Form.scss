@@ -1,0 +1,54 @@
+.mb2 {
+    margin-bottom: -10px;
+}
+
+.form-group  {
+    margin-bottom: 15px;
+}
+
+.title-auth {
+    font-weight: 600 !important;
+    color: rgba(0, 0, 0, .8);
+    text-transform: capitalize !important;
+    font-family: CriteriaCF;
+}
+
+.MuiOutlinedInput-root input {
+    font-size: 1.4rem;
+    color: #000;
+}
+
+.MuiInputLabel-root {
+    font-size: 1.4rem !important;
+}
+
+.btn-custom {
+    width: 100%;
+    padding: 10px 0;
+    font-size: 1.5rem;
+    text-transform: capitalize;
+    font-weight: 600;
+    margin: 5px 0;
+
+    &:hover {
+        color: #fff;
+        background-color: #da563f;
+    }
+}
+
+.auth-actions {
+    font-size: 1.5rem;
+    margin-top: 8px;
+    text-align: end;
+    font-weight: 400;
+    padding-right: 2px;
+    margin-bottom: 5px;
+    color: #1877f2;
+    a {
+        color: inherit;
+        &:hover {
+            color: #ff0000;
+            text-decoration: underline;
+        }
+    }
+}

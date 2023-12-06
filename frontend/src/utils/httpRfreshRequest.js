@@ -1,68 +1,53 @@
 import axios from "axios";
-import axiosInstance from "./api";
-import jwt_decode from 'jwt-decode';
+import httpRequest from "./api";
 
-const refreshToken = async () => {
-    try {
-        const res = await axios.post('http://localhost:3000/api/auth/refresh', null, {
-            withCredentials: true,
-        });
-        return res.data;
-    } catch (err) {
-        console.log('message:',err);
-    }
-};
+// const refreshToken = async () => {
+//     try {
+//         const res = await axios.post('http://localhost:3000/api/auth/refresh', null, {
+//             withCredentials: true,
+//         });
+//         console.log(res)
+//         return res?.data;
+//     } catch (err) {
+//         console.log('message:',err);
+//     }
+// };
 
 export const createAxios = (user, dispatch, stateSuccess) => {
-    axiosInstance.interceptors.request.use( async (config) => {
-            if (user && user.accessToken) { 
-                const decodedToken = jwt_decode(user?.accessToken);
-                let date = new Date();
-                if (decodedToken.exp < date.getTime() / 1000) {
-                    try {
-                        const data = await refreshToken();
-
-                        const refreshUser = {
-                            ...user,
-                            accessToken: data.accessToken,
-                        };
-                        dispatch(stateSuccess(refreshUser));
-                        config.headers['token'] = 'Bearer ' + data.accessToken;
-                    }catch (err) {
-                        console.error('Làm mới token thất bại:', err);
-                    }
-                }
+    const interceptor = httpRequest.interceptors.response.use(
+        (response) => response,
+        (error) => {
+            // Reject promise if usual error
+            if (error.response.status !== 401) {
+                return Promise.reject(error);
             }
-        return config;
-        },
-        (err) => {
-            return Promise.reject(err);
-        },
-    )
-    return axiosInstance
+            // Tránh lặp lại 
+            axios.interceptors.response.eject(interceptor);
+           
+            return axios
+            .post('http://localhost:3000/api/auth/refresh', null, {
+                withCredentials: true,
+            }).then((response) => {
+                console.log(response);
+                const refreshUser = {
+                        ...user,
+                        accessToken: response.data.accessToken,
+                    };
+                    dispatch(stateSuccess(refreshUser));
+                    error.response.config.headers["Authorization"] =
+                        "Bearer " + response.data.accessToken;
+                    
+                    return axios(error.response.config);
+                })
+                .catch((error2) => {
+                    // if (error2.response && error2.response.status === 401) {
+                    //     dispatch(stateSuccess(''))
+                    // }
+                    console.log(error2)
+                    return Promise.reject(error2.status);
+                })
+                .finally(createAxios); // Re-attach the interceptor by running the method
+        }
+    );
+    return httpRequest
 }
-
-
-// export const createAxios = (user, dispatch, stateSuccess) => {
-//     axiosInstance.interceptors.response.use( (response) => {
-//             return response
-//         },
-//         async (err) => {
-//             if(err.response.status === 404 ){
-//                 try {
-//                     const data = await refreshToken()
-//                     const refreshUser = {
-//                         ...user,
-//                         accessToken: data.accessToken,
-//                     };
-//                     dispatch(stateSuccess(refreshUser));
-
-//                 }catch (_error) {
-//                     return Promise.reject(_error);
-//                 }
-//             }
-//             return Promise.reject(err);
-//         }
-//     )
-//     return axiosInstance
-// }

@@ -1,262 +1,346 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import * as productService from '@/services/adminServices/productService'
-// import { formatPrice } from "@/components/formatData/formatData";
+import { Link, useParams } from "react-router-dom";
+import * as productColorService from "@/services/colorService";
+import {
+  Container,
+  Button,
+  FormControl,
+  Select,
+  MenuItem,
+  Paper,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
+  Grid,
+  Tooltip,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import InputField from "@/components/form-controls/InputField";
+import CloseIcon from "@mui/icons-material/Close";
+import { ErrorMessage } from "@hookform/error-message";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { formatPrice } from "@/components/formatData/formatData";
+import EmptyBox from "@/components/EmptyBox";
+import LoadingBackdrop from "@/components/LoadingBackdrop";
+import { toast } from "react-toastify";
+import { schemaColor } from "@/Validations/adminValidations";
+
+const stateColor = [
+  {
+    id: 0,
+    name: "Đen",
+  },
+  {
+    id: 1,
+    name: "Trắng",
+  },
+  {
+    id: 2,
+    name: "Đỏ",
+  },
+  {
+    id: 3,
+    name: "Xanh",
+  },
+];
+
+const initColor = {
+  nameColor: "",
+  price: "",
+};
 
 function VariantProduct() {
-  const {id} = useParams()
-  const [stateVariant, setStateVariant] = useState()
-  const [proColor, setProColor] = useState()
-  const [listSize, setListSize] = useState()
-  const [size, setSize] = useState()
+  const { id } = useParams();
+  const [open, setOpen] = useState(false);
+  const [isAddMode, setIsAddMode] = useState(true);
+  const [openLoading, setOpenLoading] = useState(false);
+  const [idColor, setIdColor] = useState();
+  const queryClient = useQueryClient();
 
-  const handleOnchangeInformation = (e) => {
-    const type = e.target.name;
-    let value;
+  const {
+    register,
+    formState: { errors },
+    reset,
+    control,
+    handleSubmit,
+  } = useForm({
+    mode: "onChange",
+    resolver: yupResolver(schemaColor),
+  });
 
-    switch (type) {
-      case "image_color":
-        value = Array.from(e.target.files);
-        break;
-      default:
-        value = e.target.value;
-        break;
-    }
-    setStateVariant({
-      ...stateVariant,
-      [type]: value,
-    });
+  const handleOpenModal = () => {
+    setIsAddMode(true);
+    setOpen(true);
   };
 
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
+  // Get All Color
+  const getAllProductColor = useQuery({
+    queryKey: ["colors", id],
+    queryFn: () => productColorService.getAllColor(id),
+    enabled: id !== undefined,
+  });
+
+  // Get Color Details
+  const getColorDetailUpdate = useQuery({
+    queryKey: ["colorDetail", idColor, open],
+    queryFn: () => productColorService.getColorDetail(idColor),
+    enabled: idColor !== undefined,
+  });
+
+  const { data: allColor } = getAllProductColor;
 
   useEffect(() => {
-    const fetchAllColor = async () => {
-        try {
-            const res = await productService.getAllColor(id)
-            setProColor(res)
-        }catch (err) {
-            console.log(err)
-        }      
-    }
-    fetchAllColor()
-  },[])
-
-  useEffect(() => {
-    const fetchAllSize = async () => {
-        try {
-            const res = await productService.getAllSize(id)
-            if(res) {
-              setListSize(res)
-            }
-        }catch (err) {
-            console.log(err)
-        }      
-    }
-    fetchAllSize()
-  },[])
-
-  // Delete Color
-  const handleDeleteColor = async (id) => {
-    try {
-        const res = await productService.deleteColor(id)
-        if(res.message) {
-            window.location = ''
-        }
-    }catch (err) {
-        console.log(err)
-    }
-  }
-
-  // Create Color
-  const handleSubmitCreateColor = async () => {
-    const formData = new FormData()
-    const propertiesToAppend = [
-      'color', 'image_color','product',
-    ];
-    propertiesToAppend.forEach(property => {
-      if(property === 'image_color') {
-        const images = stateVariant[property]
-        for(const image of images) {
-            formData.append('images', image)
-        }
-      }else if(property === 'product'){
-        formData.append(property, id)
-      }else {
-        formData.append(property, stateVariant[property]);
+    if (isAddMode) {
+      reset(initColor);
+    } else {
+      if (getColorDetailUpdate?.data) {
+        reset(getColorDetailUpdate?.data);
       }
-    });
-    
-    try {
-        const res = await productService.createColorProduct(formData)
-        console.log(res)
-    }catch (err) {
-        console.log(err)
     }
-  }
+  }, [getColorDetailUpdate?.data, isAddMode, reset]);
 
-  //Create Size
-  const handleCreateSize = async () => {
-    const formData = {
-      size,
-      product: id
-    }
-    try {
-      
-      const res = await productService.createSizeProduct(formData)
-      console.log(res)
-  }catch (err) {
-      console.log(err)
-  }
-  }
-
-  //Delete size
-  const handleClickDelete = async (id) => {
-    try {
-      const res = await productService.deleteSize(id)
-      if(res.message) {
-          window.location = ''
+  // Mutation Add Color
+  const createColor = useMutation({
+    mutationFn: (data) => productColorService.createColorProduct(data),
+    onSuccess: () => {
+      setOpenLoading(false);
+      queryClient.invalidateQueries({
+        queryKey: ["colors", id],
+        exact: true,
+      });
+      setOpen(false);
+      reset(initColor);
+      toast.success("Thêm màu sản phẩm thành công");
+    },
+    onError: (error) => {
+      if (error?.statusCode !== 500) {
+        toast.error(error.message);
       }
-  }catch (err) {
-      console.log(err)
-  }
-  }
+      setOpenLoading(false);
+      setOpen(false);
+    },
+  });
 
-  
+  // Mutation Update Color
+  const updateColor = useMutation({
+    mutationFn: (data) => {
+      const [id, newData] = data;
+      return productColorService.updateColorProduct({ id, newData });
+    },
+    onSuccess: () => {
+      setOpenLoading(false);
+      reset(initColor);
+      queryClient.invalidateQueries({
+        queryKey: ["colors", id],
+        exact: true,
+      });
+      setOpen(false);
+      toast.success("Sửa màu sản phẩm thành công");
+    },
+    onError: (error) => {
+      console.log(error);
+      if (error?.statusCode !== 500) {
+        toast.error(error.message);
+      }
+      setOpenLoading(false);
+      setOpen(false);
+    },
+  });
+
+  // Mutation Delete
+  const deleteColor = useMutation({
+    mutationFn: (id) => productColorService.deleteColor(id),
+    onSuccess: (response) => {
+      setOpenLoading(false);
+      queryClient.invalidateQueries({
+        queryKey: ["colors", id],
+        exact: true,
+      });
+      toast.success(response.message);
+    },
+    onError: (error) => {
+      if (error?.statusCode !== 500) {
+        toast.success(error.message);
+      }
+      setOpenLoading(false);
+    },
+  });
+
+  const handleUpdateProductColor = (id) => {
+    console.log(id);
+    setIsAddMode(false);
+    setOpen(true);
+    setIdColor(id);
+  };
+
+  const handleDeleteProductColor = (id) => {
+    setOpenLoading(true);
+    deleteColor.mutate(id);
+  };
+
+  const handleOnSubmitAddColor = (values) => {
+    setOpenLoading(true);
+    if (isAddMode) {
+      values.product = id;
+      createColor.mutate(values);
+    } else {
+      const { _id, ...newData } = values;
+      updateColor.mutate([_id, newData]);
+    }
+  };
 
   return (
     <>
-      <div className="content-wrapper">
-        {/* Product Details */}
-        <div className="row">
-          <div className="col-12 grid-margin stretch-card">
-            <div className="card">
-              <div className="card-body">
-                <h4 className="card-title">Biến Thể Sản Phẩm</h4>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Color Details */}
-        <div className="row">
-          <div className="col-6 grid-margin stretch-card">
-            <div className="row">
-              <div className="col-12 mt-1">
-                <div className="card card-body">
-                  <h4 className="card-title">Màu Sắc</h4>
-                  {/* ... Color details */}
-                  {
-                    proColor?.map((itemColor) => {
-                        return (
-                                <div key={itemColor?._id} className="row">
-                                  <div className="col-sm-12">
-                                      <div className="col-sm-12">
-                                        <div className="form-group">
-                                            <label form="exampleSelectGender">Màu sắc</label>
-                                            <input type="text" value={itemColor?.color} name="color" disabled className="form-control amount" id="exampleInputName1" placeholder=""/>                         
-                                            
-                                        </div>
-                                      </div>
-                                      <div className="col-sm-12">
-                                        <div className="form-group">
-                                            <img src={`http://localhost:3000/${itemColor?.image[0]}`}  width="65%" alt="ko cos anh"/>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                      <button onClick={() => handleDeleteColor(itemColor?._id)} className="badge badge-danger rounded pb-2 pt-2 pl-4 pr-4 d-flex align-items-center" >
-                                        <h4 className="mb-0">Xóa</h4>
-                                      </button>
-                                    </div>
-                                    
-                                </div>
-                        )
-                    })
-                  }
-                    
-                </div>
-              </div>
-            </div>
-
-            {/* Color Form */}
-            <div className="col-12  mt-1">
-                <form onSubmit={handleSubmitCreateColor} encType="multipart/form-data" id="form-product" className="forms-sample" >
-                    <div className="card card-body">
-                    <h4 className="card-title">Thêm Màu Sắc</h4>
-                    {/* ... Color form fields */}
-                        <div className="row">
-                            <div className="col-md-6">
-                                <div className="form-group">
-                                    <label form="exampleSelectGender">Màu sắc</label>
-                                    <input type="text" name="color" className="form-control" onChange={handleOnchangeInformation}  placeholder=""/>                         
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="form-group">
-                                    <label form="exampleSelectGender">Hình ảnh</label>
-                                    <input type="file" name="image_color" onChange={handleOnchangeInformation} multiple className="form-control avatar"/>                    
-                                </div>
-                            </div>
-                        </div>
-                        <button type="submit" className="btn btn-primary mr-2">
-                            Thêm mới
-                        </button>
-                    </div>
-                </form>
-            </div>
-          </div>
-
-          {/* Memory Details */}
-          <div className="col-6 grid-margin stretch-card" id="">
-            <div className="row ">
-              <div className="col-md-12 mt-1">
-                <div className="card card-body">
-                  <h4 className="card-title">Kích thước</h4>
-                  {/* ... Memory details */}
-                  {listSize?.map((itemSize, index) => {
-                    return(
-                      <div className="row d-flex align-items-center" key={index}>
-                        <div className="col-sm-6">
-                            <div className="form-group">
-                                <label form="exampleSelectGender">Size</label>
-                                <input type="text" value={itemSize?.size} name="color" disabled className="form-control amount" id="exampleInputName1" placeholder=""/>                         
-                            </div>
-                          </div>
-                          <div className="col-sm-6  mt-3">
-                            <button onClick={()=> handleClickDelete(itemSize?._id)} className="badge badge-danger rounded pb-2 pt-2 pl-4 pr-4 d-flex align-items-center" >
-                              <h4 className="mb-0">Xóa</h4>
-                            </button>
-                          </div>
-                      </div>
-                    ) 
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Memory Form */}
-            <div className="col-md-12 mt-1">
-              <form onSubmit={handleCreateSize} id="form-product" className="forms-sample" >
-                <input type="hidden" name="id" />
-                <div className="card card-body">
-                  <h4 className="card-title">Thêm kích thước</h4>
-                  <div className="row">
-                    <div className="col-md-6">
-                        <div className="form-group">
-                            <label form="exampleSelectGender">Size</label>
-                            <input type="text" name="size" className="form-control" onChange={(e) => setSize(e.target.value)}  placeholder=""/>                         
-                        </div>
-                    </div>
-                </div>
-                  <button  type="submit" className="btn btn-primary mr-2">
-                    Thêm mới
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
+      <LoadingBackdrop openLoading={openLoading} />
+      <Container>
+        <Typography variant="h5" className="pb-4">
+          Quản lý chi tiết sản phẩm
+        </Typography>
+        <Paper sx={{ width: "100%", padding: "10px" }} elevation={1} square>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Button startIcon={<AddIcon />} onClick={handleOpenModal}>
+              Thêm
+            </Button>
+          </Box>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>STT</TableCell>
+                  <TableCell>Màu sắc sản phẩm</TableCell>
+                  <TableCell>Giá thêm</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>Thao tác</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {allColor?.map((itemColor, index) => (
+                  <TableRow key={itemColor?._id}>
+                    <TableCell>{++index}</TableCell>
+                    <TableCell>{itemColor?.nameColor}</TableCell>
+                    <TableCell>{formatPrice(itemColor?.price)}</TableCell>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      <Link to={`/admin/variant-details/${itemColor?._id}`}>
+                        <Tooltip title="Xem chi tiết" placement="top">
+                          <RemoveRedEyeIcon />
+                        </Tooltip>
+                      </Link>
+                      <Button
+                        onClick={() => handleUpdateProductColor(itemColor?._id)}
+                      >
+                        <Tooltip title="Sửa" placement="top">
+                          <BorderColorIcon />
+                        </Tooltip>
+                      </Button>
+                      <Button
+                        onClick={() => handleDeleteProductColor(itemColor?._id)}
+                      >
+                        <Tooltip title="Xóa" placement="top">
+                          <DeleteForeverIcon />
+                        </Tooltip>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {allColor?.length <= 0 && (
+              <EmptyBox title="Chi tiết sản phẩm trống." />
+            )}
+          </TableContainer>
+        </Paper>
+        <Dialog open={open} onClose={handleCloseModal}>
+          <DialogTitle variant="h6">
+            {isAddMode ? "Thêm loại sản phẩm" : "Sửa loại sản phẩm"}
+          </DialogTitle>
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseModal}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <DialogContent>
+            <Container
+              component="form"
+              onSubmit={handleSubmit(handleOnSubmitAddColor)}
+              encType="multipart/form-data"
+              sx={{
+                marginTop: 0,
+              }}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <FormControl fullWidth error={!!errors.name}>
+                    <Typography variant="h6">Màu sản phẩm</Typography>
+                    <Controller
+                      render={({ field }) => (
+                        <Select {...field} value={field?.value || ""}>
+                          {stateColor.map((itemColor) => (
+                            <MenuItem key={itemColor.id} value={itemColor.name}>
+                              {itemColor.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      )}
+                      name={"nameColor"}
+                      control={control}
+                      variant="filled"
+                    />
+                  </FormControl>
+                  <ErrorMessage
+                    errors={errors}
+                    name="name"
+                    render={({ message }) => (
+                      <p style={{ color: "red", marginLeft: "10px" }}>
+                        {message}
+                      </p>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="h6">Giá thêm</Typography>
+                  <InputField
+                    name={"price"}
+                    type="number"
+                    validate={register("price")}
+                    errors={errors}
+                    sx={{ marginTop: "0", paddingTop: 0 }}
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button variant="contained" color="primary" type="submit">
+                    Hoàn thành
+                  </Button>
+                </Grid>
+              </Grid>
+            </Container>
+          </DialogContent>
+        </Dialog>
+      </Container>
     </>
   );
 }

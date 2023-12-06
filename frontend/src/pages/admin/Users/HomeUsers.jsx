@@ -1,78 +1,114 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { createAxios } from "@/utils/httpRfreshRequest";
-import * as userService from '@/services/adminServices/userService'
-import { loginSuccess } from "@/redux/authSlice";
-import { getUsersSuccess } from "@/redux/userSlice";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import * as userService from "@/services/userService";
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import {
+  Container,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import EmptyBox from "@/components/EmptyBox";
+import LoadingBackdrop from "@/components/LoadingBackdrop";
 
 function HomeUsers() {
-    const user = useSelector((state) => state.auth.login.currentUser)
-    const allUsers = useSelector((state) => state.user.users.allUsers)
-    const dispatch = useDispatch()
-    const axiosJWT = createAxios(user, dispatch, loginSuccess)
-    const accessToken = user?.accessToken
-    useEffect(() => {
-        const getAllUsersApi = async () => {
-            try {
-                if(accessToken){
-                    const res = await userService.getAllUsers(accessToken,dispatch, axiosJWT);
-                    if(res) {
-                        dispatch(getUsersSuccess(res.data))
-                    }}
-            }catch( err) {
-                console.log(err);
-            }
-        }
-        getAllUsersApi()
-    },[])
+  const [openLoading, setOpenLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-    const handleClickDelete = async (id) => {
-        try {
-            const res = await userService.deleteUser(user?.accessToken, id, axiosJWT )
-            if(res) {
-                const userAfterDelete = allUsers?.filter((val) => {
-                    return val._id !== id
-                })
-                dispatch(getUsersSuccess(userAfterDelete))
-            }
-        }catch (err) {
-            console.log(err);
-        }
-    }
-    return ( 
-        <table className="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">STT</th>
-                    <th scope="col">Tên Người dùng</th>
-                    <th scope="col">Chức vụ</th>
-                    <th rowSpan={2} scope="col">Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    allUsers?.map((user, index) => {
-                    return (
-                        <tr key={index} >
-                            <th scope="row">{index + 1}</th>
-                            <td>{user?.username}</td>
-                            <td>
-                                {
-                                    user?.role === 1 ? 'Admin' : 'User'
-                                }
-                            </td>
-                            <td>
-                                <Link className='btn btn-primary ml-3' to={`/admin/user/${user?._id}`} >Sửa</Link>
-                                <button className='btn btn-danger ml-3' onClick={() => handleClickDelete(user?._id)}>Xóa</button>
-                            </td>
-                        </tr>
-                    )
-                    })
-                }
-            </tbody>
-    </table>
-     );
+  const { data: allUsers } = useQuery({
+    queryKey: ["allUsers"],
+    queryFn: () => userService.getAllUsers(),
+  });
+
+  const deleteUser = useMutation({
+    mutationFn: (id) => userService.deleteUser(id),
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        queryKey: ["allUsers"],
+        exact: true,
+      });
+      setOpenLoading(false);
+      toast.success(response.message);
+    },
+    onError: (error) => {
+      if (error?.statusCode !== 500) {
+        toast.success(error.message);
+      }
+      setOpenLoading(false);
+    },
+  });
+
+  const handleClickDelete = async (id) => {
+    setOpenLoading(true);
+    deleteUser.mutate(id);
+  };
+  return (
+    <>
+      <LoadingBackdrop openLoading={openLoading} />
+      <Container>
+        <Typography variant="h4" sx={{ fontWeight: "bold" }} className="pb-4 ">
+          Danh sách người dùng
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>#</TableCell>
+                <TableCell>Tên Người dùng</TableCell>
+                <TableCell>Chức vụ</TableCell>
+                <TableCell>Hình ảnh</TableCell>
+                <TableCell>Hành động</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {allUsers?.map((user, index) => {
+                return (
+                  <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{user?.username}</TableCell>
+                    <TableCell>{user?.role === 1 ? "Admin" : "User"}</TableCell>
+                    <TableCell>
+                      <img className="img-thumbnail" alt="" />
+                    </TableCell>
+                    <TableCell>
+                      <Link
+                        className="btn btn-primary ml-3"
+                        to={`/admin/user/${user?._id}`}
+                      >
+                        <Tooltip title="Sửa" placement="top">
+                          <BorderColorIcon />
+                        </Tooltip>
+                      </Link>
+                      <button
+                        className="btn btn-danger ml-3"
+                        onClick={() => handleClickDelete(user?._id)}
+                      >
+                        <Tooltip title="Xóa" placement="top">
+                          <DeleteForeverIcon />
+                        </Tooltip>
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          {allUsers?.length <= 0 && (
+            <EmptyBox title="Danh sách người dùng trống." />
+          )}
+        </TableContainer>
+      </Container>
+    </>
+  );
 }
 
 export default HomeUsers;

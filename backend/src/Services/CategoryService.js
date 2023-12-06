@@ -1,212 +1,109 @@
+const {ObjectId} = require('mongodb');
+const {StatusCodes} = require('http-status-codes');
 const Category = require('../app/model/Category')
 const Product = require('../app/model/Product')
+const ApiError = require('../utils/ApiError')
 
-const createCategory = (newCategory) => {
-    return new Promise(async (resolve, reject) => {
-        const {name, displayInSlider} = newCategory
-        try {
-            const checkCategory = await Category.findOne({name: name})
-            if(checkCategory !== null) {
-                return resolve({
-                    status: 'Error',
-                    message: 'The name of category is already'
-                })
-            }
-            const newCategory = await Category.create({
-                name,
-                displayInSlider
-            })
-            if(newCategory) {
-                resolve({
-                    status: 'Success',
-                    message: 'Successful request',
-                    data: newCategory
-                })
-            }
-        }catch(err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to create category',
-                error: err
-            });
+
+const createCategory = async (newCategory) => {
+    const {name} = newCategory
+    try {
+        const checkCategory = await Category.findOne({name: name})
+        if(checkCategory) {
+            throw new ApiError(StatusCodes.NOT_FOUND, 'Category not found')
         }
-    })
+        const newCategory = await Category.create({
+            name
+        })
+        return {
+            data: newCategory
+        }
+    }catch(error) {
+        throw error
+    }
 }
 
-const getAllCategories = () => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const getAllCategories = await Category.find({})
-            resolve({
-                status: 'Success',
-                message: 'Successful request',
-                data: getAllCategories
-            })
-        } catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get categories',
-                error: err
-            })
-        }
-    })
+const getAllCategories = async () => {
+    try {
+        const getAllCategories = await Category.find({}).populate('subCategory')
+        return {
+            data: getAllCategories
+        }  
+    } catch (error) {
+        throw error
+    }
 }
 
-const getACategory = ({id, limit = 5, page}) => {
-    return new Promise( async (resolve, reject) => {
+const getCategoryDetail = async (id) => {
         try {
-            const skipPage = (page - 1) * limit
-            const getACategory = await Category.findById(id).populate({
-                path: 'product',
-                options: { limit: limit, sort: { createdAt: -1 }, skip: skipPage },
-              })
-            if(getACategory === null) {
-                return reject({
-                    status: 'Error',
-                    message: 'Failed to get pro in categories',
-                    error: err
-                })
+            const getCategoryDetail = await Category.findById({_id: new ObjectId(id)})
+            if(!getCategoryDetail) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Category not found')
             }
-            resolve({
-                status: 'Success',
-                message: 'Successful request',
-                data: getACategory
-            })
-        }catch(err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get categories',
-                error: err
-            })
+            return {
+                data: getCategoryDetail
+            }  
+            
+        }catch(error) {
+            throw error
         }
-    })
 }
 
-const getDetailCategory = ({slug, limit, page}) => {
-    return new Promise( async (resolve, reject) => {
+const getDetailCategory = async (slug) => {
         try {
-            const skipPage = page  * limit 
-            const category = await Category.findOne({ slug: slug });
-            let countProduct
-            if (category) {
-                countProduct = await Product.countDocuments({
-                    _id: { $in: category.product },
-                });
-             }
 
-            const getDetailCategory = await Category.findOne({slug: slug}).populate({
-                path: 'product',
-                options: { limit: limit, sort: { createdAt: -1 }, skip: skipPage },
-              })
+            const getDetailCategory = await Category.findOne({slug: slug})
 
-            if(getDetailCategory === null) {
-                return reject({
-                    status: 'Error',
-                    message: 'Failed to get pro in categories',
-                    error: err
-                })
+            if(!getDetailCategory) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Category not found')
             }
-            resolve({
-                status: 'Success',
-                message: 'Successful request',
-                countProduct: countProduct,
+            return {
                 data: getDetailCategory
-            })
-        }catch(err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get categories',
-                error: err
-            })
+            } 
+        }catch(error) {
+            throw error
         }
-    })
 }
 
-const getCategorySlide = () => {
-    return new Promise( async (resolve, reject) => {
-        try {
-            const categoriesForSlider = await Category.find({
-                displayInSlider: 1
-              });
 
-            if(categoriesForSlider === null) {
-                return reject({
-                    status: 'Error',
-                    message: 'Failed to get pro in categories',
-                    error: err
-                })
-            }
-            resolve({
-                status: 'Success',
-                message: 'Successful request',
-                data: categoriesForSlider
-            })
-        }catch(err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get categories',
-                error: err
-            })
-        }
-    })
-}
-
-const updateCategory = (id, data) => {
-    return new Promise( async (resolve, reject) => {
-        try {
-            const checkCateId = await Category.findOne({_id: id})
-            if(checkCateId === null) {
-                return resolve({
-                    status: "Error",
-                    message: "The product is not defined"
-                })
+const updateCategory = async (id, data) => {
+    try {
+        const checkCateId = await Category.findOne({_id: new ObjectId(id)})
+        if(!checkCateId) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Category not found')
             }
             
             const updateCategory = await Category.findOneAndUpdate(
                 { _id: id }, data, {new: true}
             )
-            resolve({
-                status: 'Success',
-                message: 'Successful request',
+            return {
                 data: updateCategory
-            })
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to update category',
-                error: err
-            });
+            } 
+        }catch (error) {
+            throw error
         }
-    })
 }
 
-const deleteCategory = (id) => {
-    return new Promise( async (resolve, reject) => {
+const deleteCategory = async (id) => {
         try {
             await Product.updateMany(
-                { category: id },
+                { category: new ObjectId(id) },
                 { category: null }
             );
 
-            await Category.deleteOne({_id: id})
-            resolve({
-                status: 'Success',
+            await Category.deleteOne({_id: new ObjectId(id)})
+            return {
                 message: 'Delete Success',
-            })
-        } catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to update category',
-                error: err
-            });
+            } 
+            
+        } catch (error) {
+            throw error
         }
-    })
 }
 
 module.exports = {
     getAllCategories,
-    getACategory,
-    getCategorySlide,
+    getCategoryDetail,
     createCategory,
     updateCategory,
     deleteCategory,

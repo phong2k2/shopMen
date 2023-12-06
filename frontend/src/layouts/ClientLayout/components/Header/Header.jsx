@@ -1,98 +1,157 @@
 import classNames from "classnames/bind";
 import styles from "./Header.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import * as authService from "@/services/authServices/authService";
-import {
-  faCircleUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { useQuery } from "react-query";
+import * as authService from "@/services/authService";
 import { useDispatch, useSelector } from "react-redux";
-import { createAxios } from "@/utils/httpRfreshRequest";
-import { NavLink } from "react-router-dom";
-import { IconCart } from "@/components/Icons/icon";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { IconCart, IconSearch } from "@/components/Icons/icon";
 import Menu from "@/components/Menu/Menu";
-import  config from "@/config";
-import { loginSuccess, logoutFailed, logoutStart, logoutSuccess } from "@/redux/authSlice";
+import config from "@/config";
+import { logoutFailed, logoutStart, logoutSuccess } from "@/redux/authSlice";
 import Button from "@/components/Button";
-import Search from "../Search/Search";
-import toastify from "@/components/toastify/toastify";
-import CategoryItem from "@/components/CategoryItem";
+// import Search from "../Search/Search";
+import { useDeliveryInfo } from "@/hook/useContext";
+import { useEffect, useRef, useState } from "react";
+import { getAllCategory } from "@/services/categoryService";
+import Category from "@/components/Category";
 
 const cx = classNames.bind(styles);
 function Header() {
-  const dispatch = useDispatch()
-  const user = useSelector(state => state.auth?.login)
-  const name = user?.currentUser?.data?.username
-  const axiosJWT = createAxios(user?.currentUser, dispatch, loginSuccess)
-  const listCategory = useSelector(state => state.category.allCategory)
-  const cart = useSelector(state => state.cart)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth?.login);
+  const name = user?.currentUser?.data?.username;
+  const cart = useSelector((state) => state.cart);
+  const { setShowModalCart, setShowModalSearch } = useDeliveryInfo();
+  const [showHeader, setShowHeader] = useState();
+  const navRef = useRef();
 
   const userMenus = [
     {
-      title: 'Quản Trị website',
-      check: user?.currentUser?.data?.role,
-      to: config.privateRouter.dashboard
+      title: "Quản Trị website",
+      check: user?.currentUser?.data?.isAdmin,
+      to: config.privateRouter.dashboard,
     },
     {
-      title: 'Hồ sơ',
+      title: "Hồ sơ",
       check: true,
-      to: config.publicRouter.profile
+      to: config.publicRouter.account,
     },
     {
-      title: 'Đơn hàng',
+      title: "Đơn hàng",
       to: config.publicRouter.listOrders,
-      check: true
-    },{
-      title: 'Đăng xuất',
+      check: true,
+    },
+    {
+      title: "Đăng xuất",
       check: true,
       logout: true,
     },
-  ]
+  ];
+
+  const listCategory = useQuery({
+    queryKey: "listCategoryHeader",
+    queryFn: () => getAllCategory(),
+  });
 
   const handleClickLogout = async () => {
-    dispatch(logoutStart())
-      try {
-        const accessToken = user?.currentUser?.accessToken
-          const res = await authService.logOut(accessToken, axiosJWT);
-          if (res) {
-              dispatch(logoutSuccess())
-              toastify({
-                type: 'success',
-                message: "Đã đăng xuất"
-              })
-          }
-      }catch(err) {
-          dispatch(logoutFailed())
-      }   
-  }
-  
+    dispatch(logoutStart());
+    try {
+      const res = await authService.logOut();
+      if (res) {
+        dispatch(logoutSuccess());
+        toast.success("Đã đăng xuất", { position: "top-right" });
+        navigate(config.publicRouter.home);
+      }
+    } catch (err) {
+      dispatch(logoutFailed());
+    }
+  };
 
+  const handleClickNavigate = (item) => {
+    navigate(`/collections/${item?.slug}`, { state: { stateNav: item } });
+  };
+
+  const handleShowModalNavigation = () => {
+    setShowModalCart((prev) => !prev);
+  };
+
+  const handleShowModalSearch = () => {
+    setShowModalSearch((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const sticky = navRef.current.offsetTop;
+    const handleScroll = () => {
+      if (window.pageYOffset > sticky) {
+        setShowHeader(true);
+      } else {
+        setShowHeader(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
-      <header className={cx("wrapper-header")}>
-        <div className={cx('header-top')}>
-          <div className={cx('container-full')}>
-              <div className={cx('container-item')}>
-                <ul className={cx('nav')}>
-                  <li>Tell 18001833</li>
-                  <span className={cx('span')}></span>
-                    <li >
-                      {name ?'Hi, '+ name : <Button to={config.publicRouter.auth} >Đăng nhập</Button> }
-                        <span className={cx("account-menu")}>
-                          <FontAwesomeIcon
-                            className={cx("icon-header")}
-                            icon={faCircleUser}
-                          />
-                        </span>
-                        {
-                          user?.isLogin ? <Menu items={ userMenus}  onClick={handleClickLogout}/> : ''
-                        }
-                    </li>
+    <div
+      className={cx("scroller-inner", {
+        "sticky-header": showHeader,
+      })}
+    >
+      <div className={cx("header-top")}>
+        <div className={cx("container")}>
+          <div className={cx("row")}>
+            <div className={cx("col-sm-6")}></div>
+            <div className={cx("col-sm-6")}>
+              <div className={cx("container-item")}>
+                <ul className={cx("nav")}>
+                  <li>
+                    <i className="bi bi-telephone"></i> 18001833
+                  </li>
+                  <span className={cx("sure")}></span>
+                  <li>
+                    {name ? (
+                      "Hi, " + name
+                    ) : (
+                      <Button
+                        className={cx("login")}
+                        to={config.publicRouter.auth}
+                      >
+                        Đăng nhập
+                      </Button>
+                    )}
+                    <span className={cx("account-menu")}>
+                      <i className="bi bi-person-circle"></i>
+                    </span>
+                    {user?.isLogin ? (
+                      <Menu items={userMenus} onClick={handleClickLogout} />
+                    ) : (
+                      ""
+                    )}
+                  </li>
                 </ul>
               </div>
+            </div>
           </div>
         </div>
+      </div>
+      <header ref={navRef} className={cx("wrapper-header")}>
+        <div className={cx("wrapper-header")}>
           <div className={cx("container")}>
-            <div className={cx( "row", 'header-body')}>
-              <div className={cx("col-md-2 col-sm-2 col-lg-2", "wrap-header-2")}>
+            <div className={cx("row", "header-body")}>
+              <div
+                className={cx(
+                  "col-lg-3",
+                  "col-sm-3",
+                  "col-md-3",
+                  "wrap-header-2"
+                )}
+              >
                 <div className={cx("header-logo")}>
                   <a href={config.publicRouter.home}>
                     <img
@@ -103,47 +162,67 @@ function Header() {
                   </a>
                 </div>
               </div>
-    
-              <div className={cx("col-md-6 col-sm-6 col-lg-6", "wrap-header-4")}>
+
+              <div
+                className={cx(
+                  "col-md-7",
+                  "col-sm-6",
+                  "col-lg-6",
+                  "wrap-header-4",
+                  "hide-sm"
+                )}
+              >
                 <nav className={cx("navbar-main")}>
-                  <ul className={cx("list-main")}>
-                    {
-                      listCategory?.map((category, index) => {
+                  {
+                    <ul className={cx("list-main")}>
+                      {listCategory?.data?.map((category) => {
                         return (
-                          <li key={index} className={cx("has-sub")}>
-                            <NavLink className={cx('text-nav')} to={'/'+ category?.slug}>{category.name}</NavLink>
-                            <CategoryItem idCate={category?._id}/>
-                         </li>
-                        )
-                      })
-                    }
-                  </ul>
+                          <Category
+                            key={category?._id}
+                            categories={category}
+                            handleClickNavigate={handleClickNavigate}
+                          />
+                        );
+                      })}
+                    </ul>
+                  }
                 </nav>
               </div>
-  
-              <div className={cx("col-md-4 col-sm-4 col-lg-4", "action", "wrap-header-3")}>
+
+              <div
+                className={cx(
+                  "col-md-2",
+                  "col-sm-3",
+                  "col-lg-3",
+                  "action",
+                  "wrap-header-3"
+                )}
+              >
                 <div className={cx("header-action")}>
-                  
                   <div className={cx("action-item")}>
-                      <Search/>
+                    {/* <Search /> */}
+                    <a onClick={handleShowModalSearch}>
+                      <IconSearch className={cx("icon-search")} />
+                    </a>
                   </div>
 
-  
                   <div className={cx("action-item")}>
-                   <div className={cx('div-cart')}>
-                      <a href={config.publicRouter.cart}>
-                          <IconCart className={cx('icon-cart')}/>
-                          <div className={cx('count-cart')}>
-                            <span>{cart?.cartTotalQuantity}</span>
-                          </div>
+                    <div className={cx("div-cart")}>
+                      <a onClick={handleShowModalNavigation}>
+                        <IconCart className={cx("icon-cart")} />
+                        <div className={cx("count-cart")}>
+                          <span>{cart?.cartTotalQuantity}</span>
+                        </div>
                       </a>
-                   </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
       </header>
+    </div>
   );
 }
 

@@ -1,21 +1,18 @@
-import {  Fragment} from "react";
+import { Fragment } from "react";
 import DefaultLayout from "@/layouts/ClientLayout/DefaultLayout";
 
+function PublicRoutes({ route, children }) {
+  let Layout;
 
-function publicRoutes({route, children}) {
-    let Layout = DefaultLayout;
+  if (route.layout) {
+    Layout = route.layout;
+  } else if (route.layout === null) {
+    Layout = Fragment;
+  } else {
+    Layout = DefaultLayout;
+  }
 
-        if (route.layout) {
-            Layout = route.layout;
-        } else if (route.layout === null) {
-            Layout = Fragment;
-        }
-
-    return ( 
-        <Layout>
-            {children}
-        </Layout>
-     );
+  return <Layout>{children}</Layout>;
 }
 
-export default publicRoutes;
+export default PublicRoutes;

@@ -1,48 +1,57 @@
 const multer = require('multer');
+const { StatusCodes } = require('http-status-codes');
 const path = require('path');
+const ApiError = require('../../utils/ApiError');
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'src/public/images'); // Thư mục lưu trữ tệp tin tải lên
-    },
     filename: function (req, file, cb) {
         // cb(null,file.fieldname + '-' + Date.now() + file.originalname.match(/\..*$/)[0],); // Đặt tên cho tệp tin
-        cb(null,Date.now() + path.extname(file.originalname))
+        cb(null,file.originalname)
     },
 });
 
-const uploadSingle = multer({
+const upload = multer({
     storage: storage,
     limits: { fileSize: 10000000 }, // Giới hạn kích thước tệp tin
     fileFilter: (req, file, cb) => {
         const fileTypes = /jpeg|jpg|png|gif/;
         const mimeType = fileTypes.test(file.mimetype);
         const extname = fileTypes.test(path.extname(file.originalname));
-
         if (mimeType && extname) {
             return cb(null, true);
         }
-        cb('Give proper file format to upload');
+        cb(new ApiError(StatusCodes.UNSUPPORTED_MEDIA_TYPE,'Hình ảnh không đúng định dạng'));
     },
-}).single('image'); // 'image' là tên của trường form-data chứa hình ảnh
+}); // 'image' là tên của trường form-data chứa hình ảnh
 
 
-const uploadArray = multer({
-    storage: storage,
-    limits: { fileSize: 10000000 }, // Giới hạn kích thước tệp tin
-    fileFilter: (req, file, cb) => {
-        const fileTypes = /jpeg|jpg|png|gif/;
-        const mimeType = fileTypes.test(file.mimetype);
-        const extname = fileTypes.test(path.extname(file.originalname));
+// const uploadArray = multer({
+//     storage: storage,
+//     limits: { fileSize: 10000000 }, // Giới hạn kích thước tệp tin
+//     fileFilter: (req, file, cb) => {
+//         const fileTypes = /jpeg|jpg|png|gif/;
+//         const mimeType = fileTypes.test(file.mimetype);
+//         const extname = fileTypes.test(path.extname(file.originalname));
 
-        if (mimeType && extname) {
-            return cb(null, true);
-        }
-        cb('Give proper file format to upload');
-    },
-}).array('images', 8); // 'image' là tên của trường form-data chứa hình ảnh
+//         if (mimeType && extname) {
+//             return cb(null, true);
+//         }
+//         cb('Give proper file format to upload');
+//     },
+// }); // 'image' là tên của trường form-data chứa hình ảnh
 
-module.exports = {
-    uploadSingle,
-    uploadArray
-};
+module.exports = upload
+
+// const { CloudinaryStorage } = require('multer-storage-cloudinary');
+// const cloudinary = require('../../configs/cloundinaryConfig');
+// const multer = require('multer');
+
+// const storage = new CloudinaryStorage({
+//     cloudinary: cloudinary,
+//     params: {
+//         folder: 'images-shopMen',
+//         format: ["jpg", "png", "jpeg"],
+//     }
+// })
+
+// const upload = multer({ storage: storage })

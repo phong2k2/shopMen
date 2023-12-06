@@ -1,107 +1,69 @@
+const {StatusCodes} = require('http-status-codes');
 const User = require("../app/model/User")
-
-
-const getAllUser = () => {
-    return new Promise( async (resolve, reject) => {
+const ApiError = require('../utils/ApiError')
+const getAllUser = async () => {
         try {
             const allUser = await User.find()
-            resolve({
-                status: 'Success',
-                message: 'Successful request',
+            
+            return {
                 data: allUser
-            })
-        }catch (err){
-            reject({
-                status: 'Error',
-                message: 'Failed to get user',
-                error: err
-            })
+            }
+        }catch (error){
+            throw error
         }
-    })
 }
 
-const getDetailUser = (id) => {
-    return new Promise(async (resolve, reject) => {
+const getDetailUser = async (userId) => {
         try {
             const user = await User.findOne({
-                _id: id
+                _id: userId
             })
-            if (user === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The user is not defined'
-                })
+            if (!user) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
             }
-            resolve({
-                status: 'OK',
-                message: 'SUCESS',
-                data: user
-            })
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to delete User',
-                error: err
-            })
+            const { password, ...userDetail} = user._doc
+            
+            return {
+                data: userDetail
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
-const updateUser = (id, data) => {
-    return new Promise(async (resolve, reject) => {
+const updateUser = async (id, data) => {
         try {
-            console.log(id, data)
             const checkUser = await User.findOne({
                 _id: id
             })
-            if (checkUser === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The user is not defined'
-                })
+            if (!checkUser) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
             }
-
             const updatedUser = await User.findByIdAndUpdate(id, data, { new: true })
             const { password, ...other} = updatedUser._doc
-            console.log(other)
-            resolve({
-                status: 'OK',
-                message: 'SUCCESS',
+           
+            return {
                 data: other
-            })
-        } catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to delete User',
-                error: err
-            })
+            }
+        } catch (error) {
+            throw error
         }
-    })
 }
 
-const deleteUser = (id) => {
-    return new Promise(async (resolve, reject) => {
+const deleteUser = async (id) => {
         try {
             const checkDeleteUser = await User.findOne({_id: id});
             if (!checkDeleteUser) {
-                return reject({
-                    status: 'Error',
-                    message: 'No User found',
-                })
+                throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
             }
             await User.findOneAndDelete({_id: id})
-             resolve({
-                status: 'OK',
+            
+            return {
                 message: 'Delete Success',
-            })
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to delete User',
-                error: err
-            })
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
 module.exports = {

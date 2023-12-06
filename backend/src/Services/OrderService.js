@@ -1,12 +1,15 @@
+
+const {StatusCodes} = require('http-status-codes');
 const Order = require('../app/model/Order')
 const Product = require('../app/model/Product')
+const ApiError = require('../utils/ApiError')
 
-const createOrder = (newOrder) => {
-
-    return new Promise( async (resolve, reject) => {
-        const { orderItems, shippingPrice, totalPrice, fullName, address, email, city, phone,user } = newOrder
+const createOrder = async (newOrder) => {
+        const {
+            orderItems, shippingPrice ,payment, totalPrice, fullName,
+            address, email, phone, district, province, user 
+        } = newOrder
         try {
-            // , fullName, address, city, phone,email
             const promises = orderItems.map(async (order) => {
                 const productData = await Product.findOneAndUpdate(
                     {
@@ -24,8 +27,7 @@ const createOrder = (newOrder) => {
                         status: 'OK',
                         message: 'SUCCESS'
                     }
-                }
-                 else {
+                }else {
                     return{
                         status: 'OK',
                         message: 'ERR',
@@ -41,90 +43,90 @@ const createOrder = (newOrder) => {
                 newData.forEach((item) => {
                     arrId.push(item.id)
                 })
-                resolve({
-                    status: 'ERR',
-                    message: `San pham voi id: ${arrId.join(',')} khong du hang`
-                })
+                throw new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, `San pham voi id: ${arrId.join(',')} khong du hang`)
             } else {
-                // Mã sản phẩm
-                const currentDateTime = new Date();
-                const orderCode = currentDateTime.toISOString().replace(/[^0-9]/g, '');
+                // Mã đơn hàng
+                const orderCode = "ORD-" + Date.now();
 
-                const createdOrder = await Order.create({
+                const dataOrder = await Order.create({
                     orderItems,
                     shippingAddress: {
                         fullName,
                         address,
                         email,
-                        city,
+                        district,
+                        province,
                         phone,
                     },
                     shippingPrice,
+                    payment,
                     totalPrice,
                     user: user,
-                    orderCode
+                    orderCode,
                 })
-                resolve({
-                    status: 'success',
-                    message: 'Product created successfully',
-                    data: createdOrder
-                })
+                
+                return {
+                    data: dataOrder
+                }
             }
-        }catch (err) {
-            reject(err)
+        }catch (error) {
+            throw error
         }
-    })
 }
 
 
-const getAllOrders = () => {
-    return new Promise( async (resolve, reject) => {
+const getAllOrders = async () => {
         try {
             const allOrders = await Order.find().sort({createdAt: -1, updatedAt: -1})
-            resolve({
-                status: 'OK',
-                message: 'Success',
+            
+            return {
                 data: allOrders
-            })
-        }catch (err) {
-            reject(err)
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
-const getDetailOrder = (id) => {
-    return new Promise( async (resolve, reject) => {
+const getOrderDetail = async (id) => {
         try {
             const order = await Order.findById({
                 _id: id
             }).populate('user', ['username', 'image'])
-            if(order === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The order is not defined'
-                })
+            if(!order) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
             }
-            resolve({
-                status: 'OK',
-                message: 'SUCESSS',
+           
+            return {
                 data: order
-            })
-        }catch (err) {
-            reject(err)
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
-const updateStatusOrder = (id, newStatus) => {
-    return new Promise( async (resolve, reject) => {
+const getAllOrderStatus = async (status) => {
+        try {
+            const allOrdersStatus = await Order.find({
+                status
+            })
+            if(!allOrdersStatus) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
+            }
+            
+            return {
+                data: allOrdersStatus
+            }
+        }catch(error) {
+            throw error
+        }
+}
+
+const updateStatusOrder = async (id, newStatus) => {
         try {
             
             const checkOrder = await Order.find({_id: id});
             if(!checkOrder) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The Orders is not defined'
-                })
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
             }
             const updateStatusOrder = await Order.findOneAndUpdate(
                 { _id: id }, 
@@ -132,74 +134,59 @@ const updateStatusOrder = (id, newStatus) => {
                 { new: true } 
             );
 
-            console.log(updateStatusOrder.status);
-
-            resolve({
-                status: 'OK',
-                message: 'SUCESSS',
+            
+            return {
                 data: updateStatusOrder.status
-            })
-        }catch (err) {
-            reject(err)
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
-const cancerOrder = (id) => {
-    return new Promise( async (resolve, reject) => {
+const cancerOrder = async (id) => {
         try {
             const order = await Order.findById(id);
-
             if(!order) {
-                return reject({
-                    status: 'ERR',
-                    message: 'Order does not exist'
-                })
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
             }
 
             if(order.status === 'shipped' || order.status === 'complete'){
-                return reject({
-                    status: 'ERR',
-                    message: 'Orders that have been shipped or completed cannot be canceled'
-                })
+                throw new ApiError(StatusCodes.FORBIDDEN, 'Orders that have been shipped or completed cannot be canceled')
             }
 
             order.status = 'cancelled';
             await order.save();
 
-            resolve({
-                status: 'OK',
+            return {
                 message: 'The order has been successfully canceled',
-            })
-        }catch (err) {
-            reject(err)
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
 
-const deleteOrder = (id) => {
-    return new Promise(async (resolve, reject) => {
+const deleteOrder = async (id) => {
         try {
+            const checkOrder = await Order.findOne({_id: id});
+            if (!checkOrder) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
+            }
             await Order.deleteOne({_id: id})
-            resolve({
-                status: 'Success',
+
+            return {
                 message: 'Delete Success',
-            })
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to update category',
-                error: err
-            });
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
 module.exports = {
     createOrder,
     getAllOrders,
-    getDetailOrder,
+    getOrderDetail,
+    getAllOrderStatus,
     updateStatusOrder,
     cancerOrder,
     deleteOrder

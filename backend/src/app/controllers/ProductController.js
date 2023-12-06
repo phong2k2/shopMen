@@ -1,215 +1,192 @@
+const {StatusCodes} = require('http-status-codes');
 const ProductService = require('../../Services/ProductService')
-const Product = require('../model/Product')
-
-
 
 const ProductController = {
-    // Add Product
-    createProduct: async (req, res) => {
+    
+    //Search Product
+    searchProduct: async (req, res, next) => {
         try {
-            const info = {
-                ...req.body,
-                
-                image: req.file.filename,
+            const {q, page, type} = req.query
+            const limitProps  = {
+                'less': 5,
+                'more': 10
             }
-            console.log(info)
-            
-            if(info){
-                const response = await ProductService.createProduct(info)
-                res.status(200).json(response)
-            }
-        }catch(err) {
-            res.status(404).json(err)
+            const limit = limitProps[type] || limitProps.less; 
+
+            const response = await ProductService.searchProduct(q, page, limit)
+             res.status(StatusCodes.OK).json(response);
+        }catch (error) {
+            next(error)
+        }
+    },
+
+    // Add Product
+    createProduct: async (req, res, next) => {
+        try {
+            const fileData = req.file
+            const response = await ProductService.createProduct(req.body, fileData)
+            res.status(StatusCodes.CREATED).json(response);
+        }catch(error) {
+            next(error)
         }
     },
 
     // Upadte product 
-    updateProduct: async (req, res) => {
+    updateProduct: async (req, res, next) => {
         try {
-            const urlImage = req.body.image ? req.body.image : req.file.filename 
-            const infoUpdate = {
-                ...req.body,
-                image: urlImage
-            }
+            const fileData = req.file
+            const proSlug = req.params.slug
 
-            const proId = req.params.id
-            if(!proId) {
-                return res.status(404).json({
-                    status: 404,
-                    message: 'Id product not found'
-                })
-            }
-            if(infoUpdate) {
-                const response = await ProductService.updateProduct(proId, infoUpdate)
-                res.status(200).json(response)
-            }
-        }catch (err) {
-            res.status(500).json(err)
+            const response = await ProductService.updateProduct(proSlug, req.body, fileData)
+            res.status(StatusCodes.OK).json(response);
+        }catch (error) {
+             next(error)
         }
     },
     
     //GetAll Products
-    getAllProducts: async (req, res) => {
+    getAllProducts: async (req, res, next) => {
         try {
             const response = await ProductService.getAllProducts(req.query)
-            res.status(200).json(response)
-        }catch(err) {
-            res.status(500).json(err)
+            res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+             next(error)
+        }
+    },
+
+    getAllProductsForHome: async (req, res, next) => {
+        try {
+            const response = await ProductService.getAllProductsForHome(req.query)
+            res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+             next(error)
         }
     },
     
     // Get Details Product
-    getDetailsProduct: async (req, res) => {
+    getProductBySlug: async (req, res, next) => {
         try {
-            if(req.params.slug === null) {
-                return res.status(412).json({
-                    status: 'ERR',
-                    message: 'The input is required'
-                })
-            }
-            const response = await ProductService.getDetailsProduct(req.params.slug)
-            res.status(200).json(response)
-        }catch(err) {
-            res.status(500).json(err)
+            const {slug} = req.params
+            const response = await ProductService.getProductBySlug(slug)
+             res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+             next(error)
         }
     },
 
     // Get Product By Category
-    getProductByCategory: async (req, res) => {
+    getProductByCategory: async (req, res, next) => {
         try {
-            const slug = req.params.slug
-            const { limit, page} = req.query
-            if(!slug ) {
-                return res.status(412).json({
-                    status: 'ERR',
-                    message: 'The input is required'
-                })
+            const {slug} = req.params
+            let filterPrice = ''
+            const { 
+                limit=10,
+                page,
+                sort="promise",
+                // order="asc",
+                price_min,
+                price_max
+            } = req.query
+            console.log(req.query)
+
+            if(!sort) throw new Error("Error")
+
+            
+            const options = {
+                page,
+                limit,
+                // sort: {
+                //     [sort]: order ==="asc" ? 1 : -1
+                // },
+                populate: ['category', 'subCategory'],
             }
-            const response = await ProductService.getProductByCategory(slug, limit, page)
-            res.status(200).json(response)
-        }catch(err) {
-            res.status(404).json(err)
+
+            if (price_min && price_max) {
+                filterPrice = {
+                    $gte: parseInt(parseInt(price_min)), // Giá tối thiểu
+                    $lte: parseInt(parseInt(price_max)), // Giá tối đa
+                }
+            }
+
+            const response = await ProductService.getProductByCategory(slug, filterPrice, options)
+             res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+             next(error)
+        }
+    },
+
+    getListProductRelated: async (req, res, next) => {
+        try {
+            const {categoryId} = req.params
+            const { 
+                removeId,
+                limit=10,
+            } = req.query
+           
+            const response = await ProductService.getListProductRelated(categoryId, removeId, limit)
+             res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+             next(error)
         }
     },
 
     // Get Product By Sub Category
-    getProductBySubCategory: async (req, res) => {
+    getProductBySubCategory: async (req, res, next) => {
         try {
             const slug = req.params.slug
-            const { limit, page} = req.query
-            if(!slug || !limit || !page) {
+            const { limit, } = req.query
+          
+            if(!slug || !limit ) {
                 return res.status(412).json({
                     status: 'ERROR',
                     message: 'The input is required'
                 })
             }
-            const response = await ProductService.getProductBySubCategory(slug, limit, page)
-            res.status(200).json(response)
-        }catch (err) {
-            res.status(500).json(err)
+            const response = await ProductService.getProductBySubCategory(slug, limit)
+             res.status(StatusCodes.OK).json(response);
+        }catch (error) {
+             next(error)
         }
     },
 
     // Get Details Product Id
-    getDetailsProductId: async (req, res) => {
+    getProductById: async (req, res, next) => {
         try {
-            if(req.params.id === null) {
-                return res.status(412).json({
-                    status: 'ERR',
-                    message: 'The input is required'
-                })
-            }
-            const response = await ProductService.getDetailsProductId(req.params.id)
-            res.status(200).json(response)
-        }catch(err) {
-            res.status(500).json(err)
+            
+            const response = await ProductService.getProductById(req.params.id)
+             res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+             next(error)
         }
     },
 
     
     //Delete Product
-    deleteProduct: async (req, res) => {
+    deleteProduct: async (req, res, next) => {
         try {
-            if(!req.params.id) {
-                return res.status(404).json({
-                    status: 'Error',
-                    message: 'The id is required',
-                })
-            }
-            const response = await ProductService.deleteProduct(req.params.id)
-            res.status(200).json(response)
-        }catch(err) {
-            res.status(500).json(err)
-        }
-    },
-
-    // Create color
-    createColor: async (req, res) => {
-        try {
-            const imgColor = req.files.map(file => {
-                return file.filename
-            }) 
+            const {publicId} = req.query
             
-            const valueColor = {
-                ...req.body,
-                image: imgColor
-            }
-            const response = await ProductService.createColor(valueColor)
-            res.status(200).json(response)
-        }catch(err) {
-            res.status(500).json(err)
+            const response = await ProductService.deleteProduct(req.params.id, publicId)
+             res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+             next(error)
         }
     },
-
-    //Get  color
-    getProductColor: async (req, res) => {
-        try {
-            const id = req.params.id
-            if(!id) {
-                return res.status(404).json({
-                    status: 'Error',
-                    message: 'The id is required',
-                })
-            }
-            const response = await ProductService.getProductColor(id)
-            res.status(200).json(response)
-        }catch (err) {
-            res.status(500).json(err)
-        }
-    },
-
-    //Delete Color
-    deleteColor: async (req, res) => {
-        try {
-            const id = req.params.id
-            if(!id) {
-                return res.status(404).json({
-                    status: 'Error',
-                    message: 'The id is required',
-                })
-            }
-            const response = await ProductService.deleteColor(id)
-            res.status(200).json(response)
-        }catch (err) {
-            res.status(500).json(err)
-        }
-    },
-
+    
     // Create Size
-    createSize: async (req, res) => {
-        console.log(req.body)
+    createSize: async (req, res, next) => {
         try {
             const response = await ProductService.createSize(req.body)
-            res.status(200).json(response)
-        }catch(err) {
-            res.status(500).json(err)
+             res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+             next(error)
         }
     },
 
     // Get Size
-    getProductSize: async (req, res) => {
+    getProductSize: async (req, res, next) => {
         try {
-            const id = req.params.id
+            const {id} = req.params
             if(!id) {
                 return res.status(404).json({
                     status: 'Error',
@@ -217,52 +194,12 @@ const ProductController = {
                 })
             }
             const response = await ProductService.getProductSize(id)
-            res.status(200).json(response)
-        }catch (err) {
-            res.status(500).json(err)
+             res.status(StatusCodes.OK).json(response);
+        }catch (error) {
+             next(error)
         }
     },
 
-    deleteSize:async(req, res) => {
-        try {
-            const id = req.params.id
-            if(!id) {
-                return res.status(404).json({
-                    status: 'Error',
-                    message: 'The id is required',
-                })
-            }
-            const response = await ProductService.deleteSize(id)
-            res.status(200).json(response)
-        }catch (err) {
-            res.status(500).json(err)
-        }
-    },
-
-    //Search Product
-    searchProduct: async (req, res) => {
-        try {
-            const {q, page, type} = req.query
-            if(!q && !type) {
-                return res.status(404).json({
-                    status: 'Error',
-                    message: 'Request not received',
-                })
-            }
-            const props = {
-                'less': 5,
-                'more': 10
-            }
-            const limit = props[type]
-            const response = await ProductService.searchProduct({q, page, limit})
-            res.status(200).json(response)
-        }catch (err) {
-            res.status(500).json(err)
-        }
-    },
-
-    //////
-    
 }
 
 

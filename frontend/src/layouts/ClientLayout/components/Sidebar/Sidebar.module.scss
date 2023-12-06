@@ -1,0 +1,33 @@
+.sidebar {
+    margin-bottom: 30px;
+}
+
+.title {
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+.list-unstyled {
+    padding-left: 0;
+    list-style: none;
+
+    & li a {
+        display: inline-flex;
+        position: relative;
+        padding: 5px 0px 5px 20px;
+        color: #333333;
+        align-items: center;
+        font-size: 1.6rem;
+        cursor: pointer;
+
+        i {
+            font-size: 1.5rem;
+            padding-right: 8px;
+            padding-top: 4px;
+        }
+    }
+}

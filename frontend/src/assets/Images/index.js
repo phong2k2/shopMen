@@ -1,5 +1,8 @@
-// const images = {
-//   logo: require('~/assets/images/logo.svg').default,
-//   noImage: require('~/assets/images/user-img--erorr.png'),
-// };
-// export { images };
+import logo from '@/assets/images/logo.svg';
+import noImage from '@/assets/images/user-img--erorr.png';
+
+const images = {
+  logo,
+  noImage,
+};
+export { images };

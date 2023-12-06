@@ -1,269 +1,374 @@
+import { useEffect, useState } from "react";
 import classNames from "classnames/bind";
-import styles from './DeliveryInformation.module.scss'
-import PropTypes from 'prop-types';
-import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
+import styles from "./DeliveryInformation.module.scss";
+import PropTypes from "prop-types";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { formatPrice } from "@/components/formatData/formatData";
-import { useDeliveryInfo } from "@/hook/useContext";
-import MenuItem from '@mui/material/MenuItem';
-import InputField from "@/components/form-controls/InputField/InputField"
+import InputField from "@/components/form-controls/InputField/InputField";
+import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
+import PayPal from "../../Paypal";
+import { useQuery } from "react-query";
+import { getClientIdPaypal } from "@/services/paymentService";
+import { schemaCheckout } from "@/Validations/yupSchema";
+import { getDistricts, getProvinces } from "@/services/provincesService";
 
+const initValue = {
+  id: "",
+  name: "",
+};
 
-const cx = classNames.bind(styles)
-function DeliveryInformation({
-        shippingAddress,
-        diliveryPrice,
-        onChange,
-        onClick
-    }) {
+const cx = classNames.bind(styles);
+const DeliveryInformation = function DeliveryInformation({
+  addressUserOrder,
+  diliveryPrice,
+  payments,
+  activePayment,
+  handleChangeActivePayment,
+  handleSubmitCreateOrder,
+  optionsPayPal,
+}) {
+  const [isShowPayment, setIsShowPayment] = useState(false);
+  const [province, setProvince] = useState(initValue);
+  const [district, setDistrict] = useState(initValue);
+  const [showSelectCountry, setShowSelectCountry] = useState(false);
+  const [activeTab, setActiveTab] = useState("provinces");
 
-    const schema = yup.object({
-        username: yup.string().required('Vui lòng nhập tên'),
-        email: yup.string().email('Email không đúng').required('Vui lòng nhập email'),
-        phone: yup.string().required('Vui lòng nhập số điện thoại').min(10, 'Bắt buộc phải 10 số').max(11, 'Sai định dạng'),
-        address: yup.string().required('Vui lòng nhập địa chỉ'),
-        province: yup.string().required('Vui lòng chọn'),
-        district: yup.string().required('Vui lòng chọn'),
-        ward: yup.string().required('Vui lòng chọn'),
-    }).required()
-    
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        } = useForm({
-            defaultValues: {
-                username: shippingAddress?.username, 
-            },
-            resolver: yupResolver(schema),
-        })
-        
-        const handleOnSubmit = (values) => {
-            onClick(values)
-        }
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schemaCheckout),
+  });
 
-    const {
-        provinces,
-        provinceId,
-        setProvinceId,
-        districts,
-        districtId,
-        setDistrictId,
-        wards,
-        wardId,
-        setWardId,
-    } = useDeliveryInfo();
+  const handleOnSubmit = (values) => {
+    handleSubmitCreateOrder(values);
+  };
 
-    return ( 
-        <div className={cx('step')}>
-        <div className={cx('step-section')}>
-            <h2>Thông tin giao hàng</h2>
-           <form onSubmit={handleSubmit(handleOnSubmit)}>
-                <div className={cx('section-content')}>
-                    <div className={cx('fieldset')}>
-                        <div className={cx('field')}>
-                            <div className={cx('field-input-wrapper')}>
-                                <label className={cx('filed-label')} htmlFor="">Họ và tên</label>
-                                <InputField
-                                    name="username"
-                                    register ={register}
-                                    errors= {errors}
-                                    // onChange={onChange}
-                                    // value={shippingAddress?.username}
+  useEffect(() => {
+    reset(addressUserOrder);
+  }, [addressUserOrder]);
+
+  //Get Client Id
+  const { data: clientId } = useQuery({
+    queryKey: "clientId",
+    queryFn: () => getClientIdPaypal(),
+  });
+
+  const handleChangePayment = (payment) => {
+    handleChangeActivePayment(payment);
+    const namePayment = payment?.name.toLowerCase();
+    if (namePayment.includes("paypal")) {
+      setIsShowPayment(true);
+    } else {
+      setIsShowPayment(false);
+    }
+  };
+
+  useEffect(() => {
+    setProvince(addressUserOrder?.province);
+    setDistrict(addressUserOrder?.district);
+  }, [addressUserOrder]);
+
+  // CODE EDIT
+  const provincesQuery = useQuery({
+    queryKey: "allProvinces",
+    queryFn: () => getProvinces(),
+  });
+
+  const districtQuery = useQuery({
+    queryKey: ["allDistricts", province?.id],
+    queryFn: () => getDistricts(province?.id),
+    enabled: province?.id !== undefined,
+  });
+
+  const { data: provinces } = provincesQuery;
+  const { data: itemDistrict } = districtQuery;
+
+  const handleClickActive = (active) => {
+    setActiveTab(active);
+  };
+
+  const handleClickActiveProvinces = (e) => {
+    const id = e.target.dataset.id;
+    const name = e.target.dataset.name;
+    if (id && name) {
+      setProvince({
+        ...province,
+        id,
+        name,
+      });
+      setActiveTab("district");
+    }
+  };
+
+  const handleClickActiveDistrict = (e) => {
+    const id = e.target.dataset.id;
+    const name = e.target.dataset.name;
+    if (id && name) {
+      setDistrict({
+        ...district,
+        id,
+        name,
+      });
+      setShowSelectCountry(false);
+    }
+  };
+  console.log(errors);
+  return (
+    <div className={cx("step")}>
+      <div className={cx("step-section")}>
+        <h2 className={cx("title-delivery")}>Thông tin giao hàng</h2>
+        <form onSubmit={handleSubmit(handleOnSubmit)}>
+          <div className={cx("section-content")}>
+            <div className={cx("fieldset")}>
+              <div className={cx("field")}>
+                <div className={cx("field-input-wrapper")}>
+                  <label className={cx("filed-label")} htmlFor="">
+                    Họ và tên
+                  </label>
+                  <InputField
+                    name="name"
+                    validate={register("name")}
+                    errors={errors}
+                  />
+                </div>
+              </div>
+              <div className={cx("field", "field-two-thirds")}>
+                <div className={cx("field-input-wrapper")}>
+                  <label className={cx("filed-label")} htmlFor="">
+                    Email
+                  </label>
+                  <InputField
+                    name="email"
+                    validate={register("email")}
+                    errors={errors}
+                  />
+                </div>
+              </div>
+              <div className={cx("field", "field-two-thirds")}>
+                <div className={cx("field-input-wrapper")}>
+                  <label className={cx("filed-label")} htmlFor="">
+                    Số điện thoại
+                  </label>
+                  <InputField
+                    name="phone"
+                    validate={register("phone")}
+                    errors={errors}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={cx("clear")}></div>
+          </div>
+
+          <div className={cx("section-content")}>
+            <div className={cx("fieldset")}>
+              <div className={cx("field")}>
+                <div className={cx("field-input-wrapper")}>
+                  <label className={cx("filed-label")} htmlFor="">
+                    Địa chỉ
+                  </label>
+                  <InputField
+                    name="address"
+                    validate={register("address")}
+                    errors={errors}
+                  />
+                </div>
+              </div>
+              <div className={cx("field")}>
+                <div className={cx("form-group")}>
+                  <div className={cx("row")}>
+                    <div className={cx("col-12")}>
+                      <div
+                        onClick={() => setShowSelectCountry((prev) => !prev)}
+                        className={cx("select-custom-group")}
+                      >
+                        <div className={cx("select-custom-country")}>
+                          {district?.name && province?.name
+                            ? `${district?.name}, ${province?.name} `
+                            : "Tỉnh/Thành phố, Quận/Huyện, Phường/Xã *"}
+                          <i className="bi bi-chevron-down"></i>
+                        </div>
+                        <div
+                          onClick={(e) => e.stopPropagation()}
+                          className={cx("country-options", {
+                            show: showSelectCountry,
+                          })}
+                        >
+                          <div className={cx("header-tabs")}>
+                            <ul className={cx("menu-tabs")}>
+                              <li
+                                onClick={() => handleClickActive("provinces")}
+                                className={cx("tab-city", {
+                                  active: activeTab === "provinces",
+                                })}
+                              >
+                                Tỉnh/Thành phố
+                              </li>
+                              <li
+                                onClick={() => handleClickActive("district")}
+                                className={cx("tab-district", {
+                                  active: activeTab === "district",
+                                })}
+                              >
+                                Quận/Huyện
+                              </li>
+                            </ul>
+                          </div>
+                          <div className={cx("body-result")}>
+                            {activeTab === "provinces" && (
+                              <ul className={cx("list-country", "list-city")}>
+                                {provinces?.map((itemProvince) => (
+                                  <li
+                                    data-id={itemProvince?.code}
+                                    data-name={itemProvince?.name}
+                                    onClick={handleClickActiveProvinces}
+                                    key={itemProvince?.code}
+                                    className={cx("item-list")}
+                                  >
+                                    {itemProvince?.name}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+
+                            {activeTab === "district" && (
+                              <ul
+                                className={cx("list-country", "list-district")}
+                              >
+                                {itemDistrict?.districts?.map((district) => (
+                                  <li
+                                    key={district?.code}
+                                    data-id={district?.code}
+                                    data-name={district?.name}
+                                    onClick={handleClickActiveDistrict}
+                                    className={cx("item-list")}
+                                  >
+                                    {district?.name}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={cx("clear")}></div>
+          </div>
+
+          <div className={cx("change-pick")}>
+            <div className={cx("section-shipping")}>
+              <div className={cx("fieldset")}>
+                <div className={cx("field")}>
+                  <div className={cx("section-header")}>
+                    <h2>Phương thức vận chuyển</h2>
+                  </div>
+                  <div className={cx("section-content")}>
+                    <div className={cx("radio-wrapper")}>
+                      <div className={cx("radio-content")}>
+                        <input
+                          defaultChecked={true}
+                          type="radio"
+                          className={cx("radio-input")}
+                        />
+                        <span className={cx("radio-label")}>
+                          Giao hàng tận nơi
+                        </span>
+                        <span className={cx("radio-price")}>
+                          {formatPrice(diliveryPrice)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className={cx("section-payment")}>
+              <div className={cx("fieldset")}>
+                <div className={cx("field")}>
+                  <div className={cx("section-content")}>
+                    <h2>Phương thức thanh toán</h2>
+                  </div>
+                  <div className={cx("section-content")}>
+                    <div className={cx("radio-wrapper")}>
+                      <div className={cx("radio-content")}>
+                        <Controller
+                          name="payment"
+                          control={control}
+                          render={({ field }) => (
+                            <RadioGroup
+                              {...field}
+                              value={field.value || ""}
+                              aria-labelledby="demo-controlled-radio-buttons-group"
+                            >
+                              {payments?.map((payment) => (
+                                <FormControlLabel
+                                  key={payment?._id}
+                                  value={payment?._id}
+                                  sx={{
+                                    "& .MuiTypography-root": {
+                                      fontSize: 12,
+                                    },
+                                  }}
+                                  checked={activePayment?._id === payment?._id}
+                                  onChange={() => handleChangePayment(payment)}
+                                  control={
+                                    <Radio
+                                      sx={{
+                                        "& .MuiSvgIcon-root": {
+                                          fontSize: 20,
+                                        },
+                                      }}
+                                    />
+                                  }
+                                  label={payment?.name}
                                 />
-                            </div>
-                        </div>
-                        <div className={cx('field', 'field-two-thirds')}>
-                            <div className={cx('field-input-wrapper')}>
-                                <label className={cx('filed-label')} htmlFor="">Email</label>
-                                <InputField
-                                    name="email"
-                                    register ={register}
-                                    errors= {errors}
-                                    value={shippingAddress?.email}
-                                    onChange={onChange} 
-                                />
-                            </div>
-                        </div>
-                        <div className={cx('field', 'field-two-thirds')}>
-                            <div className={cx('field-input-wrapper')}>
-                                <label className={cx('filed-label')} htmlFor="">Số điện thoại</label>
-                                <InputField
-                                    name="phone"
-                                    register ={register}
-                                    errors= {errors}
-                                    value={shippingAddress?.phone} 
-                                    onChange={onChange}
-                                />
-                            </div>
-                        </div>
+                              ))}
+                            </RadioGroup>
+                          )}
+                        />
+                      </div>
                     </div>
-                    <div className={cx('clear')}></div>
+                  </div>
                 </div>
-    
-                <div className={cx('section-content')}>
-                    <div className={cx('fieldset')}>
-                        <div action="">
-                            <div className={cx('content-box')}>
-                                <div className={cx('field')}>
-                                    <div className={cx('field-input-wrapper')}>
-                                        <label className={cx('filed-label')} htmlFor="">Địa chỉ</label>
-                                        <InputField
-                                            name="address"
-                                            register ={register}
-                                            errors= {errors}
-                                            value={shippingAddress?.address}
-                                            onChange={onChange}
-                                        />
-                                    </div>
-                                </div>
-                                <div className={cx('field', 'field-third')}>
-                                    <div className={cx('field-input-wrapper')}>
-                                        {/* <label className={cx('filed-label')} htmlFor="field-label">
-                                            Tỉnh / thành
-                                        </label> */}
-                                        <InputField
-                                            name="province" // Đặt tên của trường ở đây
-                                            register={register}
-                                            errors={errors}
-                                            select
-                                            value={provinceId || ''}
-                                            label="Tỉnh / thành"
-                                            onChange={(e) => setProvinceId(e.target.value)}
-                                            className={cx('field-input')}
-                                        >
-                                            {provinces?.map((province, index) => (
-                                                <MenuItem key={index} value={province?.province_id}>
-                                                {province?.province_name}
-                                                </MenuItem>
-                                            ))}
-                                        </InputField>
-                                        {/* <select  value={provinceId} onChange={(e) =>  setProvinceId(e.target.value)} className={cx('field-input')} name="" id="">
-                                            <option value="">Chọn tỉnh / thành</option>
-                                            {
-                                                provinces?.map((province, index) => {
-                                                    return <option key={index} value={province?.province_id}>{province?.province_name}</option>
-                                                } )
-                                            }
-                                        </select> */}
-                                    </div>
-                                </div>
-    
-                                <div className={cx('field', 'field-third')}>
-                                    <div className={cx('field-input-wrapper')}>
-                                        <InputField
-                                                name="district" // Đặt tên của trường ở đây
-                                                register={register}
-                                                errors={errors}
-                                                select
-                                                value={districtId || ''}
-                                                label="Tỉnh / thành"
-                                                onChange={(e) => setDistrictId(e.target.value)}
-                                                className={cx('field-input')}
-                                        >
-                                            {districts?.map((districtItem, index) => (
-                                                <MenuItem key={index} value={districtItem?.district_id}>
-                                                    {districtItem?.district_name}
-                                                </MenuItem>
-                                            ))}
-                                        </InputField>
-                                        {/* <label className={cx('filed-label')} htmlFor="field-label">
-                                            Quận / huyện
-                                        </label>
-                                        <select value={districtId} onChange={(e) => setDistrictId(e.target.value)} className={cx('field-input')} name="" id="">
-                                            <option value="">Chọn quận / huyện</option>
-                                            {
-                                                districts?.map(districtItem => {
-                                                    return <option key={districtItem?.district_id} value={districtItem?.district_id}>{districtItem?.district_name}</option>
-                                                })
-                                            }
-                                        </select> */}
-                                    </div>
-                                </div>
-    
-                                <div className={cx('field', 'field-third')}>
-                                    <div className={cx('field-input-wrapper')}>
-                                        <InputField
-                                                name="ward" 
-                                                register={register}
-                                                errors={errors}
-                                                select
-                                                value={wardId || ''}
-                                                label="Phường / xã"
-                                                onChange={(e)=> setWardId(e.target.value)} 
-                                                className={cx('field-input')}
-                                        >
-                                            {wards?.map((wardItem, index) => (
-                                                <MenuItem key={index} value={wardItem?.ward_id}>
-                                                    {wardItem?.ward_name}
-                                                </MenuItem>
-                                            ))}
-                                        </InputField>
-                                        {/* <label className={cx('filed-label')} htmlFor="field-label">
-                                            Phường / xã
-                                        </label>
-                                        <select onChange={(e)=> setWardId(e.target.value)} className={cx('field-input')} name="" id="">
-                                            <option value="">Chọn phường / xã</option>
-                                            {
-                                                wards?.map((wardItem, index )=> {
-                                                    return <option key={index} value={wardItem?.ward_id}>{wardItem?.ward_name}</option>
-                                                })
-                                            }
-                                        </select> */}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={cx('clear')}></div>
-                </div>
-                
-                <div className={cx('change-pick')}>
-                    <div className={cx('section-shipping')}>
-                        <div className={cx('section-header')}>
-                            <h2>Phương thức vận chuyển</h2>
-                        </div>
-                        <div className={cx('section-content')}>
-                            <div className={cx('radio-wrapper')}>
-                                <div className={cx('radio-content')}>
-                                <input defaultChecked={true} type="radio" className={'radio-input'} />
-                                <span className={cx('radio-label')}>Giao hàng tận nơi</span>
-                                <span className={cx('radio-price')}>{formatPrice(diliveryPrice)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                                            
-                    <div className={cx('section-payment')}>
-                        <div className={cx('section-content')}>
-                            <h2>Phương thức thanh toán</h2>
-                        </div>
-                        <div className={cx('section-content')}>
-                            <div className={cx('radio-wrapper')}>
-                                <div className={cx('radio-content')}>
-                                <input defaultChecked={true} type="radio" className={'radio-input'} />
-                                <span className={cx('radio-label')}>Thanh toán khi giao hàng</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className={cx('step-footer')}>
-                    <button >Hoàn tất đơn hàng</button>
-                </div>
-           </form>
-        </div>
-        
+              </div>
+            </div>
+          </div>
+          {/* Button Paypal */}
+          {isShowPayment ? (
+            <div className={cx("step-footer")}>
+              <PayPal optionsPayPal={optionsPayPal} clientId={clientId} />
+            </div>
+          ) : (
+            <div className={cx("step-footer")}>
+              <button className={cx("btn-complete")}>Hoàn tất đơn hàng</button>
+              <div className={cx("clear")}></div>
+            </div>
+          )}
+        </form>
+      </div>
     </div>
-     );
-}
+  );
+};
 
 DeliveryInformation.propTypes = {
-    shippingAddress: PropTypes.object,
-    diliveryPrice: PropTypes.number,
-    onChange: PropTypes.func, 
-    onClick: PropTypes.func
+  addressUserOrder: PropTypes.object,
+  diliveryPrice: PropTypes.number,
+  payments: PropTypes.array,
+  onChange: PropTypes.func,
+  handleSubmitCreateOrder: PropTypes.func,
+  handleChangeActivePayment: PropTypes.func,
+  activePayment: PropTypes.object,
+  optionsPayPal: PropTypes.object,
 };
 
 export default DeliveryInformation;

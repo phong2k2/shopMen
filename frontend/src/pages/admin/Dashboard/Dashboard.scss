@@ -1,0 +1,41 @@
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    color: var(--dashui-heading-color,inherit);
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+.mt-n6 {
+    margin-top: -1.5rem!important;
+}
+.mx-n4 {
+    margin-left: -1rem!important;
+    margin-right: -1rem!important;
+}
+
+
+.bg-primary {
+    --dashui-bg-opacity: 1;
+    background-color: #624bff!important;
+}
+
+.pt-10 {
+    padding-top: 10rem!important;
+}
+.mt-n22 {
+    margin-top: -16rem!important;
+}
+.pb-21 {
+    padding-bottom: 8.5rem!important;
+}
+
+.card-lift {
+    border-radius: 0.5rem;
+    transition: all .4s;
+}
+
+.card-lift:hover {
+    box-shadow: 0 5px 10px rgba(30,32,37,.12);
+    transform: translateY(-0.3rem);
+}

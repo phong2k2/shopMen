@@ -1,15 +1,16 @@
-const express = require('express');
+const {ObjectId} = require('mongodb');
+const {StatusCodes} = require('http-status-codes');
 const Product = require('../app/model/Product');
 const Category = require('../app/model/Category');
 const Subcategory = require('../app/model/SubCategory');
-const ProductColor = require('../app/model/ProductColor');
-const ProductSize = require('../app/model/ProductSize');
-const path = require('path');
-const fs = require('fs');
+const ApiError = require('../utils/ApiError')
+const {uploadToCloudinary, deleteAnCloudinary} = require('../Services/CloudinaryService');
+const SubCategory = require('../app/model/SubCategory');
+
+
 
 //Search Product
-const searchProduct =  ({q, page, limit}) => {
-    return new Promise( async (resolve, reject) => {
+const searchProduct = async (q, page, limit) => {
         try {
             const skipPage = (page-1) * limit
             const products = await Product.find({name: {$regex: q, $options: "i"}})
@@ -17,118 +18,91 @@ const searchProduct =  ({q, page, limit}) => {
             .limit(limit)
             .skip(skipPage)
 
-
             const total = await Product.countDocuments({
                 name: { $regex: q, $options: "i" },
             });
-            resolve({
-                status: 'Success',
-                message: 'Search successfully',
+            return {
                 total: total,
                 data: products
-            })
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to search product',
-                error: err
-            })
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
 // Add Product
-const createProduct = (data) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const checkProduct = await Product.findOne({name: data.name})
-            if (checkProduct !== null) {
-                return resolve({
-                    status: 'NAN',
-                    message: 'The name of Product is already ',
-                })
-            }
-            const newProduct = await Product.create(data)
-            if(newProduct) {
-                if(data.category) {
-                    const updatedCategory = await Category.findOneAndUpdate(
-                    { _id: data.category }, // Điều kiện tìm kiếm
-                    { $push: { product: newProduct._id } }, // Toán tử $push để cập nhật mảng
-                    { new: true } // Option để trả về tài liệu đã được cập nhật
-                    );
-                    
-                    if(updatedCategory === null) {
-                        const updateSubCategory = await Subcategory.findOneAndUpdate(
-                        { _id: data.category }, // Điều kiện tìm kiếm
-                        { $push: { product: newProduct._id } }, // Toán tử $push để cập nhật mảng
-                        { new: true } // Option để trả về tài liệu đã được cập nhật
-                        ); 
-                    }
-
-                }
-                 resolve({
-                    status: 'success',
-                    message: 'Product created successfully',
-                    data: newProduct
-                })
-            }
-        }catch(err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get Product',
-                error: err
-            })
+const createProduct = async (body, fileData) => {
+    let publicIdToDelete;
+    try {
+        const checkProduct = await Product.findOne({name: body.name})
+        if (checkProduct) {
+            throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
         }
-    })
+        const result = await uploadToCloudinary(fileData.path);
+        publicIdToDelete = result.publicId;
+
+        const newProduct = await Product.create({
+            ...body,
+            image: result
+        })
+        if(body.category) {
+            const updateCategory =  Category.findOneAndUpdate(
+            { _id: body.category }, // Điều kiện tìm kiếm
+            { $push: { product: newProduct._id } }, // Toán tử $push để cập nhật mảng
+            { new: true } // Option để trả về tài liệu đã được cập nhật
+            );
+            
+            const updateSubcategory = Subcategory.findOneAndUpdate(
+                { _id: body.category }, // Điều kiện tìm kiếm
+                { $push: { product: newProduct._id } }, // Toán tử $push để cập nhật mảng
+                { new: true } // Option để trả về tài liệu đã được cập nhật
+            ); 
+            await Promise.all([updateCategory, updateSubcategory]);
+
+        }
+        return {
+            data: newProduct
+        }
+    }catch(error) {
+        if (publicIdToDelete) {
+            await deleteAnCloudinary(publicIdToDelete);
+        }
+        throw error
+    }
 }
 
 // Update product
-const updateProduct = (id, info) => {
-    return new Promise(async (resolve, reject) => {
+const updateProduct = async (proSlug, body, fileData) => {
+        let publicIdToDelete;
         try {
-
-            const checkProduct = await Product.findOne({_id: id})
-            if (checkProduct === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The product is not defined'
-                })
+            const checkProduct = await Product.findOne({slug: proSlug})
+            if (!checkProduct) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
+            }
+            if(fileData) {
+                const result = await uploadToCloudinary(fileData.path);
+                publicIdToDelete = result.publicId;
+                if (result) body.image = result
             }
 
-            // Xóa ảnh cũ
-            if ( checkProduct.image !== info.image) {
-                const oldImagePath = path.join('src/public/images', checkProduct.image);
-                
-                console.log('__dirname', fs.existsSync(oldImagePath))
-                if (fs.existsSync(oldImagePath)) {
-                    // Xóa ảnh cũ
-                    fs.unlinkSync(oldImagePath);
-                    console.log('Old image deleted:', oldImagePath);
-                }
-            }
-
-            const updateProduct = await Product.findOneAndUpdate({_id: id}, info, {new: true})
-            resolve({
-                status: 'Success',
-                message: 'Successful request',
+            const updateProduct = await Product.findOneAndUpdate({slug: proSlug}, body, {new: true})
+            
+            return {
                 data: updateProduct
-            })
-        } catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get Product',
-                error: err
-            })
+            }
+        } catch (error) {
+            if (publicIdToDelete) {
+                await deleteAnCloudinary(publicIdToDelete);
+            }
+            throw error
         }
-    })
 }
 
 //GetAll Products
-const getAllProducts = ({limit = 10, page, sort, filter}) => {
-    return new Promise( async (resolve, reject) => {
+const getAllProducts = async ({limit = 10, page, sort, filter}) => {
         try {
+            let allProducts 
             const totalProduct = await Product.count()
-            let allProducts = []
             // search for product
             if(filter) {
                 const label = filter[0]
@@ -140,32 +114,32 @@ const getAllProducts = ({limit = 10, page, sort, filter}) => {
                 .populate('category')
                 .populate('subCategory')
 
-                resolve({
-                    status: 'Success',
-                    message: 'Successful request',
+                
+                return {
                     countProduct: totalProduct,
                     data: allObjectsFilter
-                })
+                }
             }
-
             // Arrange
             if(sort) {
                 const objectSort = {}
-                objectSort[sort[0]] = sort[1]
-                const allProductSort = await Product.find()
+                if(sort.indexOf('-')) {
+                    const newSort = sort.split('-')
+                    objectSort[newSort[0]] = newSort[1]
+                }
+                const allProductSort = await Product.find({})
                 .limit(limit)
                 .skip((page * limit) - limit)
                 .sort(objectSort)
                 .sort({createdAt: -1, updatedAt: -1})
                 .populate('category')
                 .populate('subCategory')
-
-                resolve({
-                    status: 'Success',
-                    message: 'Successful request',
+                
+                
+                return {
                     countProduct: totalProduct,
                     data: allProductSort
-                })
+                }
             }   
             
             if(!limit) {
@@ -182,362 +156,188 @@ const getAllProducts = ({limit = 10, page, sort, filter}) => {
                 .populate('subCategory')
             }
 
-            resolve({
-                status: 'OK',
-                message: 'Success',
-                data: allProducts,
+            
+            return {
                 total: totalProduct,
-            })
-        }catch(err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get Product',
-                error: err
-            })
+                data: allProducts,
+            }
+        }catch(error) {
+            throw error
         }
-    })
+}
+
+const getAllProductsForHome = async ({limit = 15}) => {
+        try {
+            let allProducts = await Product.find()
+                .sort({createdAt: -1, updatedAt: -1})
+                .limit(limit)
+                .populate('category')
+                .populate('subCategory')
+            
+            return {
+                data: allProducts,
+            }
+        }catch(error) {
+            throw error
+        }
 }
 
 
 // Get Product Detail 
-const getDetailsProduct = (slug) => {
-    return new Promise( async (resolve, reject) => {
+const getProductBySlug = async (slug) => {
         try {
             const product = await Product.findOne({
                 slug: slug,
-            }).populate('category',['name'])
+            })
+            .populate('category')
+            .populate({
+                path: 'color', // Điều hướng đến trường 'color'
+                populate: [
+                    { path: 'gallery' }, // Điều hướng đến trường 'gallery' trong 'color'
+                    { path: 'size' }, // Điều hướng đến trường 'size' trong 'color'
+                  ],
+            })
             
-            if(product === null) {
-                resolve({
-                    status: 'ERR',
-                    message: 'The product is not defined'
-                })
+
+            
+            return {
+                data: product,
             }
-            // const listProduct = {
-            //     ...product._doc,
-            //     'image': `http://localhost:3000/${product._doc.image}`
-            // }
-            resolve({
-                status: 'OK',
-                message: 'SUCESS',
-                data: product
-            })
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get Product Detail',
-                error: err
-            })
+        }catch (error) {
+            throw error
         }
-    })
 }
 
 
 // Get Product Detail Id
-const getDetailsProductId = ( id) => {
-    return new Promise( async (resolve, reject) => {
+const getProductById = async (id) => {
         try {
             const product = await Product.findOne({
-                _id: id,
+                _id: new ObjectId(id),
             })
             
-            if(product === null) {
-                reject({
-                    status: 'ERR',
-                    message: 'The product is not defined'
-                })
+            return {
+                data: product,
             }
-            // const listProduct = {
-            //     ...product._doc,
-            //     'image': `http://localhost:3000/${product._doc.image}`
-            // }
-            resolve({
-                status: 'OK',
-                message: 'SUCESS',
-                data: product
-            })
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get Product Detail',
-                error: err
-            })
+        }catch (error) {
+            throw error
         }
-    })
 }
 
 //Get Product By Category
-const getProductByCategory = (slug, limit, page) => {
-    return new Promise(async (resolve, reject) => {
+const getProductByCategory = async (slug, filterPrice, options) => {
         try {
-            const skipPage = page  * limit 
-            const category = await Category.findOne({ slug: slug });
-            if(category) {
-                const productCount = await Product.countDocuments({ category: category._id });
-                const product = await Product.find({
-                    $and: [
-                    { category: category._id }
-                ]})
-                .skip(skipPage)
-                .limit(limit)
-                .sort({ createdAt: -1 })
+            let productQuery = '';
+            // Kiểm tra xem slug có tương ứng với danh mục con hay không
+            const subCategory = await SubCategory.findOne({ slug: slug });
+            
+            if (subCategory) {
+                // Nếu slug tương ứng với danh mục con, sử dụng subCategory ID
+                productQuery = { 
+                    subCategory: subCategory._id
+                };
 
-                resolve({
-                    status: 'OK',
-                    message: 'SUCCESS',
-                    data: {
-                        totalProducts: productCount,
-                        product,
-                        nameCategory: category?.name
-                    }
-                })
+            } else {
+                // Nếu không phải danh mục con, tìm danh mục chính và sử dụng category ID
+                const category = await Category.findOne({ slug: slug });
+
+                if (category) {
+                    productQuery = {
+                        category: category._id,
+                    };
+                } else {
+                    throw new ApiError(StatusCodes.NOT_FOUND, 'Category not found')
+                }
             }
-        }catch(err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get Product Detail',
-                error: err
-            })
+            if(filterPrice) {
+                productQuery.price = filterPrice
+            }
+            const products = await Product.paginate(productQuery, options)
+                   
+            return {
+                data: products,
+            }
+        }catch(error) {
+            throw error
         }
-    })
+}
+
+
+
+//Get Product Related
+const getListProductRelated = async (categoryId, removeId, limit) => {
+        try {
+            const allProduct = await Product.find({
+                category: categoryId,
+                _id: { $ne: removeId },
+              })
+            .limit(limit)
+
+            return {
+                data: allProduct,
+            }
+        }catch(error) {
+            throw error
+        }
 }
 
 // Get Product By Sub Category
-const getProductBySubCategory = (slug, limit, page) => {
-    return new Promise(async (resolve, reject) => {
+const getProductBySubCategory = async (slug, limit) => {
         try {
-            const skipPage = page  * limit 
             const subcategory = await Subcategory.findOne({ slug: slug });
             if(subcategory) {
-                const productCount = await Product.countDocuments({ subCategory: subcategory._id });
-                const product = await Product.find({
-                    $and: [
+                const product = await Product.find(
                     { subCategory: subcategory._id }
-                ]})
-                .skip(skipPage)
+                )
                 .limit(limit)
                 .sort({ createdAt: -1 })
-                resolve({
-                    status: 'OK',
-                    message: 'SUCCESS',
-                    data: {
-                        totalProducts: productCount,
-                        product,
-                        nameCategory: subcategory?.name
-                    }
-                })
+                .populate('category', 'subCategory')
+                
+                return {
+                    data: product,
+                }
             }
-        }catch(err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get Product Detail',
-                error: err
-            })
+        }catch(error) {
+            throw error
         }
-    })
 }
 
 // Delete product
-const deleteProduct = (id) => {
-    return new Promise( async (resolve, reject) => {
+const deleteProduct = async (id, publicId) => {
         try {
-            
-            const checkDeleteProduct = await Product.findOne({_id: id});
+            const checkDeleteProduct = await Product.findOne({_id: new ObjectId(id)});
             if (!checkDeleteProduct) {
-                return reject({
-                    status: 'Error',
-                    message: 'No products found',
-                })
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
             }
             await Category.updateMany(
                 { product: id },
-                { $pull: { product: id } }
-              );
+                { $pull: { product: new ObjectId(id) } }
+            );
 
-            await Product.findOneAndDelete({_id: id})
-             resolve({
-                status: 'OK',
+            await Product.findOneAndDelete({_id: new ObjectId(id)})
+              
+            // delete image cloudinary
+            await deleteAnCloudinary(publicId);
+
+            return {
                 message: 'Delete Success',
-            })
-        }catch(err)  {
-            reject({
-                status: 'Error',
-                message: 'Failed to delete Product',
-                error: err
-            })
-        }
-    })
-}
-
-// Create variant
-const createColor = (valueColor) => {
-    return new Promise( async (resolve, reject) => {
-        const { color, image, product} = valueColor
-        try {
-            const existingColor = await ProductColor.findOne({
-                color: color,
-                product: product,
-            });
-
-            if(existingColor) {
-                return reject({
-                    status: 'Error',
-                    message: 'Variations already exist',
-                })
             }
-            
-
-            const newColor = await ProductColor.create({
-                color,
-                image,
-                product
-            })
-         
-
-            if(newColor) {
-                resolve({
-                    status: 'Success',
-                    message: 'Successful request',
-                    data: newColor
-                })
-            }
-        }catch(err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to crate variant',
-                error: err
-            })
+        }catch(error)  {
+            throw error
         }
-    })
 }
 
-// get Product Color
-const getProductColor = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const allColor = await ProductColor.find({
-                product: id
-            })
-            resolve({
-                status: 'Success',
-                message: 'Successful request',
-                data: allColor
-            })
-        }catch(err) {
-            reject(err)
-        }
-    })
-}
-
-const deleteColor = (id) => {
-    return new Promise( async (resolve, reject) => {
-        try {
-            const checkColor = await ProductColor.findOne({_id: id});
-            if(!checkColor) {
-                return resolve({
-                    message: 'Not found color'
-                })
-            }
-            await ProductColor.findOneAndDelete({_id: id});
-            resolve({
-                status: 'Success',
-                message: 'Delete Successful',
-            })
-        }catch (err) {
-            reject(err)
-        }
-    })
-}
-
-// Create size
-const createSize = (valueSize) => {
-    return new Promise(async (resolve, reject) => {
-        const {size, product} = valueSize
-        try {
-            const existingVariant = await ProductSize.findOne({
-                size: size,
-                product: product,
-            });
-
-            if(existingVariant) {
-                return reject({
-                    status: 'Error',
-                    message: 'Variations already exist',
-                })
-            }
-
-            const newSize = await ProductSize.create({
-                size,
-                product
-            })
-               
-            if(newSize) {
-                resolve({
-                    status: 'Success',
-                    message: 'Successful request',
-                    data: newSize
-                })
-            }
-        }catch(err) {
-            reject(err);
-        }
-    })
-}
-
-
-// get Product Color
-const getProductSize = (id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const allSize = await ProductSize.find({
-                product: id
-            })
-            resolve({
-                status: 'Success',
-                message: 'Successful request',
-                data: allSize
-            })
-        }catch(err) {
-            reject(err)
-        }
-    })
-}
-
-//Delete size
-const deleteSize = (id) => {
-    return new Promise( async (resolve, reject) => {
-        try {
-            const checkColor = await ProductSize.findOne({_id: id});
-            if(!checkColor) {
-                return resolve({
-                    message: 'Not found color'
-                })
-            }
-            await ProductSize.findOneAndDelete({_id: id});
-            resolve({
-                status: 'Success',
-                message: 'Delete Successful',
-            })
-        }catch (err) {
-            reject(err)
-        }
-    })
-}
 
 module.exports = {
     createProduct,
     updateProduct,
     getAllProducts,
+    getAllProductsForHome,
     deleteProduct,
-    getDetailsProduct,
-    getDetailsProductId,
-    createColor,
-    getProductColor,
-    deleteColor,
-    createSize,
-    getProductSize,
-    deleteSize,
+    getProductBySlug,
+    getProductById,
     searchProduct,
     getProductBySubCategory,
-    getProductByCategory
+    getProductByCategory,
+    getListProductRelated
 }

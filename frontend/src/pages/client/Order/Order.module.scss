@@ -1,62 +1,69 @@
 
-.content {
-    margin-top: 60px;
-   
+.container {
+    margin: 0 auto;
+    display: flex;
+    padding: 0 5%;
+    width: 90%;
+    // max-width: 78.57143em;
+}
 
-    .container {
-        width: 90%;
-        padding: 0 15px;
-        margin: 0 auto;
-        display: flex;
+.main {
+    width: 100%;
+    padding-right: 4em;
+    padding-top: 4em;
+}
 
-        .main-head {
+.main-head {
 
-            h2 {
-               
-                a {
-                    font-size: 3rem;
-                    color: #444141;
-                    text-decoration: none;
-                }
-            }
-
-            .breadcrumb {
-                background-color: transparent;
-                list-style: none;
-                padding-left: 0;
-                
-                .breadcrumb-item {
-                    display: inline-block;
-                    padding-right: 10px;
-                    font-size: 1.4rem;
-                    text-decoration: none;
-
-                    a {
-                        text-decoration: none;
-                        font-size: 1.4rem;
-                        display: block;
-                    }
-                }
-            }
+    h2 {
+       
+        a {
+            font-size: 3rem;
+            color: #444141;
+            text-decoration: none;
         }
     }
 }
 
+.breadcrumb {
+    background-color: transparent;
+    list-style: none;
+    padding-left: 0;
+    
+    .breadcrumb-item {
+        display: inline-block;
+        padding-right: 10px;
+        font-size: 1.4rem;
+        text-decoration: none;
 
-.step-footer {
-    button {
-        padding: 15px 20px;
-        border-radius: 4px;
-        font-size: 1.5rem;
-        font-weight: 400;
-        float: right;
-        background-color: var(--black);
-        color: #fff;
-        font-weight: 600;
-
-        &:hover {
-            opacity: .7;
+        a {
+            text-decoration: none;
+            font-size: 1.4rem;
+            display: block;
         }
     }
 }
+
+.sidebar {
+    width: 100%;
+    padding-left: 4em;
+    box-shadow: 1px 0 0 #e1e1e1 inset;
+    padding-top: 4em;
+    position: relative;
+    background-position: left top;
+
+    &::after {
+        content: "";
+        display: block;
+        width: 300%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        background: #fafafa;
+        z-index: -1;
+        box-shadow: 0 -1px 0 #e1e1e1 inset;
+    }
+}
+
 

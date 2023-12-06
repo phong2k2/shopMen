@@ -1,0 +1,18 @@
+require('dotenv').config()
+
+const env ={
+    BUILD_MODE: process.env.BUILD_MODE,
+    MONGODB_URL: process.env.MONGODB_URL,
+    JWT_ACCESS_KEY: process.env.JWT_ACCESS_KEY,
+    JWT_REFRESH_TOKEN: process.env.JWT_REFRESH_TOKEN,
+    BASE_URL_IMG: process.env.BASE_URL_IMG,
+    CLIENT_ID: process.env.CLIENT_ID,
+    USER_EMAIL: process.env.USER_EMAIL,
+    PASSWORD_EMAIL: process.env.PASSWORD_EMAIL,
+    API_LOCAL_URL: process.env.API_LOCAL_URL,
+    GOOGLE_AUTHORIZED_CLIENT_ID: process.env.GOOGLE_AUTHORIZED_CLIENT_ID,
+    GOOGLE_AUTHORIZED_CLIENT_SECRET: process.env.GOOGLE_AUTHORIZED_CLIENT_SECRET,
+    GOOGLE_AUTHORIZED_REDIRECT_URI: process.env.GOOGLE_AUTHORIZED_REDIRECT_URI
+}
+
+module.exports = {env}

@@ -3,6 +3,7 @@
     text-align: center;
     position: relative;
     overflow: hidden;
+    margin-bottom: 20px;
 
     .img-resize {
         height: 295px;
@@ -16,73 +17,48 @@
         height: 100%;
         img {
             width: 100%;
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
         }
     }
 }
 
 .product-block {
     padding: 5px 10px;
-    background-color: var(--white);
-    border-radius: 4px;
-    box-shadow: 2px 2px 11px hsla(0, 3%, 7%, 0.1);
-    
-    .product-detail{
-        
-        .pro-name{
-            padding-bottom: 8px;
-            font-weight: 500;
-            margin: 5px 0;
-            text-transform: capitalize;
+}
 
-            a {
-                color: var(--black);
-                font-size: 1.6rem;
-                font-weight: 500;
-                text-transform: capitalize;
-                cursor: pointer;
-                text-decoration: none;
+.pro-name{
+    padding-bottom: 6px;
+    font-weight: 500;
+    text-transform: capitalize;
 
-                &:hover {
-                    color: #4eb5ec;
-                }
+    .conformName {
+        color: var(--black);
+        font-size: 1.5rem;
+        font-family: var(--font-family-text);
+        font-weight: 500;
+        text-transform: capitalize;
+        cursor: pointer;
+        text-decoration: none;
 
-            }
+        &:hover {
+            color: #4eb5ec;
         }
-        
-        .box-pro-detail {
-            display: flex;
-            justify-content: space-between;
-            padding-bottom: 5px;
-            
-            .product-price{
-                font-size: 1.5rem;
-                font-weight: 700;
-                .price-del {
-                    del {
-                        margin-left: 5px;
-                        font-size: 1.4rem;
-                        opacity: .7;
-                    }
-                }
-            }
 
-            .add-cart {
-                align-items: center;
-                background: transparent;
-                border: 1px solid #003644;
-                border-radius: 3px;
-                box-sizing: border-box;
-                color: #003644;
-                cursor: pointer;
-                display: flex;
-                height: 26px;
-                align-items: center;
+    }
+}
 
-                span {
-                    padding-left: 3px;
-                }
+.box-pro-detail {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 5px;
+    
+    .product-price{
+        font-size: 1.8rem;
+        font-weight: 600;
+        .price-del {
+            del {
+                margin-left: 5px;
+                font-size: 1.4rem;
+                opacity: .7;
             }
         }
     }

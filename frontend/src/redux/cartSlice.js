@@ -15,9 +15,12 @@ const cartSlice = createSlice( {
     reducers: {
         addToCart(state, action) {
           const { orderItem} = action.payload
-          const itemOrder = state?.cartItems.find(item => item.product === orderItem.product &&
-            item.color === orderItem.color &&
-            item.size === orderItem.size
+          const itemOrder = state?.cartItems.find(
+              item => (
+                item.product === orderItem.product &&
+                item.color === orderItem.color &&
+                item.size === orderItem.size
+              )
           )
 
           if(itemOrder) {
@@ -35,20 +38,36 @@ const cartSlice = createSlice( {
           }
         },
         decreaseCart(state, action) {
-          const {idProduct} = action.payload
-          const itemOrder = state?.cartItems?.find(item => item.product === idProduct)
+          const {itemProduct} = action.payload
+          const itemOrder = state?.cartItems?.find(item => (
+              item.product === itemProduct.product &&
+              item.color === itemProduct.color &&
+              item.size === itemProduct.size
+          ))
           itemOrder.amount--
         },
         increaseCart(state, action) {
-          const {idProduct} = action.payload
-          const itemOrder = state?.cartItems?.find(item => item.product === idProduct)
+          const {itemProduct} = action.payload
+          const itemOrder = state?.cartItems?.find(item => (
+              item.product === itemProduct.product &&
+              item.color === itemProduct.color &&
+              item.size === itemProduct.size
+          ))
           itemOrder.amount++
         },
         removeFromCart(state, action) {
-          const {idProduct} = action.payload
+          const { itemRemove } = action.payload
+          console.log(itemRemove)
+          if(!itemRemove) return toastify({
+            type: 'error',
+            message: "Xóa thất bại"
+          })
               const nextCartItems = state?.cartItems?.filter(
-                (item) => item.product !== idProduct
+                (item) => {
+                  return item.product !== itemRemove.product || item.color !== itemRemove.color || item.size !== itemRemove.size
+                }
               )
+              console.log(nextCartItems)
               state.cartItems = nextCartItems;
               toastify({
                 type: 'success',

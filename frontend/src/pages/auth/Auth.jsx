@@ -1,28 +1,30 @@
 import "./Auth.scss";
-import { useRef } from "react";
-import * as authService from "@/services/authServices/authService";
-import { useDispatch } from "react-redux";
+import { useRef, useState } from "react";
+import * as authService from "@/services/authService";
+import { useDispatch, useSelector } from "react-redux";
 import {
   loginStart,
   loginSuccess,
   registerStart,
   registerSuccess,
 } from "@/redux/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import config from "@/config";
-import toastify from "@/components/toastify/toastify";
+import { toast } from "react-toastify";
 
 import FormLogin from "./AuthForm/FormLogin";
 import FormRegister from "./AuthForm/FormRegister";
-
 
 function Auth() {
   const dispatch = useDispatch();
   const divRef = useRef(null);
   const navigate = useNavigate();
+  const { search } = useLocation();
+  const user = useSelector((state) => state?.auth?.login?.currentUser);
+  const [statusAuth, setStatusAuth] = useState(false);
+  const [statusRegister, setStatusRegister] = useState(false);
 
- 
-  const handleClickSingup = () => {
+  const handleClickSignUp = () => {
     if (divRef.current) {
       divRef.current.classList.add("right-pane-active");
     }
@@ -36,59 +38,63 @@ function Auth() {
   const handleSubmitLogin = async (values) => {
     dispatch(loginStart());
     try {
-      const {email, password} = values
-      const res = await authService.loginUser({ email, password });
-      if (res?.data) {
-        dispatch(loginSuccess(res));
-        navigate(config.publicRouter.home)
-        toastify({
-          type: 'success',
-          message: "Đăng nhập thành công"
-        })
-      }else{
-        toastify({
-          type: 'error',
-          message: "Đăng nhập thất bại"
-        })
-        navigate(config.publicRouter.auth)
+      const res = await authService.loginUser(values);
+      dispatch(loginSuccess(res));
+
+      const queryParams = new URLSearchParams(search);
+      const redirectPath = queryParams.get("redirect");
+      if (redirectPath) {
+        navigate(redirectPath);
+      } else {
+        navigate(config.publicRouter.home);
       }
-    } catch (err) {
-      console.log(err)
+
+      toast.success("Đăng nhập thành công");
+      setStatusAuth(true);
+    } catch (error) {
+      if (error.statusCode !== 500) {
+        toast.error(error.message);
+        setStatusAuth(false);
+      }
     }
   };
 
   const handleSubmitRegister = async (values) => {
-    console.log(values)
     dispatch(registerStart());
     try {
       const res = await authService.registerUser(values);
-      console.log(res)
-      if (res) {
-        dispatch(registerSuccess(res));
-        toastify({
-          type: 'success',
-          message: "Đăng ký thành công"
-        })
-        // window.location.reload()
+      dispatch(registerSuccess(res));
+      toast.success("Đăng ký thành công");
+      setStatusRegister(true);
+    } catch (error) {
+      if (error?.statusCode !== 500) {
+        toast.error(error.message);
+        setStatusAuth((prev) => !prev);
+        setStatusRegister(false);
+        return;
       }
-    } catch (err) {
-      console.log(err);
     }
   };
 
+  if (user) return <Navigate to={"/"} />;
   return (
     <div className="auth">
-      <h1 className="pb-4 text-center header">
-      </h1>
-      <div ref={divRef} className="container ">
+      <div ref={divRef} className="container-auth">
         <div className="form-container signUp-container">
           {/* Form Register */}
-          <FormRegister onSubmit={handleSubmitRegister}/>
+          <FormRegister
+            handleSubmitRegister={handleSubmitRegister}
+            statusRegister={statusRegister}
+            ref={divRef}
+          />
         </div>
-        
+
         {/* Form Login */}
         <div className="form-container">
-          <FormLogin onSubmit={handleSubmitLogin}/>
+          <FormLogin
+            handleSubmitLogin={handleSubmitLogin}
+            statusAuth={statusAuth}
+          />
         </div>
 
         <div className="overlay-container">
@@ -112,7 +118,7 @@ function Auth() {
               <button
                 type="submit"
                 className="mt-3 btn btn-custom--tem signUp"
-                onClick={handleClickSingup}
+                onClick={handleClickSignUp}
               >
                 Sign up
               </button>

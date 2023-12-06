@@ -1,39 +1,4 @@
 
-.breadcrumb-shop {
-        background-color: #fafafa;
-        margin-bottom: 20px;
-        border: 1px solid #e7e7e7;
-        margin-top: 20px;
-
-       
-
-            .breadcrumb {
-                padding: 15px 0;       
-                background-color: transparent;
-                margin-bottom: 0;
-                list-style-type: none;
-
-                li {
-                    display: inline-block;
-
-                    &:not(:first-child)::before {
-                        content: '/';
-                        color: #ccc;
-                        padding: 0 5px;
-                    }
-
-                   a {
-                    display: inline-block;
-                    span {
-                        font-size: 1.5rem;
-                        font-weight: 300;
-                        text-transform: capitalize;
-                    }
-                   }
-                }
-            }
-    }
-
 
     // list product
     .list-collections {
@@ -43,10 +8,11 @@
                 flex-wrap: nowrap;
                 margin: 10px 0;
 
-                h1 {
-                    font-size: 3rem;
-                    font-weight: 700;
-                    text-transform: capitalize;
+                .name {
+                    font-size: 2.4rem;
+                    font-weight: 600;
+
+                    text-transform: uppercase;
                 }
 
                 .select{
@@ -54,17 +20,123 @@
                     justify-content: flex-end;
                     align-items: center;
 
-                    span {
-                        select {
-                            font-size: 1.4rem;
-                            background-color: var(--white);
-                            color: var(--back );
-                            border-color: transparent;
-                            border-bottom: 1px solid var(--black);
-                            padding-bottom: 5px;
-                            outline: 0;
+                    .control-filter {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        .filter {
+                            margin-top: -7px;
+                            padding-right: 10px;
+                            cursor: pointer;
+                            .text {
+                                font-size: 1.5rem;
+                                font-weight: 400;
+                            }
+
+                            i {
+                                font-size: 2rem;
+                            }
+                        }
+
+                        .sort-box {
+                        position: relative;
+
+                        .sort-by {
+                            z-index: 445;
+                            background-color: #fff;
+                        }
+                        &:hover .sort-by {
+                            opacity: 1;
+                            visibility: visible;
+                            transform: translateY(0);
+                        }
+
+                        .title {
+                            display: block;
+                            font-size: 1.5rem;
+                            font-weight: 400;
+                            cursor: pointer;
+                            .text {
+                                margin-left: 15px;
+                                min-width: 230px;
+                                min-height: 50px;
+                                line-height: 46px;
+                                border: 1px solid #dde1ef;
+                                display: inline-block;
+                                border-radius: 4px;
+                                padding: 0 15px;
+                                font-weight: 400;
+                            }
+                            .icon {
+                                position: absolute;
+                                right: 10px;
+                                top: calc(50% - 15px);
+                            }
+                        }
+
+                        .sort-by {
+                            position: absolute;
+                            width: 230px;
+                            right: 0;
+                            transform: translateY(15px);
+                            transition: transform 0.3s ease;
+                            top: calc(100% - 4px);
+                            opacity: 0;
+                            visibility: hidden;
+                            list-style: none;
+                            padding-left: 0;
+                            border: 1px #dde1ef solid;
+
+                            li::before {
+                                content: '';
+                                position: absolute;
+                                right: 10px;
+                                top: 20px;
+                                width: 12px;
+                                height: 6px;
+                                transform: rotate(-45deg) scale(0, 0);
+                                border-top-style: none !important;
+                                border-right-style: none !important;
+                                background-color: transparent;
+                                border: 1.5px solid #000;
+
+                            }
+
+                            li:hover::before {
+                                transform: rotate(-45deg) scale(1, 1);
+                            }
+                            
+                            .option {
+                                font-size: 1.6rem;
+                                padding: 15px 0;
+                                padding-left: 15px;
+                                font-weight: 400;
+                                cursor: pointer;
+
+                                &:hover {
+                                    opacity: .7;
+                                }
+                            }
+
+                            .active {
+                                
+                            }
                         }
                     }
+                }
+                    // font-size: 1.5rem;
+                    // background-color: inherit;
+                    // color: var(--black);
+                    // display: block;
+                    // border-color: transparent;
+                    // border-bottom: 1px solid var(--black);
+                    // padding-bottom: 5px;
+                    // outline: 0;
+
+                    // .option {
+                    //     background: #fff;
+                    // }
                 }
             }
 
@@ -158,52 +230,27 @@
                     }
                 }
             }
+    //Filter Product
+    .filter {
+        .header {
+            margin-bottom: 20px;
 
-    }
+            .title {
+                font-size: 2.4rem;
+                font-weight: 600;
+            }
 
-// Phân trang
-
-.custom-pagination {
-    display: flex;
-    justify-content: center;
-    list-style: none;
-    padding: 0;
-    padding: 60px 0;
-    margin-bottom: 0;
-
-    .custom-pagination__active {
-        opacity: 1 !important;
-        cursor: default;
-        pointer-events: none;
-        background-color: #00b156!important;
-        color: #fafafa;
-    }
-
-    .custom-pagination__disabled {
-        cursor: default;
-        pointer-events: none;
-    }
-
-    .custom-pagination__item {
-        display: block;
-        font-size: 1.8rem;
-        text-decoration: none;
-        opacity: 0.5;
-        padding: 4px;
-        margin: 0 4px;
-
-        a {
-            text-decoration: none;
-            font-size: 1.5rem !important;
+            .list-tag {
+                .filter-tag {
+                    margin-top: 15px;
+                    font-size: 1.5rem;
+                    font-weight: 1.8rem;
+                    color: #5d5d5d;
+                    padding: 2px 10px 3px 24px;
+                }
+            }
         }
 
-        .custom-pagination__link {
-            font-size: 1.8rem;
-            color: var(--back);
-            font-weight: bold;
-            text-decoration: none;
-            padding: 0 10px;
-        }
 
-    }
-  }
+    }  
+}

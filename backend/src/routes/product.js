@@ -1,27 +1,21 @@
 const express = require('express');
-const route = express.Router();
+const router = express.Router();
 
 const productController = require('../app/controllers/ProductController');
+const middlewareController = require('../app/middlewares/authMiddleware')
 const upload = require('../app/middlewares/multerMiddlewares');
 
-route.post('/create', upload.uploadSingle, productController.createProduct);
-route.get('/', productController.getAllProducts);
-route.get('/product-detail/:slug', productController.getDetailsProduct)
-route.get('/product-detailId/:id', productController.getDetailsProductId)
-route.get('/sub-category/:slug', productController.getProductBySubCategory)
-route.get('/category/:slug', productController.getProductByCategory)
-route.put('/:id', upload.uploadSingle, productController.updateProduct);
-route.delete('/:id', productController.deleteProduct);
-
-route.get('/color/:id', productController.getProductColor)
-route.post('/createColor', upload.uploadArray, productController.createColor)
-route.delete('/deleteColor/:id', productController.deleteColor)
-
-route.post('/createSize', productController.createSize)
-route.get('/size/:id', productController.getProductSize)
-route.delete('/deleteSize/:id', productController.deleteSize)
-
-route.get('/search', productController.searchProduct)
+router.get('/', productController.getAllProducts);
+router.get('/all', productController.getAllProductsForHome);
+router.get('/search', productController.searchProduct)
+router.get('/:slug', productController.getProductBySlug)
+router.get('/by-sub-category/:slug', productController.getProductBySubCategory)
+router.get('/by-category/:slug', productController.getProductByCategory)
+router.get('/related/:categoryId', productController.getListProductRelated)
+router.post('/', middlewareController.authAdminMiddleWare, upload.single('image'), productController.createProduct);
+router.put('/:slug', middlewareController.authAdminMiddleWare, upload.single('image'), productController.updateProduct);
+router.delete('/:id', middlewareController.authAdminMiddleWare, productController.deleteProduct);
 
 
-module.exports = route
+
+module.exports = router

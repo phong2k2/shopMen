@@ -3,12 +3,24 @@ const Schema = mongoose.Schema;
 
 const ProductSizeSchema = new Schema ({
     size: {
-            type: String,
-            required: true
-        },
-    product: {
+        type: String,
+        required: true
+    },
+    width: {
+        type: Number,
+        required: true
+    },
+    height: {
+        type: Number,
+        required: true
+    },
+    mass: {
+        type: String,
+        required: true
+    },
+    productColor: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
+        ref: 'ProductColor',
         required: true
     }
 })

@@ -1,68 +1,65 @@
 const UserService = require('../../Services/UserService')
+const {StatusCodes} = require('http-status-codes');
+
 const UserController = {
-    getAllUser: async (req, res) => {
+    getAllUser: async (req, res, next) => {
         try {
             const response = await UserService.getAllUser()
-            res.status(200).json(response)
-        }catch(err) {
-            res.status(500).json({
-                message: err
-            })
+            res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+            next(error)
         }
     },
-    getDetailUser: async (req, res) => {
+
+    getMeHandler: async (req, res, next) => {
         try {
-            const userId = req.params.id;
-            if(!userId) {
-                return res.status(404).json({
-                    status: 404,
-                    message: 'The userId is required'
-                })
-            }
+            const userId = req.user.id
             const response = await UserService.getDetailUser(userId)
-            return res.status(200).json(response)
-        }catch(err) {
-            return res.status(500).json({
-                message: err
-            })
+            console.log("🚀 ~ file: UserController.js:18 ~ getMeHandler: ~ response:", response)
+            const accessToken = req.cookies.accessToken
+            const newRes = {
+                ...response,
+                accessToken
+            }
+            res.status(StatusCodes.OK).json(newRes);
+          } catch (error) {
+            next(error);
+          }
+    },
+
+    getDetailUser: async (req, res, next) => {
+        try {
+            const { userId } = req.params;
+            
+            const response = await UserService.getDetailUser(userId)
+            res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+            next(error)
         }
     },
-    updateUser: async (req, res) => {
+    updateUser: async (req, res, next) => {
         try {
+            const userId = req.params.userId
             const urlImage = req.body.image ? req.body.image : req.file.filename 
             const infoUpdate = {
                 ...req.body,
                 image: urlImage
             }
-            const userId = req.params.id
-        if (!userId) {
-            return res.status(401).json({
-                status: 'ERR',
-                message: 'The userId is required'
-            })
-        }
-        const response = await UserService.updateUser(userId, infoUpdate)
-        return res.status(200).json(response)
-        }catch(err) {
-            return res.status(500).json(err)
+        
+            const response = await UserService.updateUser(userId, infoUpdate)
+            res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+            next(error)
         }
     },
-    deleteUser: async (req, res) => {
+    deleteUser: async (req, res, next) => {
         try {
-            const id = req.params.id
-            if(!id) {
-                return res.status(404).json({
-                    status: 404,
-                    message: 'Id product not found'
-                })
-            }
-
+            const id = req.params.userId
+            
             const response = await UserService.deleteUser(id)
-            res.status(200).json(response)
-        }catch(err) {
-            res.status(500).json({
-                message: err
-            })
+            res.status(StatusCodes.OK).json(response);
+        }catch(error) {
+            next(error)
         }
     }
 }

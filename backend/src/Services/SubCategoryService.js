@@ -1,169 +1,153 @@
+const {ObjectId} = require('mongodb');
+const {StatusCodes} = require('http-status-codes');
 const SubCategory = require('../app/model/SubCategory')
 const Category = require('../app/model/Category')
+const {uploadToCloudinary, deleteAnCloudinary} = require('../Services/CloudinaryService');
+const ApiError = require('../utils/ApiError')
 
 // Get SubCategory Service
-const getSubCategory = () => {
-    return new Promise(async (resolve, reject) => {
+const getSubCategory = async () => {
         try {
             const getAllSubCate = await SubCategory.find({})
-            if(getAllSubCate) {
-                resolve({
-                    status: 'Success',
-                    message: 'Successful request',
-                    data: getAllSubCate
-                })
+            
+            return {
+                data: getAllSubCate
             }
-        } catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get',
-                error: err
-            })
+        } catch (error) {
+            throw error
         }
-    })
 }
 
 // Get An SubCategory
 
-const getDetailSubCategory = (id) => {
-    return new Promise( async (resolve, reject) => {
+const getSubCategoryDetail = async (id) => {
         try {
             const subCategory = await SubCategory.findOne({
-                _id:id
+                _id: new ObjectId(id)
             })
-            if(subCategory) [
-                resolve({
-                    status: 'Success',
-                    message: 'Successful request',
-                    data: subCategory
-                })
-            ]
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get',
-                error: err
-            })
+            return {
+                data: subCategory
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
 // Get SubCategory By category
-const getSubCategoryByCategory = (id) => {
-    return new Promise( async (resolve, reject) => {
+const getAllSubCategoryForCategory = async (categoryId) => {
         try {
-            const subCategory = await SubCategory.find({
-                $and: [
-                    {category: id}
-                ]
+            const allSubCategory = await SubCategory.find({
+                category: new ObjectId(categoryId)
             }).populate('category', ['name'])
-            if(subCategory) [
-                resolve({
-                    status: 'Success',
-                    message: 'Successful request',
-                    data: subCategory
-                })
-            ]
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get',
-                error: err
-            })
+            
+            return {
+                data: allSubCategory
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
 // Add SubCategory Service
-const createSubCategory = ({name, category} ) => {
-    return new Promise( async (resolve, reject) => {
+const createSubCategory = async (name, category, fileData ) => {
+        let publicIdToDelete;
         try {
             const checkSubCate = await SubCategory.findOne({ name: name })
             if(checkSubCate) {
-                return reject({
-                    status: 'Error',
-                    message: 'The name subcategory is already'
-                })
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Sub category not found')
             }
+            // Save image in cloudinary
+            const result = await uploadToCloudinary(fileData.path, 'images-shop_men/category');
+            publicIdToDelete = result.publicId;
             const newSubCategory = await SubCategory.create({
                 name,
+                image: result,
                 category
             })
+
             if (newSubCategory) {
                 // Add subcategory to category
                 if(category) {
-                    const updateCategory = await Category.findById(category)
-                    await updateCategory.updateOne({$push: {subcategories: newSubCategory._id}})
+                    await Category.findOneAndUpdate(
+                        { _id: category }, // Điều kiện tìm kiếm
+                        { $push: { subCategory: newSubCategory._id } }, // Toán tử $push để cập nhật mảng
+                        { new: true }
+                    )
                 }
-                resolve({
-                    status: 'Success',
-                    message: 'Successful request',
+                
+                return {
                     data: newSubCategory
-                })
+                }
             }
-        } catch(err) {
-            reject(err)
+        } catch(error) {
+            if (publicIdToDelete) {
+                await deleteAnCloudinary(publicIdToDelete);
+            }
+            throw error
+
         }
-    })
 }
 
 // Update SubCategory Service
-const updateSubCategory = (id, data) => {
-    return new Promise( async (resolve, reject) => {
+const updateSubCategory = async (id, data, fileData) => {
+        let publicIdToDelete;
         try {
-            const checkSubCatId = await SubCategory.findOne({_id: id})
-            if (checkSubCatId === null) {
-                return reject({
-                    status: 'Error',
-                    message: "The subCategory is not defined"
-                })
+            const checkSubCatId = await SubCategory.findOne({_id: new ObjectId(id)})
+            if (!checkSubCatId) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Sub category not found')
             }
+            if(fileData) {
+                const result = await uploadToCloudinary(fileData.path, 'images-shop_men/category');
+                publicIdToDelete = result.publicId;
+                if (result) data.image = result
+            }
+
             const updateSubCategory = await SubCategory.findOneAndUpdate(
-                {_id: id}, data, {new: true} 
+                {_id: new ObjectId(id)}, data, {new: true} 
             )
-            resolve({
-                status: 'Success',
-                message: 'Successful request',
+           
+            return {
                 data: updateSubCategory
-            })
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get',
-                error: err
-            })
+            }
+        }catch (error) {
+            if (publicIdToDelete) {
+                await deleteAnCloudinary(publicIdToDelete);
+            }
+            throw error
         }
-    })
 }
 
 // Delete SubCategory
-const deleteSubCategory = (id) => {
-    return new Promise(async (resolve, reject) => {
+const deleteSubCategory = async (id, publicId) => {
         try {
-            // await Category.updateMany(
-            //     {subcategories: id},
-            //     {$pull: {subcategories: id}}
-            // )
-            await SubCategory.findByIdAndDelete({_id: id})
-            resolve({
-                status: 'Success',
-                message: 'Delete Success',
+            const checkSubCate = await SubCategory.findOne({
+                _id: new ObjectId(id)
             })
-        }catch (err) {
-            reject({
-                status: 'Error',
-                message: 'Failed to get',
-                error: err
-            }) 
+            if (!checkSubCate) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Sub category not found')
+            }
+
+            await Category.updateMany(
+                {subCategory: new ObjectId(id)},
+                {$pull: {subCategory: new ObjectId(id)}}
+            )
+            await SubCategory.findByIdAndDelete({_id: new ObjectId(id)})
+            // delete image cloudinary
+            await deleteAnCloudinary(publicId);
+            
+            return {
+                message: 'Delete Success',
+            }
+        }catch (error) {
+            throw error
         }
-    })
 }
 
 module.exports = {
     getSubCategory,
-    getDetailSubCategory,
+    getSubCategoryDetail,
     createSubCategory,
     updateSubCategory,
     deleteSubCategory,
-    getSubCategoryByCategory
+    getAllSubCategoryForCategory
 }

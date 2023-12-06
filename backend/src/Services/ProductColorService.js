@@ -1,0 +1,127 @@
+const {ObjectId} = require('mongodb');
+const {StatusCodes} = require('http-status-codes');
+const ProductColor = require('../app/model/ProductColor');
+const ApiError = require('../utils/ApiError')
+const Product = require('../app/model/Product');
+
+const createColor = async (valueColor) => {
+    const { nameColor, price, product} = valueColor
+    try {
+        const checkColor = await ProductColor.findOne({
+            nameColor,
+            product,
+        });
+
+        if(checkColor) {
+            throw new ApiError(StatusCodes.NOT_FOUND, 'Color not found')
+        }
+
+        const newColor = await ProductColor.create({
+            nameColor,
+            price,
+            product
+        })
+
+        if(newColor) {
+            await Product.findOneAndUpdate(
+                { _id: newColor.product}, // Điều kiện tìm kiếm
+                { $push: { color: newColor._id } }, // Toán tử $push để cập nhật mảng
+                { new: true }
+            )
+        }
+        
+        return {
+            data: newColor
+        }
+    }catch(error) {
+        throw error
+    }
+}
+
+// get Product Color
+const getColorForProduct = async (productId) => {
+        try {
+            const allColor = await ProductColor.find({
+                product: new ObjectId(productId)
+            })
+            .populate("gallery")
+            .populate("size")
+            
+        return {
+            data: allColor
+        }
+        }catch(error) {
+           throw error
+        }
+}
+
+const getColorDetail = async (id) => {
+    try {
+        const colorDetails = await ProductColor.findOne({
+            _id: new ObjectId(id)
+        })
+        if(!colorDetails) {
+            throw new ApiError(StatusCodes.NOT_FOUND, 'Color not found')
+        }
+        
+        return {
+            data: colorDetails
+        }
+    }catch(error) {
+        throw error
+    }
+    
+}
+
+// Update color
+const updateColor = async (id, newColor) => {
+    const { nameColor} = newColor
+        try {
+            const checkColor = await ProductColor.findOne({_id: new ObjectId(id)});
+            const existColor = await ProductColor.findOne({
+                nameColor,
+            });
+            if(!checkColor || existColor) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Color not found')
+            }
+
+            
+
+            const updateColor = await ProductColor.findOneAndUpdate({_id: id}, newColor, {new: true})
+            
+            return {
+                data: updateColor
+            }
+        }catch (error) {
+            throw error
+        }
+}
+
+const deleteColor = async (id) => {
+        try {
+            const checkColor = await ProductColor.findOne({_id: new ObjectId(id)});
+            if(!checkColor) {
+                throw new ApiError(StatusCodes.NOT_FOUND, 'Color not found')
+            }
+            await ProductColor.findOneAndDelete({_id: new ObjectId(id)});
+            
+            await Product.updateMany(
+                {color: new ObjectId(id)},
+                {$pull: {color: new ObjectId(id)}}
+            )
+
+            return {
+                message: 'Delete Successful',
+            }
+        }catch (error) {
+           throw error
+        }
+}
+
+module.exports = {
+    getColorForProduct,
+    getColorDetail,
+    createColor,
+    updateColor,
+    deleteColor,
+}

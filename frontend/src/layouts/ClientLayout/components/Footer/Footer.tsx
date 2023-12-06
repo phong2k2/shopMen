@@ -15,7 +15,9 @@ function Footer() {
       <div className={cx("footer-module")}>
         <div className={cx("container", "module-container")}>
           <div className={cx("row")}>
-            <div className={cx("col-md-3", "col-block")}>
+            <div
+              className={cx("col-md-3", "col-sm-3", "col-lg-3", "col-block")}
+            >
               <div className={cx("icon")}>
                 <FontAwesomeIcon
                   className={cx("icon-detail")}
@@ -30,7 +32,9 @@ function Footer() {
               </div>
             </div>
 
-            <div className={cx("col-md-3", "col-block")}>
+            <div
+              className={cx("col-md-3", "col-sm-3", "col-lg-3", "col-block")}
+            >
               <div className={cx("icon")}>
                 <FontAwesomeIcon
                   className={cx("icon-detail")}
@@ -76,7 +80,9 @@ function Footer() {
       <div className={cx("footer-bottom")}>
         <div className={cx("container")}>
           <div className={cx("row")}>
-            <div className={cx("col-md-3", "col-block")}>
+            <div
+              className={cx("col-md-3", "col-sm-3", "col-lg-3", "col-block")}
+            >
               <div className={cx("footer-block")}>
                 <h4 className={cx("footer-title")}>Kenta VN</h4>
                 <div className={cx("footer-content")}>
@@ -97,7 +103,7 @@ function Footer() {
                 </div>
               </div>
             </div>
-            <div className={cx("col-md-3")}>
+            <div className={cx("col-md-3", "col-sm-3", "col-lg-3")}>
               <div className={cx("footer-block")}>
                 <h4 className={cx("footer-title")}>Chính sách</h4>
                 <div className={cx("footer-content")}>
@@ -118,7 +124,7 @@ function Footer() {
                 </div>
               </div>
             </div>
-            <div className={cx("col-md-3")}>
+            <div className={cx("col-md-3", "col-sm-3", "col-lg-3")}>
               <div className={cx("footer-block")}>
                 <h4 className={cx("footer-title")}>Kết nối với Kenta</h4>
                 <div className={cx("footer-content")}>
@@ -147,7 +153,7 @@ function Footer() {
                 </div>
               </div>
             </div>
-            <div className={cx("col-md-3")}>
+            <div className={cx("col-md-3", "col-sm-3", "col-lg-3")}>
               <div className={cx("footer-block")}>
                 <h4 className={cx("footer-title")}>Thông tin cửa hàng</h4>
                 <div className={cx("footer-content")}>

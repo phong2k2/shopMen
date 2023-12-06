@@ -1,101 +1,151 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as orderService from "@/services/orderService"
-import { loginSuccess } from "@/redux/authSlice";
-import { createAxios } from "@/utils/httpRfreshRequest";
+import { useState } from "react";
+import * as orderService from "@/services/orderService";
 import { formatPrice } from "@/components/formatData/formatData";
+import {
+  Container,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  Tooltip,
+  TableRow,
+  Typography,
+  Chip,
+} from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import dayjs from "dayjs";
+import { orderStatus } from "@/contant";
+import EmptyBox from "@/components/EmptyBox";
+import { toast } from "react-toastify";
+import LoadingBackdrop from "@/components/LoadingBackdrop";
 
 function Orders() {
-    const [listOrders, setListOrders] = useState([])
-    const user = useSelector(state => state.auth?.login?.currentUser)
-    const dispatch = useDispatch()
-    const axiosJWT = createAxios(user, dispatch, loginSuccess)
-    const accessToken = user?.accessToken
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { status } = useParams();
+  const [openLoading, setOpenLoading] = useState(false);
 
-    useEffect(() => {
-        const getAllOrder = async () => {
-            try {
-                const res = await orderService.getAllOrder(accessToken, axiosJWT)
-                if(res) {
-                    setListOrders(res?.data)
-                }
-            }catch (err) {
-                console.log(err)
-            }
-        }
-        getAllOrder()
-    },[])
+  // Get list orders
+  const listOrderQuery = useQuery({
+    queryKey: ["listOrder", status],
+    queryFn: () => orderService.getAllOrderStatus(status),
+    enabled: status !== undefined,
+  });
 
-    const handleChangeStatusOrder = async (event, id) => {
-        const newStatus = event.target.value
-        try {
-            const res = await orderService.updateStatus(accessToken, id, newStatus, axiosJWT)
-            if(res) {
-                window.location = ''
-            }
-        }catch (err) {
-            console.log(err)
-        }
-    }
+  const { data: listOrders } = listOrderQuery;
 
-    const handleDeleteOrder = async (id) => {
-        try {
-            const res = await orderService.deleteOrder(accessToken, id, axiosJWT)
-            if(res) {
-                const orderAfterDelete = listOrders.filter((val) => {
-                    return val._id !== id
-                })
-                setListOrders(orderAfterDelete)
-            }
-        }catch (err) {
-            console.log(err)
-        }
-    }
+  const deleteOrderMutation = useMutation({
+    mutationFn: (id) => orderService.deleteOrder(id),
+    onSuccess: (response) => {
+      setOpenLoading(false);
+      queryClient.invalidateQueries({
+        queryKey: ["listOrder", status],
+        exact: true,
+      });
+      toast.success(response.message);
+    },
+    onError: (error) => {
+      if (error?.statusCode !== 500) {
+        toast.success(error.message);
+      }
+      setOpenLoading(false);
+    },
+  });
 
-    return (
-        <div>
-            <table className="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">STT</th>
-                        <th scope="col">Tên khách hàng</th>
-                        <th scope="col">Điện thoại</th>
-                        <th scope="col">Tổng tiền</th>
-                        <th scope="col">Trạng thái</th>
-                        <th rowSpan={2} scope="col" className="text-center">Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        listOrders?.map((item, index) => {
-                            return (
-                                <tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>{item?.shippingAddress?.fullName}</td>
-                                    <td>{item?.shippingAddress?.phone}</td>
-                                    <td>{formatPrice(item?.totalPrice)}</td>
-                                    <td>
-                                        <select  value={item?.status}  onChange={(event)=> handleChangeStatusOrder(event, item?._id)} name="" id="">
-                                            <option value="processing">Đang xử lý</option>
-                                            <option value="confirmed">Đang xác nhận</option>
-                                            <option value="shipped">Đang vận chuyển</option>
-                                            <option value="complete">Hoàn thành</option>
-                                            <option value="cancelled">Hủy</option>
-                                        </select>
-                                    </td>
-                                    <td className="text-center">
-                                        <a className='btn btn-primary ml-3' href={`/admin/order/detail/${item?._id}`}>Chi tiết</a>
-                                        <button onClick={()=> handleDeleteOrder(item?._id)} className='btn btn-danger ml-3'>Xóa</button>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </table>
-        </div>
-    );
+  const handleDeleteOrder = (id) => {
+    deleteOrderMutation.mutate(id);
+  };
+
+  const handleClickNextOrderDetail = (id) => {
+    navigate(`/admin/order/detail/${id}`, { state: { status } });
+  };
+  return (
+    <>
+      <LoadingBackdrop openLoading={openLoading} />
+      <Container>
+        <Typography variant="h4" sx={{ fontWeight: "bold" }} className="pb-4 ">
+          Đơn hàng
+        </Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>#</TableCell>
+                <TableCell>Mã đơn hàng</TableCell>
+                <TableCell>Thời gian đặt hàng</TableCell>
+                <TableCell>Tổng tiền</TableCell>
+                <TableCell>Trạng thái</TableCell>
+                <TableCell>Tên khách hàng</TableCell>
+                <TableCell>Hành động</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {listOrders?.map((itemOrder, index) => {
+                const color = orderStatus[itemOrder?.status].color;
+                return (
+                  <TableRow key={index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{itemOrder?.orderCode}</TableCell>
+                    <TableCell>
+                      {dayjs(itemOrder?.itemOrder?.createdAt).format(
+                        "DD/MM/YYYY HH:mm:ss"
+                      )}
+                    </TableCell>
+                    <TableCell>{formatPrice(itemOrder?.totalPrice)}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={orderStatus[itemOrder?.status].title}
+                        color={color}
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          fontSize: "10px",
+                          padding: "10px",
+                          textAlign: "center",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {itemOrder?.shippingAddress?.fullName}
+                    </TableCell>
+
+                    <TableCell>
+                      <a
+                        className="btn btn-primary ml-3"
+                        onClick={() =>
+                          handleClickNextOrderDetail(itemOrder?._id)
+                        }
+                      >
+                        <Tooltip title="Chi tiết" placement="top">
+                          <RemoveRedEyeIcon />
+                        </Tooltip>
+                      </a>
+                      <button
+                        className="btn btn-danger ml-3"
+                        onClick={() => handleDeleteOrder(itemOrder?._id)}
+                      >
+                        <Tooltip title="Xóa" placement="top">
+                          <DeleteForeverIcon />
+                        </Tooltip>
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+          {listOrders?.length <= 0 && (
+            <EmptyBox title="Danh sách đơn hàng trống." />
+          )}
+        </TableContainer>
+      </Container>
+    </>
+  );
 }
 
 export default Orders;
