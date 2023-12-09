@@ -16,7 +16,7 @@ function Sidebar() {
             </Link>
           </li>
           <li>
-            <Link to={config.publicRouter.listOrders}>
+            <Link to={config.publicRouter.orderStatistics}>
               <i className="bi bi-stop-circle"></i> Đơn hàng
             </Link>
           </li>

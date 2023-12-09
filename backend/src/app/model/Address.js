@@ -34,6 +34,16 @@ const AddressSchema = new Schema({
             required: true,
         }
     },
+    ward: {
+        id: {
+            type: Number,
+            required: true,
+        },
+        name: {
+            type: String,
+            required: true,
+        }
+    },
     address: {
         type: String,
         required: true,

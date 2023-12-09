@@ -81,7 +81,9 @@ class HttpRequest {
     
       async update(path, options) {
         try {
-          const response = await this.httpRequest.put(path, options);
+          const response = await this.httpRequest.put(path, options, {
+            withCredentials: true,
+        });
           return response.data;
         } catch (error) {
           throw error?.response?.data
@@ -90,7 +92,9 @@ class HttpRequest {
     
       async patch(path, options) {
         try {
-          const response = await this.httpRequest.patch(path, options);
+          const response = await this.httpRequest.patch(path, options, {
+            withCredentials: true,
+        });
           return response.data;
         } catch (error) {
           throw error?.response?.data
@@ -99,7 +103,9 @@ class HttpRequest {
     
       async delete(path, options) {
         try {
-          const response = await this.httpRequest.delete(path, options);
+          const response = await this.httpRequest.delete(path, options, {
+            withCredentials: true,
+        });
           return response.data;
         } catch (error) {
           throw error?.response?.data

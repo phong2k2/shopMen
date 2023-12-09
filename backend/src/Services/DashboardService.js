@@ -23,8 +23,6 @@ const homeAdmin = () => {
                 })
             }
             resolve({
-                status: 'Success',
-                message: 'Search successfully',
                 totalProducts,
                 totalOrders,
                 totalUsers,

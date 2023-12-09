@@ -18,6 +18,7 @@ const OrderController = {
             next(error)
         }
     },
+    
     getOrderDetail: async (req, res, next) => {
         try {
             const orderId = req.params.id
@@ -28,6 +29,16 @@ const OrderController = {
             next(error)
         }
     },
+
+    getOrderStatistical: async (req, res, next) => {
+        try {
+            const response = await OrderService.getOrderStatistical()
+            res.status(StatusCodes.OK).json(response);
+        }catch (error) {
+            next(error)
+        }
+    },
+
     getAllOrderStatus: async (req, res, next) => {
         try {
             const {status} = req.params

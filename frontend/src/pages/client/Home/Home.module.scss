@@ -131,6 +131,38 @@
     }
 }
 
+.item__cate {
+    min-height: 250px;
+    a {
+        width: 100%;
+        position: relative;
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 1;
+        }
+
+        & img + img {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+    }
+}
+
+.name-product {
+    font-size: 1.6rem;
+    margin: 20px 0;
+    color: #000;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
 @keyframes identifier  {
     0% {
         opacity: 0;

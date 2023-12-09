@@ -173,6 +173,13 @@ const getAllProductsForHome = async ({limit = 15}) => {
                 .limit(limit)
                 .populate('category')
                 .populate('subCategory')
+                .populate({
+                    path: 'color', // Điều hướng đến trường 'color'
+                    populate: [
+                        { path: 'gallery' }, // Điều hướng đến trường 'gallery' trong 'color'
+                        { path: 'size' }, // Điều hướng đến trường 'size' trong 'color'
+                      ],
+                })
             
             return {
                 data: allProducts,
@@ -197,8 +204,6 @@ const getProductBySlug = async (slug) => {
                     { path: 'size' }, // Điều hướng đến trường 'size' trong 'color'
                   ],
             })
-            
-
             
             return {
                 data: product,
@@ -271,7 +276,13 @@ const getListProductRelated = async (categoryId, removeId, limit) => {
                 category: categoryId,
                 _id: { $ne: removeId },
               })
-            .limit(limit)
+            .limit(limit).populate({
+                path: 'color', // Điều hướng đến trường 'color'
+                populate: [
+                    { path: 'gallery' }, // Điều hướng đến trường 'gallery' trong 'color'
+                    { path: 'size' }, // Điều hướng đến trường 'size' trong 'color'
+                  ],
+            })
 
             return {
                 data: allProduct,

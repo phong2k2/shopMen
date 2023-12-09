@@ -30,8 +30,14 @@ const AuthController = {
                 throw new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, 'Thông tin đầu vào không phải là email hợp lệ')
             }
             const response = await AuthService.login(req.body)
-            const { refreshToken, ...newResponse } = response
+            const { refreshToken, accessToken, ...newResponse } = response
             res.cookie("refreshToken", refreshToken, {
+                httpOnly: true,
+                secure: false,
+                sameSite: false,
+                path: "/"
+            })
+            res.cookie("accessToken", accessToken, {
                 httpOnly: true,
                 secure: false,
                 sameSite: false,
@@ -98,23 +104,6 @@ const AuthController = {
             next(error)
         }
     },
-
-    // loginSuccess: async (req, res, next) => {
-    //     try {
-    //         const user = req?.user
-    //         const response = await AuthService.loginSuccess(user)
-    //         const { refreshToken, ...newResponse } = response
-    //         res.cookie("refreshToken", refreshToken, {
-    //             httpOnly: true,
-    //             secure: false,
-    //             sameSite: false,
-    //             path: "/"
-    //         })
-    //         res.status(StatusCodes.OK).json(newResponse);
-    //     }catch (error) {
-    //         next(new ApiError(StatusCodes.FORBIDDEN, error.message))
-    //     }
-    // },
 
     // Logout 
     logOut: async (req, res) => {

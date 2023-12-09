@@ -14,7 +14,7 @@ export const getAllAddress = async (userId) => {
 }
 
 // Get An Address
-export const getAddressDetail = async ( addressId) => {
+export const getAddressDetail = async (addressId) => {
     try {
         const res = await axiosJWT.get(`/users/addresses/${addressId}`)
         return res?.data

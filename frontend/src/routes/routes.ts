@@ -27,6 +27,7 @@ import Address from '@/pages/client/Address/Address';
 import ForGotPassword from '@/pages/client/ForGotPassword';
 import ResetPassword from '@/pages/client/ResetPassword';
 import NotFound from '@/pages/client/NotFound';
+import OrderStatistics from '@/pages/client/OrderStatistics';
 
 const adminRoutes = [
     {
@@ -91,6 +92,11 @@ const privateRoutes = [
     },{
         path: config.publicRouter.listOrders,
         component: ListOrders,
+        layout: AccountLayout,
+        protected: true
+    },{
+        path: config.publicRouter.orderStatistics,
+        component: OrderStatistics,
         layout: AccountLayout,
         protected: true
     },{

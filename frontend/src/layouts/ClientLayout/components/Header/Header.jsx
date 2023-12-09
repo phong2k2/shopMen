@@ -25,14 +25,10 @@ function Header() {
   const cart = useSelector((state) => state.cart);
   const { setShowModalCart, setShowModalSearch } = useDeliveryInfo();
   const [showHeader, setShowHeader] = useState();
+  const isAdmin = user?.currentUser?.data?.isAdmin;
   const navRef = useRef();
 
   const userMenus = [
-    {
-      title: "Quản Trị website",
-      check: user?.currentUser?.data?.isAdmin,
-      to: config.privateRouter.dashboard,
-    },
     {
       title: "Hồ sơ",
       check: true,
@@ -48,6 +44,14 @@ function Header() {
       check: true,
       logout: true,
     },
+  ];
+
+  const menuItem = [
+    {
+      title: "Quản Trị website",
+      to: config.privateRouter.dashboard,
+    },
+    ...userMenus,
   ];
 
   const listCategory = useQuery({
@@ -129,7 +133,10 @@ function Header() {
                       <i className="bi bi-person-circle"></i>
                     </span>
                     {user?.isLogin ? (
-                      <Menu items={userMenus} onClick={handleClickLogout} />
+                      <Menu
+                        items={isAdmin ? menuItem : userMenus}
+                        handleClickLogout={handleClickLogout}
+                      />
                     ) : (
                       ""
                     )}

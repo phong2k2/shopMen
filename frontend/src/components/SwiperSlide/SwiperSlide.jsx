@@ -1,22 +1,14 @@
 import classNames from "classnames/bind";
 import styles from "./SwiperSlide.module.scss";
 import PropTypes from "prop-types";
-import Swiper from "./Swiper";
 
 const cx = classNames.bind(styles);
-function SwiperSlide(props) {
-  const { title, allItem, name, handleClickNavigate } = props;
+function SwiperSlide({ children, title }) {
   return (
     <section className={cx("categoryHot")}>
       <div className={cx("content-full")}>
         <h2 className={cx("headingSection")}>{title}</h2>
-        <div className={cx("product-list")}>
-          <Swiper
-            allItem={allItem}
-            name={name}
-            handleClickNavigate={handleClickNavigate}
-          />
-        </div>
+        <div className={cx("product-list")}>{children}</div>
       </div>
     </section>
   );
@@ -25,8 +17,7 @@ function SwiperSlide(props) {
 SwiperSlide.propTypes = {
   title: PropTypes.string,
   allItem: PropTypes.array,
-  handleClickNavigate: PropTypes.func,
-  name: PropTypes.string,
+  children: PropTypes.node,
 };
 
 export default SwiperSlide;

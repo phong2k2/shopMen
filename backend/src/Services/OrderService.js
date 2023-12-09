@@ -7,7 +7,7 @@ const ApiError = require('../utils/ApiError')
 const createOrder = async (newOrder) => {
         const {
             orderItems, shippingPrice ,payment, totalPrice, fullName,
-            address, email, phone, district, province, user 
+            address, email, phone, district, province, ward, user 
         } = newOrder
         try {
             const promises = orderItems.map(async (order) => {
@@ -56,6 +56,7 @@ const createOrder = async (newOrder) => {
                         email,
                         district,
                         province,
+                        ward,
                         phone,
                     },
                     shippingPrice,
@@ -121,9 +122,31 @@ const getAllOrderStatus = async (status) => {
         }
 }
 
+const getOrderStatistical = async () => {
+    try {   
+        const totalProcessing = await Order.count({
+            status: 'processing'
+        })
+        const totalConfirmed = await Order.count({
+            status: 'confirmed'
+        })
+        const totalComplete = await Order.count({
+            status: 'complete'
+        })
+        const totalCancelled = await Order.count({
+            status: 'cancelled'
+        })
+        
+        return {
+            data: {totalProcessing, totalConfirmed, totalComplete, totalCancelled}
+        }
+    }catch(error) {
+        throw error
+    }
+}
+
 const updateStatusOrder = async (id, newStatus) => {
         try {
-            
             const checkOrder = await Order.find({_id: id});
             if(!checkOrder) {
                 throw new ApiError(StatusCodes.NOT_FOUND, 'Order not found')
@@ -187,6 +210,7 @@ module.exports = {
     getAllOrders,
     getOrderDetail,
     getAllOrderStatus,
+    getOrderStatistical,
     updateStatusOrder,
     cancerOrder,
     deleteOrder

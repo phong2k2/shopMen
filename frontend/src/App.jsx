@@ -1,4 +1,3 @@
-// import viteLogo from '/vite.svg'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { adminRoutes, privateRoutes, publicRoutes } from "@/routes/routes";

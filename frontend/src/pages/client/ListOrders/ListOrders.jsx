@@ -1,24 +1,18 @@
 import classNames from "classnames/bind";
 import styles from "./ListOrders.module.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import * as orderService from "@/services/orderService";
 import { formatPrice } from "@/components/formatData/formatData";
+import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
 
 const cx = classNames.bind(styles);
 function ListOrders() {
-  const [allOrders, setAllOrders] = useState([]);
+  const { status } = useParams();
   const [idShowItem, setIdShowItem] = useState(null);
   const [idCancer, serIdCancer] = useState("");
-
-  const status = {
-    processing: "Đang xử lý",
-    confirmed: "Đang xác nhận",
-    shipped: "Đang vận chuyển",
-    complete: "Hoàn thành",
-    cancelled: "Hủy",
-  };
 
   const handleShowDetailOrder = (index) => {
     if (idShowItem === index) {
@@ -31,18 +25,6 @@ function ListOrders() {
     setIdShowItem(null);
   };
 
-  useEffect(() => {
-    const getAllOrder = async () => {
-      try {
-        const res = await orderService.getAllOrder();
-        setAllOrders(res);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getAllOrder();
-  }, []);
-
   const handleCancerOrder = async () => {
     try {
       const res = await orderService.cancerOrder(idCancer);
@@ -53,6 +35,15 @@ function ListOrders() {
       console.log(err);
     }
   };
+  const { data: listOrderStatus } = useQuery({
+    queryKey: ["orderStatus", status],
+    queryFn: () => orderService.getAllOrderStatus(status),
+    enabled: status !== undefined,
+  });
+  console.log(
+    "🚀 ~ file: ListOrders.jsx:64 ~ ListOrders ~ listOrderStatus:",
+    listOrderStatus
+  );
 
   return (
     <section className={cx("list-order")}>
@@ -68,7 +59,7 @@ function ListOrders() {
               <th>Tình trạng</th>
             </tr>
           </thead>
-          {allOrders?.map((item, index) => {
+          {listOrderStatus?.map((item, index) => {
             return (
               <tbody key={index}>
                 <tr>
@@ -82,7 +73,7 @@ function ListOrders() {
                   <td>{item?.createdAt}</td>
                   <td>{item?.orderCode}</td>
                   <td>{formatPrice(item?.totalPrice)}</td>
-                  <td>{status[item?.status]}</td>
+                  <td>{item?.status}</td>
                 </tr>
                 <tr
                   className={cx("info-order", {

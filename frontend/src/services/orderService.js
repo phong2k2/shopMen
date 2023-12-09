@@ -36,6 +36,11 @@ export const getAllOrderStatus = async (status) => {
     }
 }
 
+export const getOrderStatistical = async () => {
+    const res = await axiosJWT.get(`/orders/list/statistical`)
+    return res?.data
+}
+
 export const updateStatus = async (id, newStatus) => {
     const res = await axiosJWT.post(`/orders/${id}/update-status`, {
         status: newStatus,

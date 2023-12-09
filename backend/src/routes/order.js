@@ -7,6 +7,7 @@ const middlewareController = require('../app/middlewares/authMiddleware')
 
 router.get('/',  orderController.getAllOrders)
 router.get('/:id', middlewareController.authAdminMiddleWare, orderController.getOrderDetail)
+router.get('/list/statistical', middlewareController.authAdminMiddleWare, orderController.getOrderStatistical)
 router.get('/status/:status', middlewareController.authAdminMiddleWare, orderController.getAllOrderStatus)
 router.post('/', middlewareController.verifyToken, orderController.createOrder)
 router.patch('/:id/update-status', middlewareController.authAdminMiddleWare, orderController.updateStatusOrder)

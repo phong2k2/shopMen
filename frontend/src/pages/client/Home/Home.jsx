@@ -10,6 +10,10 @@ import { useEffect } from "react";
 import { getMe } from "@/services/userService";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "@/redux/authSlice";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Scrollbar } from "swiper/modules";
+import { Navigation } from "swiper/modules";
+import SlideShowItem from "@/components/SlideShowItem";
 
 const cx = classNames.bind(styles);
 function Home() {
@@ -20,20 +24,21 @@ function Home() {
     const fetchUser = async () => {
       try {
         const response = await getMe();
+
         dispatch(loginSuccess(response));
       } catch (error) {
-        console.log("🚀 ~ file: Account.jsx:48 ~ fetchUser ~ error:", error);
+        console.error(error);
       }
     };
     fetchUser();
   }, [dispatch]);
 
-  const allListSubCategory = useQuery({
+  const { data: allListSubCategory } = useQuery({
     queryKey: "allSubCate",
     queryFn: () => getAllSubCategory(),
   });
 
-  const getAllFeaturedProduct = useQuery({
+  const { data: getAllFeaturedProduct } = useQuery({
     queryKey: "featuredProduct",
     queryFn: () => getAllProductsForHome(),
   });
@@ -44,12 +49,33 @@ function Home() {
 
   return (
     <>
-      <SwiperSlides
-        title="Danh mục mới"
-        allItem={allListSubCategory?.data}
-        name={`/collections`}
-        handleClickNavigate={handleClickNavigate}
-      />
+      <SwiperSlides title="Danh mục mới">
+        <Swiper
+          spaceBetween={20}
+          navigation={true}
+          scrollbar={true}
+          slidesPerView={4}
+          modules={[Scrollbar, Navigation]}
+          className="productHotSwiper swiper-horizontal"
+          loop={true}
+          direction={"horizontal"}
+        >
+          {allListSubCategory?.map((proItem) => {
+            return (
+              <SwiperSlide key={proItem?._id}>
+                <div className={cx("item__cate")}>
+                  <a
+                    onClick={() => handleClickNavigate(proItem, "/collections")}
+                  >
+                    <img src={proItem?.image?.url} alt="image1" />
+                  </a>
+                  <h3 className={cx("name-product")}>{proItem?.name}</h3>
+                </div>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      </SwiperSlides>
 
       <section className={cx("bannerWeb")}>
         <a>
@@ -60,12 +86,13 @@ function Home() {
         </a>
       </section>
 
-      <SwiperSlides
-        title="Sản phẩm mới"
-        allItem={getAllFeaturedProduct?.data}
-        name={`/products`}
-        handleClickNavigate={handleClickNavigate}
-      />
+      <SwiperSlides title="Sản phẩm mới">
+        <SlideShowItem
+          allProduct={getAllFeaturedProduct}
+          name={`/products`}
+          handleClickNavigate={handleClickNavigate}
+        />
+      </SwiperSlides>
     </>
   );
 }

@@ -20,39 +20,4 @@ router.get('/oauth/google', authController.googleOauthHandler);
 
 
 
-// router.get('/login/success', authController.loginSuccess)
-
-// router.get("/login/failed", (req, res) => {
-//     res.status(401).json({
-//         error: true,
-// 		message: "Log in failure",
-// 	});
-// });
-
-// router.get('/google',
-//   passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
-  
-// router.get('/google/callback', 
-//     passport.authenticate('google', {
-//         successRedirect: `http://localhost:5173`,
-//         failureRedirect: `http://localhost:3000/api/auth/login/failed`
-//     })
-// );
-
-// router.get(
-//     '/auth/google',
-//     passport.authenticate('google', { scope: ['profile', 'email'] })
-// );
-  
-// router.get(
-//     '/google/callback',
-//     passport.authenticate('google', { failureRedirect: '/' }),
-//     (req, res) => {
-//         // Successful authentication, redirect to the client app
-//         res.redirect('http://localhost:5173/');
-//     }
-// );
-  
-
-
 module.exports = router

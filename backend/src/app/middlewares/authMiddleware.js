@@ -40,24 +40,15 @@ const middlewareController = {
     //Phân quyền
     authAdminMiddleWare: (req, res, next) => {
         middlewareController.verifyToken(req, res, () => {
+            console.log(1)
+            console.log("🚀 ~ file: authMiddleware.js:45 ~ middlewareController.verifyToken ~ req.user.isAdmin:", req.user.isAdmin)
             if(req.user.isAdmin) {
                 next()
             }else {
-                res.status(403).json("You're not allowed to do that!")
+                return res.status(403).json("You're not allowed to do that!")
             }
         })
     },
-
-    // deserializeUser: (req, res, next) => {
-    //     middlewareController.verifyToken(req, res, async () => {
-    //         if (req.user) {
-    //             const userId = req.user.id
-    //             req.id = userId
-    //             next()
-    //         }
-    //         res.status(403).json("Sai")
-    //     })
-    // }
 }
 
 module.exports = middlewareController

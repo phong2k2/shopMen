@@ -5,13 +5,31 @@ import {
 } from "swiper/react";
 import { Scrollbar } from "swiper/modules";
 import { Navigation } from "swiper/modules";
-import "./Swiper.scss";
+import "./SlideShowItem.scss";
 import "swiper/css";
 import "swiper/css/scrollbar";
 import "swiper/css/navigation";
 import "swiper/swiper-bundle.css";
 
-function Swiper({ allItem, name, handleClickNavigate }) {
+function SlideShowItem({ allProduct, name, handleClickNavigate }) {
+  const renderImages = (proItem) => {
+    if (proItem?.color?.length) {
+      const images = [];
+      let i = 0;
+      while (images.length < 2 && i < proItem.color.length) {
+        const image = proItem.color[i].gallery[0]?.image;
+
+        if (image) {
+          images.push(<img key={i} src={image.url} alt={`image-${i + 1}`} />);
+        }
+        i++;
+      }
+      return images;
+    }
+
+    return null;
+  };
+
   return (
     <SwiperContainer
       spaceBetween={20}
@@ -23,12 +41,12 @@ function Swiper({ allItem, name, handleClickNavigate }) {
       loop={true}
       direction={"horizontal"}
     >
-      {allItem?.map((proItem) => {
+      {allProduct?.map((proItem) => {
         return (
           <OriginalSwiperSlide key={proItem?._id}>
             <div className="item">
               <a onClick={() => handleClickNavigate(proItem, name)}>
-                <img src={proItem?.image?.url} alt="" />
+                {renderImages(proItem)}
               </a>
               <h3 className="name-product">{proItem?.name}</h3>
             </div>
@@ -39,10 +57,10 @@ function Swiper({ allItem, name, handleClickNavigate }) {
   );
 }
 
-Swiper.propTypes = {
-  allItem: PropTypes.array,
+SlideShowItem.propTypes = {
+  allProduct: PropTypes.array,
   name: PropTypes.string,
   handleClickNavigate: PropTypes.func,
 };
 
-export default Swiper;
+export default SlideShowItem;

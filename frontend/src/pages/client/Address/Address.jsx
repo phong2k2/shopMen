@@ -17,7 +17,11 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import { schemaAddress } from "@/Validations/yupSchema";
 import InputField from "@/components/form-controls/InputField";
-import { getDistricts, getProvinces } from "@/services/provincesService";
+import {
+  getDistricts,
+  getProvinces,
+  getWards,
+} from "@/services/provincesService";
 
 const initValue = {
   id: "",
@@ -37,6 +41,7 @@ function Address() {
   const [showSelectCountry, setShowSelectCountry] = useState(false);
   const [province, setProvince] = useState(initValue);
   const [district, setDistrict] = useState(initValue);
+  const [ward, setWard] = useState(initValue);
   const [activeTab, setActiveTab] = useState("provinces");
   const [idAddress, setIdAddress] = useState();
   const [isValid, setIsValid] = useState();
@@ -74,6 +79,12 @@ function Address() {
     enabled: province?.id !== undefined,
   });
 
+  const wardQuery = useQuery({
+    queryKey: ["allWards", district?.id],
+    queryFn: () => getWards(district?.id),
+    enabled: district?.id !== undefined,
+  });
+
   const addressDetailQuery = useQuery({
     queryKey: ["addressDetail", idAddress],
     queryFn: () => getAddressDetail(idAddress),
@@ -82,6 +93,7 @@ function Address() {
 
   const { data: provinces } = provincesQuery;
   const { data: itemDistrict } = districtQuery;
+  const { data: itemWard } = wardQuery;
   const { data: listAddress } = addressQuery;
   const { data: addressDetail } = addressDetailQuery;
 
@@ -96,9 +108,10 @@ function Address() {
       reset(addressDetail);
       setProvince(addressDetail?.province);
       setDistrict(addressDetail?.district);
+      setWard(addressDetail?.ward);
       setStatusAddress(addressDetail?.status);
     }
-  }, [addressDetail, isValid]);
+  }, [addressDetail, isValid, reset]);
 
   const handleClickActiveProvinces = (e) => {
     const id = e.target.dataset.id;
@@ -119,6 +132,19 @@ function Address() {
     if (id && name) {
       setDistrict({
         ...district,
+        id,
+        name,
+      });
+      setActiveTab("ward");
+    }
+  };
+
+  const handleClickActiveWard = (e) => {
+    const id = e.target.dataset.id;
+    const name = e.target.dataset.name;
+    if (id && name) {
+      setWard({
+        ...ward,
         id,
         name,
       });
@@ -196,6 +222,7 @@ function Address() {
       ...values,
       province: province,
       district: district,
+      ward: ward,
       status: checkRef.current.checked ? 1 : 0,
       userId,
     };
@@ -348,7 +375,7 @@ function Address() {
                       >
                         <div className={cx("select-custom-country")}>
                           {district?.name && province?.name
-                            ? `${district?.name}, ${province?.name} `
+                            ? `${ward?.name}, ${district?.name}, ${province?.name}`
                             : "Tỉnh/Thành phố, Quận/Huyện, Phường/Xã *"}
                           <i className="bi bi-chevron-down"></i>
                         </div>
@@ -375,6 +402,14 @@ function Address() {
                                 })}
                               >
                                 Quận/Huyện
+                              </li>
+                              <li
+                                onClick={() => handleClickActive("ward")}
+                                className={cx("tab-ward", {
+                                  active: activeTab === "ward",
+                                })}
+                              >
+                                Phường/Xã
                               </li>
                             </ul>
                           </div>
@@ -408,6 +443,22 @@ function Address() {
                                     className={cx("item-list")}
                                   >
                                     {district?.name}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+
+                            {activeTab === "ward" && (
+                              <ul className={cx("list-country", "list-ward")}>
+                                {itemWard?.wards?.map((ward) => (
+                                  <li
+                                    key={ward?.code}
+                                    data-id={ward?.code}
+                                    data-name={ward?.name}
+                                    onClick={handleClickActiveWard}
+                                    className={cx("item-list")}
+                                  >
+                                    {ward?.name}
                                   </li>
                                 ))}
                               </ul>

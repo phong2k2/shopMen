@@ -25,8 +25,6 @@ export const getGoogleUrl = () => {
   
     const googleUrl = `${rootUrl}?${qs.toString()}`;
 
-    console.log("Google URL:", googleUrl);
-
     return googleUrl;
 };
   

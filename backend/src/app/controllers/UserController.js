@@ -15,7 +15,6 @@ const UserController = {
         try {
             const userId = req.user.id
             const response = await UserService.getDetailUser(userId)
-            console.log("🚀 ~ file: UserController.js:18 ~ getMeHandler: ~ response:", response)
             const accessToken = req.cookies.accessToken
             const newRes = {
                 ...response,

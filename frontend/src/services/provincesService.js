@@ -3,7 +3,7 @@ import axios from "axios";
 export const getProvinces = async () => {
     try{
         const response = await axios.get('https://provinces.open-api.vn/api/')
-        return response.data
+        return response?.data
     }catch (err) {
         console.log(err)
     }
@@ -16,15 +16,19 @@ export const getDistricts = async (idDistrict) => {
                 depth: 2
             }
         })
-        return response.data
+        return response?.data
     }catch (err) {
         console.log(err)
     }
 }
-export const apiGetWard = async (id) => {
+export const getWards = async (idWard) => {
     try {
-        const response = await axios.get(`https://vapi.vnappmob.com/api/province/ward/${id}`)
-        return response.data.results
+        const response = await axios.get(`https://provinces.open-api.vn/api/d/${idWard}`, {
+            params: {
+                depth: 2 
+            }
+        })
+        return response?.data
     }catch (err) {
         console.log(err)
     }

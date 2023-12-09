@@ -11,7 +11,11 @@ import PayPal from "../../Paypal";
 import { useQuery } from "react-query";
 import { getClientIdPaypal } from "@/services/paymentService";
 import { schemaCheckout } from "@/Validations/yupSchema";
-import { getDistricts, getProvinces } from "@/services/provincesService";
+import {
+  getDistricts,
+  getProvinces,
+  getWards,
+} from "@/services/provincesService";
 
 const initValue = {
   id: "",
@@ -31,6 +35,7 @@ const DeliveryInformation = function DeliveryInformation({
   const [isShowPayment, setIsShowPayment] = useState(false);
   const [province, setProvince] = useState(initValue);
   const [district, setDistrict] = useState(initValue);
+  const [ward, setWard] = useState(initValue);
   const [showSelectCountry, setShowSelectCountry] = useState(false);
   const [activeTab, setActiveTab] = useState("provinces");
 
@@ -47,10 +52,6 @@ const DeliveryInformation = function DeliveryInformation({
   const handleOnSubmit = (values) => {
     handleSubmitCreateOrder(values);
   };
-
-  useEffect(() => {
-    reset(addressUserOrder);
-  }, [addressUserOrder]);
 
   //Get Client Id
   const { data: clientId } = useQuery({
@@ -69,9 +70,11 @@ const DeliveryInformation = function DeliveryInformation({
   };
 
   useEffect(() => {
+    reset(addressUserOrder);
     setProvince(addressUserOrder?.province);
     setDistrict(addressUserOrder?.district);
-  }, [addressUserOrder]);
+    setWard(addressUserOrder?.ward);
+  }, [addressUserOrder, reset]);
 
   // CODE EDIT
   const provincesQuery = useQuery({
@@ -85,8 +88,15 @@ const DeliveryInformation = function DeliveryInformation({
     enabled: province?.id !== undefined,
   });
 
+  const wardQuery = useQuery({
+    queryKey: ["allWards", district?.id],
+    queryFn: () => getWards(district?.id),
+    enabled: district?.id !== undefined,
+  });
+
   const { data: provinces } = provincesQuery;
   const { data: itemDistrict } = districtQuery;
+  const { data: itemWard } = wardQuery;
 
   const handleClickActive = (active) => {
     setActiveTab(active);
@@ -114,10 +124,23 @@ const DeliveryInformation = function DeliveryInformation({
         id,
         name,
       });
+      setActiveTab("ward");
+    }
+  };
+
+  const handleClickActiveWard = (e) => {
+    const id = e.target.dataset.id;
+    const name = e.target.dataset.name;
+    if (id && name) {
+      setWard({
+        ...ward,
+        id,
+        name,
+      });
       setShowSelectCountry(false);
     }
   };
-  console.log(errors);
+
   return (
     <div className={cx("step")}>
       <div className={cx("step-section")}>
@@ -189,7 +212,7 @@ const DeliveryInformation = function DeliveryInformation({
                       >
                         <div className={cx("select-custom-country")}>
                           {district?.name && province?.name
-                            ? `${district?.name}, ${province?.name} `
+                            ? `${ward?.name}, ${district?.name}, ${province?.name} `
                             : "Tỉnh/Thành phố, Quận/Huyện, Phường/Xã *"}
                           <i className="bi bi-chevron-down"></i>
                         </div>
@@ -216,6 +239,14 @@ const DeliveryInformation = function DeliveryInformation({
                                 })}
                               >
                                 Quận/Huyện
+                              </li>
+                              <li
+                                onClick={() => handleClickActive("ward")}
+                                className={cx("tab-district", {
+                                  active: activeTab === "ward",
+                                })}
+                              >
+                                Phường/Xã
                               </li>
                             </ul>
                           </div>
@@ -249,6 +280,22 @@ const DeliveryInformation = function DeliveryInformation({
                                     className={cx("item-list")}
                                   >
                                     {district?.name}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+
+                            {activeTab === "ward" && (
+                              <ul className={cx("list-country", "list-ward")}>
+                                {itemWard?.wards?.map((ward) => (
+                                  <li
+                                    key={ward?.code}
+                                    data-id={ward?.code}
+                                    data-name={ward?.name}
+                                    onClick={handleClickActiveWard}
+                                    className={cx("item-list")}
+                                  >
+                                    {ward?.name}
                                   </li>
                                 ))}
                               </ul>
