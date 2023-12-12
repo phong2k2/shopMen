@@ -146,9 +146,13 @@
     -webkit-box-shadow: 0 -1px #e7e7e7 inset;
     box-shadow: 0 -1px #e7e7e7 inset;
 
+    & .container {
+        padding: 0 64px;
+    }
 
     .header-body {
         height: var(--height-body-header);
+        justify-content: space-around;
 
         .header-logo{
             .image-header{

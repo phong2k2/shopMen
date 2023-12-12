@@ -22,7 +22,7 @@ $desktop-size: "only screen and (min-width: 1382px)";
     --pd-top-header: calc(var(--height-body-header) + var(--height-top-header));
 
     // font
-  --font-family: 'SVN-Gilroy', sans-serif;
+  --font-family: 'CriteriaCF', sans-serif;
   --font-family-text: 'svgGilroy', sans-serif;
 }
 
@@ -118,13 +118,18 @@ a[href] {
   font-weight: 600;
 }
 
+@font-face {
+  font-family: CriteriaCF;
+  src: url('/src/assets/fonts/CriteriaCF-ExtraBold.otf');
+  font-weight: 400;
+}
 
-// .container {
-//   padding-right: 15px;
-//   padding-left: 15px;
-//   margin-right: auto;
-//   margin-left: auto;
-// }
+@font-face {
+  font-family: 'CriteriaCF-DemiBold';
+  src: url('/src/assets/fonts/CriteriaCF-DemiBold.otf');
+  font-weight: 600;
+}
+
 
 .conformName {
   white-space: normal;
@@ -134,6 +139,15 @@ a[href] {
   -webkit-box-orient: vertical;
   display: -webkit-box;
   word-break: break-all!important;
+}
+
+.MuiInputLabel-root {
+  font-size: 1.4rem !important;
+}
+
+.MuiOutlinedInput-root input {
+  color: #000;
+  padding: 25.5px 14px !important; 
 }
 
 

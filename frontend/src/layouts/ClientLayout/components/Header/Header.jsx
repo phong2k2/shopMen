@@ -153,7 +153,7 @@ function Header() {
             <div className={cx("row", "header-body")}>
               <div
                 className={cx(
-                  "col-lg-3",
+                  "col-lg-2",
                   "col-sm-3",
                   "col-md-3",
                   "wrap-header-2"
@@ -172,7 +172,7 @@ function Header() {
 
               <div
                 className={cx(
-                  "col-md-7",
+                  "col-md-8",
                   "col-sm-6",
                   "col-lg-6",
                   "wrap-header-4",

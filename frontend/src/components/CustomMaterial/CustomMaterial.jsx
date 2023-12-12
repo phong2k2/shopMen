@@ -33,10 +33,11 @@ export const CustomizeAccordion = ({ listCategory }) => {
         id="panel1a-header"
       >
         <Typography
+          variant="h2"
           sx={{
-            fontWeight: 800,
-            fontSize: 18,
-            fontFamily: "SVN-Gilroy",
+            fontWeight: 400,
+            fontSize: 15,
+            fontFamily: "CriteriaCF",
           }}
         >
           Danh mục

@@ -11,8 +11,7 @@ import { getMe } from "@/services/userService";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "@/redux/authSlice";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Scrollbar } from "swiper/modules";
-import { Navigation } from "swiper/modules";
+import { Navigation, Autoplay, Scrollbar, Pagination } from "swiper/modules";
 import SlideShowItem from "@/components/SlideShowItem";
 
 const cx = classNames.bind(styles);
@@ -49,50 +48,231 @@ function Home() {
 
   return (
     <>
-      <SwiperSlides title="Danh mục mới">
-        <Swiper
-          spaceBetween={20}
-          navigation={true}
-          scrollbar={true}
-          slidesPerView={4}
-          modules={[Scrollbar, Navigation]}
-          className="productHotSwiper swiper-horizontal"
-          loop={true}
-          direction={"horizontal"}
+      <section className={cx("category-hot")}>
+        <SwiperSlides
+          title="Danh mục mới"
+          sx={{
+            paddingTop: 20,
+          }}
         >
-          {allListSubCategory?.map((proItem) => {
-            return (
-              <SwiperSlide key={proItem?._id}>
-                <div className={cx("item__cate")}>
-                  <a
-                    onClick={() => handleClickNavigate(proItem, "/collections")}
-                  >
-                    <img src={proItem?.image?.url} alt="image1" />
-                  </a>
-                  <h3 className={cx("name-product")}>{proItem?.name}</h3>
-                </div>
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-      </SwiperSlides>
+          <Swiper
+            spaceBetween={20}
+            navigation={true}
+            scrollbar={true}
+            slidesPerView={4}
+            modules={[Scrollbar, Navigation]}
+            className="productHotSwiper swiper-horizontal"
+            loop={true}
+            direction={"horizontal"}
+          >
+            {allListSubCategory?.map((proItem) => {
+              return (
+                <SwiperSlide key={proItem?._id}>
+                  <div className={cx("item__cate")}>
+                    <a
+                      onClick={() =>
+                        handleClickNavigate(proItem, "/collections")
+                      }
+                    >
+                      <img src={proItem?.image?.url} alt="image1" />
+                    </a>
+                    <h3 className={cx("name-product")}>{proItem?.name}</h3>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </SwiperSlides>
+      </section>
 
-      <section className={cx("bannerWeb")}>
+      <section className={cx("banner-web")}>
         <a>
           <img
-            src="https://aristino.com/Data/ResizeImage/images/banner/n%C4%83m%202023/Bannner-website-Aristino-mobile-4_1920x750x0x0x2.webp"
+            src="https://media2.coolmate.me/cdn-cgi/image/width=1069,height=1575,quality=80,format=auto/uploads/December2023/mceclip6_65.png"
             alt="banner"
           />
         </a>
+        <div className={cx("block-content")}>
+          <h2 className={cx("block-heading")}>
+            BST
+            <br />
+            THU ĐÔNG
+          </h2>
+          <div className={cx("block-button")}>
+            <a href="">Khám phá ngay</a>
+          </div>
+        </div>
       </section>
 
-      <SwiperSlides title="Sản phẩm mới">
-        <SlideShowItem
-          allProduct={getAllFeaturedProduct}
-          name={`/products`}
-          handleClickNavigate={handleClickNavigate}
-        />
-      </SwiperSlides>
+      <section className={cx("banner-web")}>
+        <SwiperSlides title="Sản phẩm mới">
+          <SlideShowItem
+            allProduct={getAllFeaturedProduct}
+            name={`/products`}
+            handleClickNavigate={handleClickNavigate}
+          />
+        </SwiperSlides>
+      </section>
+
+      <section className={cx("homepage-care-share")}>
+        <div className={cx("container")}>
+          <div className={cx("homepage-care")}>
+            <a href="">
+              <div className={cx("homepage-image")}>
+                <img
+                  src="https://mcdn.coolmate.me/image/March2023/mceclip0_137.jpg"
+                  alt="ảnh chia sẻ cộng đồng"
+                />
+              </div>
+              <div className={cx("homepage-content")}>
+                <img src="https://mcdn.coolmate.me/image/March2023/mceclip8.png" />
+                <h2>
+                  Góp phần mang lại cuộc <br /> sống tươi đẹp{" "}
+                  <br className={cx("mobile--hidden")} />
+                  hơn cho tụi nhỏ
+                </h2>
+                <div className={cx("homepage-button")}>
+                  <a href="">Khám phá ngay</a>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className={cx("homepage-branch")}>
+        <div className={cx("container")}>
+          <div className={cx("row")}>
+            <div className={cx("branch-item", "col-6")}>
+              <div className={cx("branch-img")}>
+                <img src="https://mcdn.coolmate.me/image/December2023/mceclip1_99.png" />
+              </div>
+              <div className={cx("branch-content")}>
+                <p>CM24 MỘT TUỔI</p>
+                <h2>
+                  Mời bạn <br />
+                  Chung vui
+                </h2>
+                <div className={cx("homepage-button")}>
+                  <a href="">Khám phá ngay</a>
+                </div>
+              </div>
+            </div>
+
+            <div className={cx("branch-item", "col-6")}>
+              <div className={cx("branch-img")}>
+                <img src="https://mcdn.coolmate.me/image/December2023/mceclip1_99.png" />
+              </div>
+              <div className={cx("branch-content")}>
+                <p>84Rising - streetwear</p>
+                <h2>
+                  BASKETBALL
+                  <br /> COLLECTION
+                </h2>
+                <div className={cx("homepage-button")}>
+                  <a href="">Khám phá ngay</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={cx("homepage-collections")}>
+        <div className={cx("container")}>
+          <div className={cx("row")}>
+            <div className={cx("col-3", "collection-item")}>
+              <a href="">
+                <div className={cx("collection-thumbnail")}>
+                  <img
+                    src="https://media2.coolmate.me/cdn-cgi/image/width=1069,height=1575,quality=80,format=auto/uploads/October2023/mceclip1_36.png"
+                    alt="banner"
+                  />
+                </div>
+              </a>
+            </div>
+
+            <div className={cx("col-3", "collection-item")}>
+              <a href="">
+                <div className={cx("collection-thumbnail")}>
+                  <img
+                    src="https://media2.coolmate.me/cdn-cgi/image/width=1069,height=1575,quality=80,format=auto/uploads/October2023/mceclip0_40.png"
+                    alt="banner"
+                  />
+                </div>
+              </a>
+            </div>
+
+            <div className={cx("col-3", "collection-item")}>
+              <a href="">
+                <div className={cx("collection-thumbnail")}>
+                  <img
+                    src="https://media2.coolmate.me/cdn-cgi/image/width=1069,height=1575,quality=80,format=auto/uploads/October2023/mceclip3_86.png"
+                    alt="banner"
+                  />
+                </div>
+              </a>
+            </div>
+
+            <div className={cx("col-3", "collection-item")}>
+              <a href="">
+                <div className={cx("collection-thumbnail")}>
+                  <img
+                    src="https://media2.coolmate.me/cdn-cgi/image/width=1069,height=1575,quality=80,format=auto/uploads/October2023/mceclip4_7.png"
+                    alt="banner"
+                  />
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={cx("homepage-care-share")}>
+        <div className={cx("container")}>
+          <div className={cx("homepage-care")}>
+            <a href="">
+              <div className={cx("homepage-image")}>
+                <img
+                  src="https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/November2023/mceclip0_71.png"
+                  alt="ảnh chia sẻ cộng đồng"
+                />
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section className={cx("banner-web")}>
+        <SwiperSlides title="NHẬT KÝ KENTA">
+          <Swiper
+            spaceBetween={20}
+            navigation={true}
+            slidesPerView={4}
+            centeredSlides={true}
+            autoplay={{
+              delay: 1500,
+              disableOnInteraction: false,
+            }}
+            modules={[Navigation, Autoplay, Pagination]}
+            className="productHotSwiper "
+            loop={true}
+            direction={"horizontal"}
+          >
+            {allListSubCategory?.map((proItem) => {
+              return (
+                <SwiperSlide key={proItem?._id}>
+                  <div className={cx("item__cate")}>
+                    <a>
+                      <img src={proItem?.image?.url} alt="image1" />
+                    </a>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </SwiperSlides>
+      </section>
     </>
   );
 }

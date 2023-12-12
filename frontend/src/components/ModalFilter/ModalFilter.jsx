@@ -3,7 +3,6 @@ import styles from "./ModalFilter.module.scss";
 import { Slider } from "@mui/material";
 import { CustomizeAccordion } from "@/components/CustomMaterial/CustomMaterial";
 import { formatPrice } from "@/components/formatData/formatData";
-import Typography from "@mui/material/Typography";
 
 import { useSelector } from "react-redux";
 import { useState } from "react";
@@ -85,15 +84,7 @@ function ModalFilter() {
 
                 <div className={cx("filter_group")}>
                   <div className={cx("block")}>
-                    <Typography
-                      sx={{
-                        fontWeight: 800,
-                        fontSize: 18,
-                        fontFamily: "SVN-Gilroy",
-                      }}
-                    >
-                      Khoảng giá
-                    </Typography>
+                    <h2>Khoảng giá</h2>
                     <div className={cx("filter-price")}>
                       <div className={cx("slider-price")}>
                         <Slider

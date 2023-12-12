@@ -26,6 +26,7 @@
         font-weight: 600;
         font-size: 1.6rem;
         border-bottom: 1px solid rgba(0,0,0,0.2);
+        font-family: CriteriaCF;
 
         
         .close {
@@ -76,6 +77,11 @@
                 .filter_group {
                     margin-top: 10px;
                     width: 100%;
+
+                    .block h2 {
+                        font-family: "CriteriaCF",
+                    }
+
                     .sub-title span {
                         font-size: 1.8rem;
                         font-weight: 600;
@@ -103,6 +109,7 @@
                             flex: 1 1;
                             border-radius: 3px;
                             margin-right: 10px;
+                            font-size: 1.4rem;
                         }
 
                         .max-value {
@@ -114,6 +121,7 @@
                             padding: 3px 10px;
                             flex: 1 1;
                             border-radius: 3px;
+                            font-size: 1.4rem;
                         }
                        } 
                     }
@@ -139,12 +147,12 @@
         .btn-filter {
             flex: 1 1;
             border: 1px solid #000;
-            color: #000;
-            font-weight: 600;
+            font-size: 1.4rem;
+            font-weight: 400;
             padding: 8px;
             background-color: #000;
             color: #fff;
-
+            font-family: 'CriteriaCF';
             &:hover {
                 opacity: 0.8;
             }
