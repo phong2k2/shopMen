@@ -1,4 +1,6 @@
- // product
+@import './../../components/GlobalStyles/GlobalStyle.scss';
+
+// product
  .product-img {
     text-align: center;
     position: relative;
@@ -16,13 +18,36 @@
         justify-content: center;
         height: 100%;
         img {
+            display: block;
             width: 100%;
+            object-fit: cover;
+            opacity: 1;
+        }
+
+        & img + img {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
     }
-}
+    &:hover {
+        cursor: pointer;
+        transition: all .5s
+    };
 
-.product-block {
-    padding: 5px 10px;
+    &:hover > a > picture > img {
+        opacity: 0;
+        transition: opacity .1s ease-in-out;
+        -webkit-transition: opacity .1s ease-in-out;
+    }
+
+    &:hover > a > picture >img + img{
+        opacity: 1;
+        transition: opacity .1s ease-in-out;
+        overflow: hidden;
+        -webkit-transition: opacity .1s ease-in-out;
+    }
 }
 
 .pro-name{
@@ -54,6 +79,8 @@
     .product-price{
         font-size: 1.8rem;
         font-weight: 600;
+        display: flex;
+        flex-wrap: wrap;
         .price-del {
             del {
                 margin-left: 5px;
@@ -61,5 +88,19 @@
                 opacity: .7;
             }
         }
+    }
+}
+
+
+// Responsive
+
+@media #{$mobile-size} { 
+    .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+        position: relative;
+        width: 100%;
+        padding-right: 5px;
+        padding-left: 5px;
     }
 }

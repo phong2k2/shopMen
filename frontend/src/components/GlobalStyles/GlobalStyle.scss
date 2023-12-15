@@ -1,10 +1,10 @@
 @import 'normalize.css';
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;1,500;1,700;1,900&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;1,500;1,700;1,900&display=swap');
 
 
-$mobile-size: "only screen and (max-width: 768px)";
-$tablet-size: "only screen and (min-width: 768px) and (max-width: 1381px)";
-$desktop-size: "only screen and (min-width: 1382px)";
+$mobile-size: "only screen and (max-width: 767px)";
+$tablet-size: "only screen and (min-width: 768px) and (max-width: 992px)";
+$desktop-size: "only screen and (min-width: 992px)";
 
 :root {
     --black: #000;
@@ -22,7 +22,7 @@ $desktop-size: "only screen and (min-width: 1382px)";
     --pd-top-header: calc(var(--height-body-header) + var(--height-top-header));
 
     // font
-  --font-family: 'CriteriaCF', sans-serif;
+  --font-family: 'svgGilroy', sans-serif;
   --font-family-text: 'svgGilroy', sans-serif;
 }
 
@@ -180,7 +180,12 @@ a[href] {
 // }
 
 @media #{$mobile-size} {
-  
+  .container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
 }
 
 @media #{$tablet-size} {

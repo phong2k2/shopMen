@@ -2,7 +2,8 @@ const {ObjectId} = require('mongodb');
 const {StatusCodes} = require('http-status-codes');
 const Category = require('../app/model/Category')
 const Product = require('../app/model/Product')
-const ApiError = require('../utils/ApiError')
+const ApiError = require('../utils/ApiError');
+const SubCategory = require('../app/model/SubCategory');
 
 
 const createCategory = async (newCategory) => {
@@ -86,10 +87,15 @@ const updateCategory = async (id, data) => {
 
 const deleteCategory = async (id) => {
         try {
-            await Product.updateMany(
-                { category: new ObjectId(id) },
-                { category: null }
-            );
+            // await Product.updateMany(
+            //     { category: new ObjectId(id) },
+            //     { category: null }
+            // );
+
+            const checkSubcategory = await SubCategory.findOne({category: new ObjectId(id)})
+            if(checkSubcategory) {
+                throw new ApiError(StatusCodes.CONFLICT, 'Danh mục này không thể xóa')
+            }
 
             await Category.deleteOne({_id: new ObjectId(id)})
             return {

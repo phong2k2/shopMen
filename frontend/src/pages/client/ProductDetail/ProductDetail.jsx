@@ -1,5 +1,5 @@
 import classNames from "classnames/bind";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import parse from "html-react-parser";
@@ -83,11 +83,6 @@ function ProductDetail() {
       detailProduct?.category !== undefined && detailProduct?._id !== undefined,
   });
 
-  // Price
-  const discountedPrice = useMemo(() => {
-    return Math.ceil(detailProduct?.price - detailProduct?.discount);
-  }, [detailProduct]);
-
   const handleChangeSelectColor = (item, index) => {
     setIndexActive(index);
     setSelectedColor(item);
@@ -144,8 +139,8 @@ function ProductDetail() {
             name: detailProduct?.name,
             image: images[0]?.image.url || detailProduct?.image?.url,
             amount: amount,
-            price: discountedPrice,
-            discount: detailProduct?.discount,
+            price: detailProduct?.salePrice,
+            salePrice: detailProduct?.salePrice,
             color: selectedColor?.nameColor,
             size: selectedSize,
             product: detailProduct?._id,
@@ -166,11 +161,12 @@ function ProductDetail() {
         <div className={cx("row")}>
           <div className={cx("col-md-12")}>
             <div className={cx("row")}>
-              <div className={cx("col-md-8")}>
+              <div className={cx("col-md-8 col-sm-12")}>
                 <div className={cx("product-gallery")}>
                   <Swiper
                     spaceBetween={10}
                     navigation={true}
+                    slidesPerView={1}
                     thumbs={{ swiper: thumbsSwiper }}
                     modules={[FreeMode, Navigation, Thumbs]}
                     className="productHotSwiper"
@@ -227,7 +223,7 @@ function ProductDetail() {
                   </Swiper>
                 </div>
               </div>
-              <div className={cx("col-md-4", "product-content")}>
+              <div className={cx("col-md-4 col-sm-12", "product-content")}>
                 <div className={cx("product-title")}>
                   <h1>{detailProduct?.name}</h1>
                   <p>
@@ -237,9 +233,9 @@ function ProductDetail() {
                 </div>
                 <div className={cx("product-price")}>
                   <span className={cx("pro-price")}>
-                    {formatPrice(discountedPrice)}
+                    {formatPrice(detailProduct?.salePrice)}
                   </span>
-                  <del>{formatPrice(detailProduct?.discount)}</del>
+                  <del>{formatPrice(detailProduct?.price)}</del>
                 </div>
 
                 <div className={cx("select-action")}>
@@ -375,10 +371,7 @@ function ProductDetail() {
                     )}
                   </div>
                   <div className={cx("wrap-addOrder")}>
-                    <button
-                      onClick={handleAddToCart}
-                      className={cx("cart-btn")}
-                    >
+                    <button onClick={handleAddToCart} className={cx("btn-buy")}>
                       <span>Mua ngay</span>
                     </button>
                   </div>

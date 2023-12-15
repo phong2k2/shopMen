@@ -148,7 +148,7 @@ function SubCategory() {
     },
     onError: (error) => {
       if (error?.statusCode !== 500) {
-        toast.success(error.message);
+        toast.error(error.message);
       }
       setOpen(false);
       setOpenLoading(false);
@@ -169,7 +169,7 @@ function SubCategory() {
         reset(getSubCateDetails?.data);
       }
     }
-  }, [getSubCateDetails?.data, reset]);
+  }, [getSubCateDetails?.data, reset, isAddMode]);
 
   // Submit Form
   const handleCreateSubCate = (values) => {

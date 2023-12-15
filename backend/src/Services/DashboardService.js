@@ -3,35 +3,29 @@ const Order = require('../app/model/Order');
 const User = require('../app/model/User');
 
 
-const homeAdmin = () => {
-    return new Promise(async (resolve, reject) =>{
-        try {
-            const totalProducts = await Product.count({})
-            const totalOrders = await Order.count({})
-            const totalUsers = await User.count({})
-            const [{ totalPrice}] = await Order.aggregate([
-                {
-                    $group: {
-                        _id: null,
-                        totalPrice: { $sum: "$totalPrice" },
-                    },
+const homeAdmin = async () => {
+    try {
+        const totalProducts = await Product.count({})
+        const totalOrders = await Order.count({})
+        const totalUsers = await User.count({})
+        const [{ totalPrice}] = await Order.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalPrice: { $sum: "$totalPrice" },
                 },
-            ]);
-            if (!totalProducts || !totalOrders || !totalUsers || !totalPrice) {
-                return reject({
-                    status: 'error',
-                })
-            }
-            resolve({
-                totalProducts,
-                totalOrders,
-                totalUsers,
-                totalPriceOrder: totalPrice
-            })
-        }catch(error) {
-            reject(error)
+            },
+        ]);
+       
+        return {
+            totalProducts,
+            totalOrders,
+            totalUsers,
+            totalPriceOrder: totalPrice
         }
-    })
+    }catch(error) {
+        throw error
+    }
 }
 
 function getMonthYear(date) {
@@ -56,21 +50,18 @@ const calculateRevenue = (orders) => {
 
 
 
-const dataChart = () => {
-    return new Promise( async (resolve, reject) => {
-        try {
-            const orders = await Order.find({})
+const dataChart = async () => {
+    try {
+        const orders = await Order.find({})
 
-            const revenueData = calculateRevenue(orders);
+        const revenueData = calculateRevenue(orders);
 
-            resolve({
-                status: 'success',
-                data: revenueData
-            })
-        }catch(error) {
-            reject(error)
+        return {
+            data: revenueData
         }
-    })
+    }catch(error) {
+        throw error
+    }
 }
 
 module.exports = {

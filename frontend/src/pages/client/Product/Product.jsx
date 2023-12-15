@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import styles from "./Product.module.scss";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import * as productService from "@/services/productService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,27 +21,32 @@ function Product() {
   const [sortOption, setSortOption] = useState();
   const { setShowModalFilter, filter } = useDeliveryInfo();
   const [pageNumber, setPageNumber] = useState(0);
-  const limit = 2;
+  const limit = 10;
   const navName = [stateNav?.name];
+
+  const sortingOptions = useMemo(
+    () => [
+      { value: "default", label: "Mặc định" },
+      { value: "salePrice-asc", label: "Giá: Tăng dần" },
+      { value: "salePrice-desc", label: "Giá: Giảm dần" },
+      { value: "name-asc", label: "Tên: A-Z" },
+      { value: "name-desc", label: "Tên: Z-A" },
+    ],
+    []
+  );
 
   useEffect(() => {
     selectRef.current.textContent = sortingOptions[0].label;
     setSortOption(sortingOptions[0].value);
-  }, [slug]);
-
-  const sortingOptions = [
-    { value: "position", label: "Mặc định" },
-    { value: "price-asc", label: "Giá: Tăng dần" },
-    { value: "price-desc", label: "Giá: Giảm dần" },
-    { value: "name-asc", label: "Tên: A-Z" },
-    { value: "name-desc", label: "Tên: Z-A" },
-  ];
+  }, [slug, sortingOptions]);
 
   // Sort Product
   const handleSortChange = (selectedOption) => {
     selectRef.current.textContent = selectedOption.label;
     setSortOption(selectedOption.value);
   };
+
+  // Get Product
   const getProductQuery = useQuery({
     queryKey: ["productByCate", slug, limit, pageNumber, sortOption, filter],
     queryFn: () => {
@@ -57,7 +62,7 @@ function Product() {
   });
 
   const { data: allProducts, isLoading } = getProductQuery;
-  console.log(allProducts);
+
   const handleShowModalFilter = () => {
     setShowModalFilter(true);
   };
@@ -78,7 +83,7 @@ function Product() {
               <div className={cx(" col-md-12")}>
                 <div className={cx("row", "hed-title")}>
                   <div className={cx("col-md-6")}>
-                    <h1 className={cx("name")}>{stateNav?.name}</h1>
+                    <h1 className={cx("product-name")}>{stateNav?.name}</h1>
                   </div>
                   <div className={cx("col-md-6", "select")}>
                     <div className={cx("control-filter")}>
@@ -89,7 +94,13 @@ function Product() {
                         <span className={cx("text")}>Bộ lọc</span>
                         <i className="bi bi-funnel" />
                       </div>
+
                       <div className={cx("sort-box")}>
+                        <div className={cx("sort-mobile")}>
+                          <span>Sắp xếp:</span>
+                          <i className="bi bi-filter-left"></i>
+                        </div>
+
                         <label className={cx("title")} htmlFor="">
                           Sắp xếp:
                           <span className={cx("text")} ref={selectRef}></span>

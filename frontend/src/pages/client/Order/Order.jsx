@@ -127,39 +127,48 @@ function Order() {
     <div className={cx("order")}>
       <div className={cx("content")}>
         <div className={cx("container")}>
-          <div className={cx("main")}>
-            <div className={cx("main-head")}>
-              <h2>
-                <Link to={config.publicRouter.home}>KENTA.VN</Link>
-              </h2>
-              <ul className={cx("breadcrumb")}>
-                <li className={cx("breadcrumb-item")}>
-                  <Link to={config.publicRouter.cart}>Giỏ hàng</Link>
-                </li>
-                <li className={cx("breadcrumb-item")}>
-                  <FontAwesomeIcon icon={faAngleRight} />
-                </li>
-                <li className={cx("breadcrumb-item")}>Thông tin giao hàng</li>
-              </ul>
+          <div className={cx("row")}>
+            <div className={cx("col-md-12")}>
+              <div className={cx("header-order")}>
+                <h2>
+                  <Link to={config.publicRouter.home}>KENTA.VN</Link>
+                </h2>
+              </div>
             </div>
-            <div className={cx("main-content")}>
-              <DeliveryInformation
-                addressUserOrder={addressUserOrder}
+            <div className={cx("col-md-6 col-sm-12", "main")}>
+              <div className={cx("main-head")}>
+                <h2>
+                  <Link to={config.publicRouter.home}>KENTA.VN</Link>
+                </h2>
+                <ul className={cx("breadcrumb")}>
+                  <li className={cx("breadcrumb-item")}>
+                    <Link to={config.publicRouter.cart}>Giỏ hàng</Link>
+                  </li>
+                  <li className={cx("breadcrumb-item")}>
+                    <FontAwesomeIcon icon={faAngleRight} />
+                  </li>
+                  <li className={cx("breadcrumb-item")}>Thông tin giao hàng</li>
+                </ul>
+              </div>
+              <div className={cx("main-content")}>
+                <DeliveryInformation
+                  addressUserOrder={addressUserOrder}
+                  diliveryPrice={diliveryPrice}
+                  payments={allPayments}
+                  activePayment={activePayment}
+                  handleChangeActivePayment={handleChangeActivePayment}
+                  handleSubmitCreateOrder={handleSubmitCreateOrder}
+                  optionsPayPal={paypalButtonTransactionProps}
+                />
+              </div>
+            </div>
+            <div className={cx("col-md-6 col-sm-12", "sidebar")}>
+              <OrderInformation
+                cart={cart}
                 diliveryPrice={diliveryPrice}
-                payments={allPayments}
-                activePayment={activePayment}
-                handleChangeActivePayment={handleChangeActivePayment}
-                handleSubmitCreateOrder={handleSubmitCreateOrder}
-                optionsPayPal={paypalButtonTransactionProps}
+                totalPrice={totalPrice}
               />
             </div>
-          </div>
-          <div className={cx("sidebar")}>
-            <OrderInformation
-              cart={cart}
-              diliveryPrice={diliveryPrice}
-              totalPrice={totalPrice}
-            />
           </div>
         </div>
       </div>

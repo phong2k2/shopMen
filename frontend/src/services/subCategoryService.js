@@ -51,7 +51,7 @@ export const deleteSubCategory = async (
     id,
     publicId,
 ) => {
-    const res = await axiosJWT.delete('/subcategories/'+id, 
+    const res = await axiosJWT.delete(`/subcategories/${id}`, 
     {
         params: {
             publicId

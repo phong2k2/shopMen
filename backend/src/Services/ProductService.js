@@ -31,19 +31,15 @@ const searchProduct = async (q, page, limit) => {
 }
 
 // Add Product
-const createProduct = async (body, fileData) => {
-    let publicIdToDelete;
+const createProduct = async (body) => {
+    // let publicIdToDelete;
     try {
         const checkProduct = await Product.findOne({name: body.name})
         if (checkProduct) {
             throw new ApiError(StatusCodes.NOT_FOUND, 'Product not found')
         }
-        const result = await uploadToCloudinary(fileData.path);
-        publicIdToDelete = result.publicId;
-
         const newProduct = await Product.create({
             ...body,
-            image: result
         })
         if(body.category) {
             const updateCategory =  Category.findOneAndUpdate(
@@ -58,15 +54,14 @@ const createProduct = async (body, fileData) => {
                 { new: true } // Option để trả về tài liệu đã được cập nhật
             ); 
             await Promise.all([updateCategory, updateSubcategory]);
-
         }
         return {
             data: newProduct
         }
     }catch(error) {
-        if (publicIdToDelete) {
+        // if (publicIdToDelete) {
             await deleteAnCloudinary(publicIdToDelete);
-        }
+        // }
         throw error
     }
 }
@@ -255,7 +250,7 @@ const getProductByCategory = async (slug, filterPrice, options) => {
                 }
             }
             if(filterPrice) {
-                productQuery.price = filterPrice
+                productQuery.salePrice = filterPrice
             }
             const products = await Product.paginate(productQuery, options)
                    

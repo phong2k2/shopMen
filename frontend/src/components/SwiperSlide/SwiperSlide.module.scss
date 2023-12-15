@@ -17,6 +17,15 @@
 
 // Responsive
 @media #{$mobile-size} {
+  .heading-section {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 1.5rem;
+  }
+    
+}
+
+@media #{$mobile-size} {
     .content-full {
         padding: 0 10px;
         margin: 0 auto;

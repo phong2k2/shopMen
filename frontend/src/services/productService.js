@@ -1,14 +1,11 @@
 import HttpRequest from "@/utils/httpRequest";
+import { removeUndefinedProperties } from "@/utils/removeUndefinedProperties ";
 
 const axiosJWT = new HttpRequest();
 
 // Create Product
-export const createProduct = async (formData) => {
-    const res = await axiosJWT.post('/products', formData,{
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        },
-    })
+export const createProduct = async (dataProduct) => {
+    const res = await axiosJWT.post('/products', dataProduct)
     return res?.data
 }
 
@@ -53,15 +50,11 @@ export const getProductDetail = async (slug) => {
 
 //Update Product
 export const updateProduct = async (
-    formData,
+    dataProduct,
     slug,
 ) => {
     try {
-        const res = await axiosJWT.update(`/products/${slug}`,formData,{
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
-        })
+        const res = await axiosJWT.update(`/products/${slug}`,dataProduct)
         return res?.data
     }catch(err) {
         console.log(err)
@@ -93,7 +86,7 @@ export const getProductId = async (id) => {
 }
 
 // Get product by category
-export const getProductByCategory = async ({slug, limit= 1, pageNumber, sortOption='position', price_min, price_max}) => {
+export const getProductByCategory = async ({slug, limit= 1, pageNumber, sortOption='default',  price_max, price_min}) => {
     try {
         const params = {
             limit,
@@ -104,10 +97,10 @@ export const getProductByCategory = async ({slug, limit= 1, pageNumber, sortOpti
         };
 
         // Loại bỏ các đối số có giá trị undefined
-        Object.keys(params).forEach(key => params[key] === undefined && delete params[key]);
+        const processedParams = removeUndefinedProperties(params);
 
         const res = await axiosJWT.get(`/products/by-category/${slug}`, {
-            params
+            params: processedParams
         })
         return res?.data
     }catch(err) {

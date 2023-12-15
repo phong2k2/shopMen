@@ -1,7 +1,9 @@
+@import './../../../components/GlobalStyles/GlobalStyle.scss';
 
 .banner-web {
     position: relative;
     a{
+        display: block;
         img {
             width: 100%;
         }
@@ -15,9 +17,8 @@
 .block-content {
     position: absolute;
     left: 0;
-    bottom: 16%;
+    bottom: 8%;
     padding-left: 40px;
-    height: 100%;
     max-width: 800px;
     display: flex;
     justify-content: flex-end;
@@ -30,7 +31,7 @@
     font-size: 8rem;
     line-height: 8rem;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 20px;
     font-family: CriteriaCF-DemiBold;
 }
 
@@ -56,6 +57,7 @@
 
 .homepage-care-share {
     margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .homepage-care {
@@ -69,15 +71,26 @@
     }
 }
 
-.homepage-image img{
-    width: 100%;
-    height: 100%;
+.homepage-image {
+    & img {
+        width: 100%;
+        height: 100%;
+    }
 }
+
+
+.homepage-care-image {
+    & img{
+        width: 100%;
+        height: 100%;
+    }
+}
+
 
 .homepage-content {
     position: absolute;
     left: 40px;
-    bottom: 20%;
+    bottom: 8%;
 
     & img {
         object-fit: contain;
@@ -101,10 +114,11 @@
     align-items: center;
     & a {
         font-weight: 400;
-        font-size: 1.8rem;
+        font-size: 1.4rem;
         font-family: CriteriaCF-DemiBold;
         line-height: 20px;
         background-color: #fff;
+        text-transform: uppercase;
         padding: 18px 35px;
         border-radius: 50px;
         color: #000;
@@ -117,7 +131,6 @@
 
 .homepage-branch {
     position: relative;
-    margin-top: 50px;
     margin-bottom: 50px;
 }
 
@@ -135,7 +148,7 @@
 .branch-content {
     position: absolute;
     left: 40px;
-    bottom: 20%;
+    bottom: 8%;
 
     & p {
         font-size: 1.5rem;
@@ -157,6 +170,7 @@
         color: #fff;
         text-transform: uppercase;
         line-height: 7rem;
+        margin-bottom: 20px;
     }
 }
 
@@ -300,7 +314,7 @@
     a {
         width: 100%;
         position: relative;
-
+        cursor: pointer;
         img {
             display: block;
             width: 100%;
@@ -341,4 +355,149 @@
       100% {
         opacity: 1;
       }
+}
+
+// Responsive 
+@media #{$mobile-size} {
+    .hide-sm {
+        display: none;
+    }
+
+    .block-content {
+        padding-left: 10px;
+        align-items: flex-start;
+    }
+
+    .block-heading {
+        font-size: 4rem;
+        line-height: 4rem;
+    }
+
+    .block-button a {
+        display: block;
+        font-weight: 400;
+        font-family: CriteriaCF-DemiBold;
+        line-height: 20px;
+        background-color: #ffffff;
+        border-radius: 50px;
+        color: #000000;
+    }
+
+    .branch-item {
+        margin-top: 10px;
+    }
+
+    .branch-content h2 {
+        font-size: 3rem;
+        line-height: normal;
+
+    }
+
+    .homepage-image {
+        position: relative;
+        display: flex;
+        flex-flow: column;
+        justify-content: flex-end;
+        padding: 2.5rem 1.5rem;
+        top: 0;
+        left: 0;
+
+        &::before {
+            content: "";
+            padding-top: 175.75%;
+            display: block;
+        }
+
+        & img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .banner-image {
+        position: relative;
+        &::before {
+            content: "";
+            padding-top: 175.75%;
+            display: block;
+        }
+
+        & img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .homepage-content {
+        display: flex;
+        flex-flow: column;
+        justify-content: flex-end;
+        padding: 2.5rem 1.5rem;
+        top: 0;
+        left: 0;
+
+        & h2 {
+            margin-bottom: 20px;
+        }
+    }
+
+    .homepage-button {
+        width: 100%;
+        
+        & a {
+            font-weight: 400;
+            font-size: 1.5rem;
+            font-family: CriteriaCF-DemiBold;
+            line-height: 20px;
+            background-color: #fff;
+            text-transform: uppercase;
+            padding: 18px 20px;
+            border-radius: 50px;
+            color: #000;
+        }
+    }
+
+    .button-full {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .collection-item {
+        margin-bottom: 15px;
+    }
+}
+
+
+@media #{$tablet-size} {
+    .branch-content h2 {
+        font-size: 3rem;
+        line-height: normal;
+    }
+
+    .branch-item {
+        margin-top: 20px;
+    }
+    
+    .block-heading {
+        font-size: 5rem;
+        line-height: 5rem;
+    }
+
+    
+}
+
+@media #{$desktop-size} {
+    .hide-md {
+        display: none;
+    }  
 }

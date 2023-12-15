@@ -16,7 +16,6 @@ export const getAllUsers = async () => {
 export const getMe = async () => {
     const res = await axiosJWT.get('/users/me')
     return res
-    
 }
 
 export const getDetailUser = async (id) => {

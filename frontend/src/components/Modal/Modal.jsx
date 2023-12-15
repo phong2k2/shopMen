@@ -8,6 +8,7 @@ import { getTotals, removeFromCart } from "@/redux/cartSlice";
 import { useEffect } from "react";
 import ModalCart from "./ModalCart/ModalCart";
 import ModalSearch from "./ModalSearch/ModalSearch";
+import ModalCategory from "./ModalCategory/ModalCategory";
 
 const cx = classNames.bind(styles);
 function Modal() {
@@ -16,7 +17,10 @@ function Modal() {
     setShowModalCart,
     showModalSearch,
     setShowModalSearch,
+    setShowModalCategory,
+    showModalCategory,
   } = useDeliveryInfo();
+
   const user = useSelector((state) => state.auth.login?.currentUser?.data);
   const cart = useSelector((state) => state.cart);
 
@@ -49,11 +53,14 @@ function Modal() {
   const handleCloseModal = () => {
     setShowModalCart(false);
     setShowModalSearch(false);
+    setShowModalCategory(false);
   };
 
   return (
     <div
-      className={cx("site-cart", { active: showModalCart || showModalSearch })}
+      className={cx("site-cart", {
+        active: showModalCart || showModalSearch || showModalCategory,
+      })}
     >
       {/* Modal Cart */}
       {showModalCart && (
@@ -68,6 +75,7 @@ function Modal() {
       )}
 
       {showModalSearch && <ModalSearch />}
+      {showModalCategory && <ModalCategory />}
 
       <button onClick={handleCloseModal} className={cx("hamburger-menu")}>
         <span className={cx("bar")}></span>

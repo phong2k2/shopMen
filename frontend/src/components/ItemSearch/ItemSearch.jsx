@@ -1,8 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./ItemSearch.module.scss";
 import PropTypes from "prop-types";
-import { Link, useNavigate } from "react-router-dom";
-import { useMemo } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { formatPrice } from "../formatData/formatData";
 
 const cx = classNames.bind(styles);
@@ -17,10 +16,6 @@ function ItemSearch({ data, setSearchValue, setShowModalSearch }) {
     }
   };
 
-  const discountedPrice = useMemo(() => {
-    return Math.ceil(data?.price - data?.discount);
-  }, [data]);
-
   return (
     <>
       <li onClick={handleNextPageSearch} className={cx("content-item")}>
@@ -28,12 +23,12 @@ function ItemSearch({ data, setSearchValue, setShowModalSearch }) {
           <p className={cx("text-search")}>
             <span>{data?.name}</span>
           </p>
-          <strong>{formatPrice(discountedPrice)}</strong>
+          <strong>{formatPrice(data?.salePrice)}</strong>
         </div>
 
-        <Link to={`/products/${data?.slug}`} className={cx("img-item")}>
+        <NavLink to={`/products/${data?.slug}`} className={cx("img-item")}>
           <img src={data?.image?.url} alt="" />
-        </Link>
+        </NavLink>
       </li>
       <span className={cx("line")}></span>
     </>

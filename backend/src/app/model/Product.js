@@ -8,17 +8,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const ProductSchema = new Schema({
     name: { type: String, required: true},
     price: { type: Number, required: true},
-    discount: { type: Number , required: true},
-    image: {
-        publicId:{
-            type: String,
-            required: true
-        },
-        url: {
-            type: String,
-            required: true
-        }
-    },
+    salePrice: { type: Number , required: true},
     countInStock: { type: Number, required: true},
     description: { type: String, required: true},
     hot: { type: String, required: true, enums: ['hot', 'nomar']},

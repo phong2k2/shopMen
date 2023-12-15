@@ -31,8 +31,7 @@ const initValues = {
   hot: "",
   price: "",
   countInStock: "",
-  discount: "",
-  image: "",
+  salePrice: "",
   description: "",
 };
 const statusProduct = [
@@ -54,7 +53,6 @@ function EditProduct() {
   const [productDetail, setProductDetail] = useState();
   const addMatch = useMatch("/admin/product/create");
   const isAddMode = Boolean(addMatch);
-  const [avatar, setAvatar] = useState();
   const [openLoading, setOpenLoading] = useState(false);
 
   const {
@@ -108,12 +106,11 @@ function EditProduct() {
 
   const { data: category } = categoryQuery;
   const { data: subCategory } = subCategoryQuery;
-  console.log(category);
+
   // Mutations Add Product
   const addProductMutation = useMutation({
     mutationFn: (formData) => productService.createProduct(formData),
     onSuccess: () => {
-      setAvatar("");
       setOpenLoading(false);
       navigate(config.privateRouter.indexProduct);
       toast.success("Thêm sản phẩm thành công");
@@ -128,10 +125,9 @@ function EditProduct() {
 
   // Mutations Update Product
   const updateProductMutation = useMutation({
-    mutationFn: (formData) => productService.updateProduct(formData, slug),
+    mutationFn: (values) => productService.updateProduct(values, slug),
     onSuccess: () => {
       navigate(config.privateRouter.indexProduct);
-      setAvatar("");
       setOpenLoading(false);
       toast.success("Sửa sản phẩm thành công");
     },
@@ -144,38 +140,13 @@ function EditProduct() {
 
   const handleOnSubmitAddProduct = (values) => {
     setOpenLoading(true);
-    const formData = new FormData();
-    for (let name in initValues) {
-      if (name === "image") {
-        if (!values[name][0]) {
-          continue;
-        } else {
-          formData.append(name, values[name][0]);
-        }
-      } else {
-        formData.append(name, values[name]);
-      }
-    }
 
     if (isAddMode) {
-      addProductMutation.mutate(formData);
+      addProductMutation.mutate(values);
     } else {
-      updateProductMutation.mutate(formData);
+      updateProductMutation.mutate(values);
     }
   };
-
-  // Show avatar at the img
-  const handlePreviewAvatar = (e) => {
-    const file = e.target.files[0];
-    file.preview = URL.createObjectURL(file);
-    setAvatar(file);
-  };
-  // Delete old photos when changing photos
-  useEffect(() => {
-    return () => {
-      avatar && URL.revokeObjectURL(avatar.preview);
-    };
-  }, [avatar]);
 
   return (
     <>
@@ -295,32 +266,11 @@ function EditProduct() {
             <Grid item xs={4}>
               <InputLabel id="category-label">Giảm giá</InputLabel>
               <InputField
-                name={"discount"}
-                validate={register("discount")}
+                name={"salePrice"}
+                validate={register("salePrice")}
                 errors={errors}
               />
             </Grid>
-
-            <Grid item xs={6}>
-              <InputLabel id="category-label">Hình ảnh</InputLabel>
-              <InputField
-                name={"image"}
-                validate={register("image")}
-                errors={errors}
-                type="file"
-                onChange={handlePreviewAvatar}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <img
-                src={
-                  avatar?.preview ? avatar?.preview : productDetail?.image?.url
-                }
-                width="30%"
-                alt="ko có anh"
-              />
-            </Grid>
-
             <Grid item xs={12}>
               <InputLabel id="description-label">Mô tả sản phẩm</InputLabel>
               <FormControl fullWidth error={!!errors.description}>

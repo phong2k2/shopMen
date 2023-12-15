@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import * as userService from "@/services/userService";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
   Container,
   Paper,
@@ -80,14 +80,14 @@ function HomeUsers() {
                       <img className="img-thumbnail" alt="" />
                     </TableCell>
                     <TableCell>
-                      <Link
+                      <NavLink
                         className="btn btn-primary ml-3"
                         to={`/admin/user/${user?._id}`}
                       >
                         <Tooltip title="Sửa" placement="top">
                           <BorderColorIcon />
                         </Tooltip>
-                      </Link>
+                      </NavLink>
                       <button
                         className="btn btn-danger ml-3"
                         onClick={() => handleClickDelete(user?._id)}

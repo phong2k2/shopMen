@@ -3,7 +3,8 @@ const {StatusCodes} = require('http-status-codes');
 const SubCategory = require('../app/model/SubCategory')
 const Category = require('../app/model/Category')
 const {uploadToCloudinary, deleteAnCloudinary} = require('../Services/CloudinaryService');
-const ApiError = require('../utils/ApiError')
+const ApiError = require('../utils/ApiError');
+const Product = require('../app/model/Product');
 
 // Get SubCategory Service
 const getSubCategory = async () => {
@@ -125,6 +126,11 @@ const deleteSubCategory = async (id, publicId) => {
             })
             if (!checkSubCate) {
                 throw new ApiError(StatusCodes.NOT_FOUND, 'Sub category not found')
+            }
+
+            const checkProduct = await Product.findOne({subCategory: new ObjectId(id)})
+            if (checkProduct) {
+                throw new ApiError(StatusCodes.CONFLICT, 'Danh mục này không thể xóa')
             }
 
             await Category.updateMany(

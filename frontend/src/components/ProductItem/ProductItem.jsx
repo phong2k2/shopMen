@@ -1,19 +1,30 @@
 import classNames from "classnames/bind";
 import styles from "./ProductItem.module.scss";
 import PropTypes from "prop-types";
-import { useMemo } from "react";
 import Skeleton from "@mui/material/Skeleton";
 import { Link, NavLink } from "react-router-dom";
 import { formatPrice } from "@/components/formatData/formatData";
 
 const cx = classNames.bind(styles);
 function ProductItem({ itemPro, loading }) {
-  const discountedPrice = useMemo(() => {
-    return Math.ceil(itemPro?.price - itemPro?.discount);
-  }, [itemPro]);
+  const renderImages = (proItem) => {
+    const imageProduct = proItem?.color[0]?.gallery;
+    if (imageProduct && imageProduct.length >= 2) {
+      const twoImages = imageProduct.slice(0, 2);
+      const imageElements = twoImages.map((itemImage) => (
+        <img
+          key={itemImage._id}
+          src={itemImage.image.url}
+          alt={`image-${itemImage._id}`}
+        />
+      ));
+      return <>{imageElements}</>;
+    }
+    return null;
+  };
 
   return (
-    <div className={cx(" col-md-3 mt-5")}>
+    <div className={cx(" col-md-3 col-sm-6 mt-5", "col-6")}>
       {loading ? (
         <div>
           <Skeleton
@@ -31,7 +42,7 @@ function ProductItem({ itemPro, loading }) {
             <Link to={`/products/${itemPro?.slug}`}>
               <picture>
                 <source media="(max-width: 767px)" />
-                <img src={itemPro?.image?.url} alt="Anh" />
+                {renderImages(itemPro)}
               </picture>
             </Link>
           </div>
@@ -47,9 +58,9 @@ function ProductItem({ itemPro, loading }) {
             </div>
             <div className={cx("box-pro-detail")}>
               <div className={cx("product-price", "conformName")}>
-                {formatPrice(discountedPrice)}
+                {formatPrice(itemPro?.salePrice)}
                 <span className={cx("price-del")}>
-                  <del>{formatPrice(itemPro?.discount)}</del>
+                  <del>{formatPrice(itemPro?.price)}</del>
                 </span>
               </div>
             </div>

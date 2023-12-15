@@ -43,6 +43,7 @@ function Home() {
   });
 
   const handleClickNavigate = (item, name) => {
+    console.log(name, item);
     navigate(`${name}/${item?.slug}`, { state: { stateNav: item } });
   };
 
@@ -59,7 +60,13 @@ function Home() {
             spaceBetween={20}
             navigation={true}
             scrollbar={true}
-            slidesPerView={4}
+            slidesPerView={2}
+            breakpoints={{
+              "@1.50": {
+                slidesPerView: 4,
+                spaceBetween: 50,
+              },
+            }}
             modules={[Scrollbar, Navigation]}
             className="productHotSwiper swiper-horizontal"
             loop={true}
@@ -75,8 +82,8 @@ function Home() {
                       }
                     >
                       <img src={proItem?.image?.url} alt="image1" />
+                      <h3 className={cx("name-product")}>{proItem?.name}</h3>
                     </a>
-                    <h3 className={cx("name-product")}>{proItem?.name}</h3>
                   </div>
                 </SwiperSlide>
               );
@@ -87,10 +94,18 @@ function Home() {
 
       <section className={cx("banner-web")}>
         <a>
-          <img
-            src="https://media2.coolmate.me/cdn-cgi/image/width=1069,height=1575,quality=80,format=auto/uploads/December2023/mceclip6_65.png"
-            alt="banner"
-          />
+          <div className={cx("banner-image")}>
+            <picture>
+              <source
+                srcSet="https://media2.coolmate.me/cdn-cgi/image/width=450,height=663,quality=80,format=auto/uploads/December2023/mceclip7_63.png"
+                media="(max-width: 991px)"
+              />
+              <img
+                src="https://media2.coolmate.me/cdn-cgi/image/width=1069,height=1575,quality=80,format=auto/uploads/December2023/mceclip6_65.png"
+                alt="banner"
+              />
+            </picture>
+          </div>
         </a>
         <div className={cx("block-content")}>
           <h2 className={cx("block-heading")}>
@@ -108,8 +123,8 @@ function Home() {
         <SwiperSlides title="Sản phẩm mới">
           <SlideShowItem
             allProduct={getAllFeaturedProduct}
-            name={`/products`}
             handleClickNavigate={handleClickNavigate}
+            name={`/products`}
           />
         </SwiperSlides>
       </section>
@@ -132,7 +147,9 @@ function Home() {
                   hơn cho tụi nhỏ
                 </h2>
                 <div className={cx("homepage-button")}>
-                  <a href="">Khám phá ngay</a>
+                  <a className={cx("button-full")} href="#">
+                    Khám phá ngay
+                  </a>
                 </div>
               </div>
             </a>
@@ -143,7 +160,7 @@ function Home() {
       <section className={cx("homepage-branch")}>
         <div className={cx("container")}>
           <div className={cx("row")}>
-            <div className={cx("branch-item", "col-6")}>
+            <div className={cx("col-md-6 col-12", "branch-item")}>
               <div className={cx("branch-img")}>
                 <img src="https://mcdn.coolmate.me/image/December2023/mceclip1_99.png" />
               </div>
@@ -159,9 +176,9 @@ function Home() {
               </div>
             </div>
 
-            <div className={cx("branch-item", "col-6")}>
+            <div className={cx("col-md-6 col-12", "branch-item")}>
               <div className={cx("branch-img")}>
-                <img src="https://mcdn.coolmate.me/image/December2023/mceclip1_99.png" />
+                <img src="https://mcdn.coolmate.me/image/October2023/mceclip1_15.png" />
               </div>
               <div className={cx("branch-content")}>
                 <p>84Rising - streetwear</p>
@@ -181,7 +198,7 @@ function Home() {
       <section className={cx("homepage-collections")}>
         <div className={cx("container")}>
           <div className={cx("row")}>
-            <div className={cx("col-3", "collection-item")}>
+            <div className={cx("col-md-3 col-sm-3 col-6", "collection-item")}>
               <a href="">
                 <div className={cx("collection-thumbnail")}>
                   <img
@@ -192,7 +209,7 @@ function Home() {
               </a>
             </div>
 
-            <div className={cx("col-3", "collection-item")}>
+            <div className={cx("col-md-3 col-sm-3 col-6", "collection-item")}>
               <a href="">
                 <div className={cx("collection-thumbnail")}>
                   <img
@@ -203,7 +220,7 @@ function Home() {
               </a>
             </div>
 
-            <div className={cx("col-3", "collection-item")}>
+            <div className={cx("col-md-3 col-sm-3 col-6", "collection-item")}>
               <a href="">
                 <div className={cx("collection-thumbnail")}>
                   <img
@@ -214,7 +231,7 @@ function Home() {
               </a>
             </div>
 
-            <div className={cx("col-3", "collection-item")}>
+            <div className={cx("col-md-3 col-sm-3 col-6", "collection-item")}>
               <a href="">
                 <div className={cx("collection-thumbnail")}>
                   <img
@@ -231,12 +248,18 @@ function Home() {
       <section className={cx("homepage-care-share")}>
         <div className={cx("container")}>
           <div className={cx("homepage-care")}>
-            <a href="">
-              <div className={cx("homepage-image")}>
-                <img
-                  src="https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/November2023/mceclip0_71.png"
-                  alt="ảnh chia sẻ cộng đồng"
-                />
+            <a href="#">
+              <div className={cx("homepage-care-image")}>
+                <picture>
+                  <source
+                    srcSet="https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/November2023/mceclip1_90.png"
+                    media="(max-width: 991px)"
+                  />
+                  <img
+                    src="https://media2.coolmate.me/cdn-cgi/image/quality=80,format=auto/uploads/November2023/mceclip0_71.png"
+                    alt="ảnh chia sẻ cộng đồng"
+                  />
+                </picture>
               </div>
             </a>
           </div>
@@ -248,7 +271,13 @@ function Home() {
           <Swiper
             spaceBetween={20}
             navigation={true}
-            slidesPerView={4}
+            slidesPerView={2}
+            breakpoints={{
+              "@1.50": {
+                slidesPerView: 4,
+                spaceBetween: 50,
+              },
+            }}
             centeredSlides={true}
             autoplay={{
               delay: 1500,

@@ -23,7 +23,8 @@ function Header() {
   const user = useSelector((state) => state.auth?.login);
   const name = user?.currentUser?.data?.username;
   const cart = useSelector((state) => state.cart);
-  const { setShowModalCart, setShowModalSearch } = useDeliveryInfo();
+  const { setShowModalCart, setShowModalSearch, setShowModalCategory } =
+    useDeliveryInfo();
   const [showHeader, setShowHeader] = useState();
   const isAdmin = user?.currentUser?.data?.isAdmin;
   const navRef = useRef();
@@ -152,12 +153,7 @@ function Header() {
           <div className={cx("container")}>
             <div className={cx("row", "header-body")}>
               <div
-                className={cx(
-                  "col-lg-2",
-                  "col-sm-3",
-                  "col-md-3",
-                  "wrap-header-2"
-                )}
+                className={cx("col-md-2", "col-sm-6 col-7", "wrap-header-2")}
               >
                 <div className={cx("header-logo")}>
                   <a href={config.publicRouter.home}>
@@ -170,15 +166,7 @@ function Header() {
                 </div>
               </div>
 
-              <div
-                className={cx(
-                  "col-md-8",
-                  "col-sm-6",
-                  "col-lg-6",
-                  "wrap-header-4",
-                  "hide-sm"
-                )}
-              >
+              <div className={cx("col-md-8", "wrap-header-4", "hide")}>
                 <nav className={cx("navbar-main")}>
                   {
                     <ul className={cx("list-main")}>
@@ -199,20 +187,20 @@ function Header() {
               <div
                 className={cx(
                   "col-md-2",
-                  "col-sm-3",
-                  "col-lg-3",
+                  "col-sm-6",
+                  "col-5",
                   "action",
                   "wrap-header-3"
                 )}
               >
                 <div className={cx("header-action")}>
+                  {/* <Search /> */}
                   <div className={cx("action-item")}>
-                    {/* <Search /> */}
                     <a onClick={handleShowModalSearch}>
                       <IconSearch className={cx("icon-search")} />
                     </a>
                   </div>
-
+                  {/* Cart */}
                   <div className={cx("action-item")}>
                     <div className={cx("div-cart")}>
                       <a onClick={handleShowModalNavigation}>
@@ -220,6 +208,19 @@ function Header() {
                         <div className={cx("count-cart")}>
                           <span>{cart?.cartTotalQuantity}</span>
                         </div>
+                      </a>
+                    </div>
+                  </div>
+                  {/* Category */}
+                  <div className={cx("action-item", "show-cate")}>
+                    <div className={cx("div-category")}>
+                      <a onClick={() => setShowModalCategory((prev) => !prev)}>
+                        <i
+                          className={cx(
+                            "fa-solid fa-align-justify",
+                            "icon-cate"
+                          )}
+                        ></i>
                       </a>
                     </div>
                   </div>

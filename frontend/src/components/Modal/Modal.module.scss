@@ -1,13 +1,14 @@
+@import './../../components/GlobalStyles/GlobalStyle.scss';
+
 .site-cart::-webkit-scrollbar {
     display: none; /* cho Chrome, Safari, and Opera */
-  }
+}
 
 .site-cart {
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
-    width: var(--width-site-cart);
     height: 100%;
     width: 480px;
     background-color: #fff;
@@ -56,5 +57,11 @@
         height: 3px;
         background-color: #000;
         transform: rotate(45deg);
+    }
+}
+
+@media #{$mobile-size} { 
+    .site-cart {
+        width: 100%;
     }
 }

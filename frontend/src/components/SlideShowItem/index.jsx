@@ -13,29 +13,32 @@ import "swiper/swiper-bundle.css";
 
 function SlideShowItem({ allProduct, name, handleClickNavigate }) {
   const renderImages = (proItem) => {
-    if (proItem?.color?.length) {
-      const images = [];
-      let i = 0;
-      while (images.length < 2 && i < proItem.color.length) {
-        const image = proItem.color[i].gallery[0]?.image;
-
-        if (image) {
-          images.push(<img key={i} src={image.url} alt={`image-${i + 1}`} />);
-        }
-        i++;
-      }
-      return images;
+    const imageProduct = proItem?.color[0]?.gallery;
+    if (imageProduct && imageProduct.length >= 2) {
+      const twoImages = imageProduct.slice(0, 2);
+      const imageElements = twoImages.map((itemImage) => (
+        <img
+          key={itemImage._id}
+          src={itemImage.image.url}
+          alt={`image-${itemImage._id}`}
+        />
+      ));
+      return <>{imageElements}</>;
     }
-
     return null;
   };
-
   return (
     <SwiperContainer
       spaceBetween={20}
       navigation={true}
       scrollbar={true}
-      slidesPerView={4}
+      slidesPerView={2}
+      breakpoints={{
+        "@1.50": {
+          slidesPerView: 4,
+          spaceBetween: 50,
+        },
+      }}
       modules={[Scrollbar, Navigation]}
       className="productHotSwiper swiper-horizontal"
       loop={true}
@@ -46,9 +49,9 @@ function SlideShowItem({ allProduct, name, handleClickNavigate }) {
           <OriginalSwiperSlide key={proItem?._id}>
             <div className="item">
               <a onClick={() => handleClickNavigate(proItem, name)}>
-                {renderImages(proItem)}
+                <div className="img-block"> {renderImages(proItem)}</div>
+                <h3 className="name-product">{proItem?.name}</h3>
               </a>
-              <h3 className="name-product">{proItem?.name}</h3>
             </div>
           </OriginalSwiperSlide>
         );

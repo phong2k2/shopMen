@@ -6,38 +6,37 @@ import MuiAccordion from "@mui/material/Accordion";
 
 export const AccordionCustom = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
-))(() => ({
+))({
   "&:not(:last-child)": {
     borderBottom: 0,
   },
   "&:before": {
     display: "none",
   },
-  "& .MuiButtonBase-root": {
-    backgroundColor: "#f9fafa",
-    padding: 0,
-  },
-  ".MuiCollapse-wrapperInner": {
-    backgroundColor: "#f9fafa",
-  },
-}));
+});
 
 export const AccordionSummaryCustom = styled((props) => (
   <MuiAccordionSummary
     expandIcon={<ArrowForwardIosSharpIcon sx={{ fontSize: "1.3rem" }} />}
     {...props}
   />
-))(() => ({
+))({
+  paddingLeft: 0,
+  backgroundColor: "#fff",
   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
     transform: "rotate(90deg)",
   },
-}));
+  "& p": {
+    fontSize: 20,
+    fontWeight: 600,
+  },
+});
 
-export const AccordionDetailsCustom = styled(MuiAccordionDetails)(
-  ({ theme }) => ({
-    padding: theme.spacing(0),
-    // "& .MuiAccordion-region": {
-    //   backgroundColor: "#f9fafa",
-    // },
-  })
-);
+export const AccordionDetailsCustom = styled(MuiAccordionDetails)({
+  padding: 0,
+  "& span": {
+    fontSize: 18,
+    fontWeight: 600,
+  },
+  marginLeft: 25,
+});

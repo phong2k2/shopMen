@@ -1,6 +1,6 @@
 const {StatusCodes} = require('http-status-codes');
 const ProductService = require('../../Services/ProductService')
-
+const ApiError = require('../../utils/ApiError')
 const ProductController = {
     
     //Search Product
@@ -23,8 +23,8 @@ const ProductController = {
     // Add Product
     createProduct: async (req, res, next) => {
         try {
-            const fileData = req.file
-            const response = await ProductService.createProduct(req.body, fileData)
+            // const fileData = req.file
+            const response = await ProductService.createProduct(req.body)
             res.status(StatusCodes.CREATED).json(response);
         }catch(error) {
             next(error)
@@ -82,23 +82,33 @@ const ProductController = {
             const { 
                 limit=10,
                 page,
-                sort="promise",
-                // order="asc",
+                sort="default",
                 price_min,
                 price_max
             } = req.query
-            console.log(req.query)
-
-            if(!sort) throw new Error("Error")
-
             
+            if(!sort) throw new ApiError(StatusCodes.NOT_FOUND, 'Error')
+            
+            let sortBy = {}
+            let sortCut = sort.split('-')
+            if(sortCut[1]) {
+                sortBy[sortCut[0]] = sortCut[1]
+            }else {
+                sortBy = null
+            }
+
             const options = {
                 page,
                 limit,
-                // sort: {
-                //     [sort]: order ==="asc" ? 1 : -1
-                // },
+                sort: sortBy,
                 populate: ['category', 'subCategory'],
+                populate:[{
+                    path: 'color', // Điều hướng đến trường 'color'
+                    populate: [
+                        { path: 'gallery' }, // Điều hướng đến trường 'gallery' trong 'color'
+                        { path: 'size' }, // Điều hướng đến trường 'size' trong 'color'
+                      ],
+                }]
             }
 
             if (price_min && price_max) {

@@ -1,10 +1,10 @@
 import classNames from "classnames/bind";
 import styles from "./ModalFilter.module.scss";
+import { useSelector } from "react-redux";
 import { Slider } from "@mui/material";
+
 import { CustomizeAccordion } from "@/components/CustomMaterial/CustomMaterial";
 import { formatPrice } from "@/components/formatData/formatData";
-
-import { useSelector } from "react-redux";
 import { useState } from "react";
 import { useDeliveryInfo } from "@/hook/useContext";
 

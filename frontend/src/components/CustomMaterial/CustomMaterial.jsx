@@ -19,7 +19,9 @@ export const CustomizeAccordion = ({ listCategory }) => {
   };
 
   const handleClickShowProduct = (subItem) => {
-    navigate(`/${subItem?.slug}`, { state: { category: subItem } });
+    navigate(`/collections/${subItem?.slug}`, {
+      state: { stateNav: subItem },
+    });
     setShowModalFilter(false);
   };
 
@@ -36,7 +38,7 @@ export const CustomizeAccordion = ({ listCategory }) => {
           variant="h2"
           sx={{
             fontWeight: 400,
-            fontSize: 15,
+            fontSize: 17,
             fontFamily: "CriteriaCF",
           }}
         >

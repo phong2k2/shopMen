@@ -142,7 +142,7 @@ function HomeCate() {
     },
     onError: (error) => {
       if (error?.statusCode !== 500) {
-        toast.success(error.message);
+        toast.error(error.message);
       }
       setOpen(false);
       setOpenLoading(false);
@@ -160,7 +160,7 @@ function HomeCate() {
         reset(categoryDetail);
       }
     }
-  }, [categoryDetail, isAddMode]);
+  }, [categoryDetail, isAddMode, reset]);
 
   // Handle Category
   const handleCategory = (values) => {

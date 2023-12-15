@@ -11,17 +11,24 @@ function Overlay() {
     setShowModalSearch,
     showModalFilter,
     setShowModalFilter,
+    setShowModalCategory,
+    showModalCategory,
   } = useDeliveryInfo();
   const handleCloseModal = () => {
     setShowModalCart(false);
     setShowModalSearch(false);
     setShowModalFilter(false);
+    setShowModalCategory(false);
   };
   return (
     <div
       onClick={handleCloseModal}
       className={cx("site-overlay", {
-        active: showModalCart || showModalSearch || showModalFilter,
+        active:
+          showModalCart ||
+          showModalSearch ||
+          showModalFilter ||
+          showModalCategory,
       })}
     ></div>
   );

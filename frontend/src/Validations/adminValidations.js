@@ -12,18 +12,11 @@ export const schemaHandleProduct = yup.object().shape({
       .transform((value) => (Number.isNaN(value) ? null : value))
       .nullable()
       .required("Vui lòng nhập số lượng"),
-    discount: yup
+      salePrice: yup
       .number()
       .transform((value) => (Number.isNaN(value) ? null : value))
       .nullable()
       .required("Vui lòng nhập giảm giá"),
-    // image: yup.mixed()
-    //   .test('required', "Vui lòng chọn một hình ảnh", (value) => {
-    //     return value.length > 0
-    //   })
-    //   .test("type", "Chúng tôi chỉ hỗ trợ định dạng jpeg và jpg, png", function (value) {
-    //     return value && (value[0]?.type === "image/jpg" || value[0]?.type === "image/jpeg" || value[0]?.type === "image/png");
-    //   }),
     category: yup.string().required("Vui lòng chọn danh mục"),
     subCategory: yup.string().required("Vui lòng chọn loại sản phẩm"),
     hot: yup.string().required("Vui lòng chọn trạng thái"),

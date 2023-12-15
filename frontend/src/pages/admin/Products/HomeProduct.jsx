@@ -1,5 +1,5 @@
 import * as productService from "@/services/productService";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import {
@@ -20,6 +20,7 @@ import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import EmptyBox from "@/components/EmptyBox";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
 import { useState } from "react";
+import { formatPrice } from "@/components/formatData/formatData";
 
 function HomeProduct() {
   const [openLoading, setOpenLoading] = useState(false);
@@ -85,7 +86,8 @@ function HomeProduct() {
                 <TableCell>#</TableCell>
                 <TableCell>Loại</TableCell>
                 <TableCell>Tên sản phẩm</TableCell>
-                <TableCell>Hình ảnh</TableCell>
+                <TableCell>Giá gốc</TableCell>
+                <TableCell>Giá sale</TableCell>
                 <TableCell>Hành động</TableCell>
               </TableRow>
             </TableHead>
@@ -98,30 +100,25 @@ function HomeProduct() {
                       {pro?.subCategory?.name || pro?.category?.name}
                     </TableCell>
                     <TableCell>{pro?.name}</TableCell>
+                    <TableCell>{formatPrice(pro?.price)}</TableCell>
+                    <TableCell>{formatPrice(pro?.salePrice)}</TableCell>
                     <TableCell>
-                      <img
-                        className="img-thumbnail"
-                        src={pro?.image?.url}
-                        alt=""
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Link
+                      <NavLink
                         className="btn btn-primary mr-2"
                         to={`/admin/variant/${pro?._id}`}
                       >
                         <Tooltip title="Xem chi tiết" placement="top">
                           <RemoveRedEyeIcon />
                         </Tooltip>
-                      </Link>
-                      <Link
+                      </NavLink>
+                      <NavLink
                         className="btn btn-primary"
                         to={`/admin/product/${pro?.slug}`}
                       >
                         <Tooltip title="Sửa" placement="top">
                           <BorderColorIcon />
                         </Tooltip>
-                      </Link>
+                      </NavLink>
                       <button
                         className="btn btn-danger ml-2"
                         onClick={() =>

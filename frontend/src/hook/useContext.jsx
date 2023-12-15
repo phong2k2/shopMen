@@ -14,6 +14,7 @@ function DeliveryInfoProvider({ children }) {
   const [city, setCity] = useState("");
   const [showModalCart, setShowModalCart] = useState(false);
   const [showModalSearch, setShowModalSearch] = useState(false);
+  const [showModalCategory, setShowModalCategory] = useState(false);
   const [showModalFilter, setShowModalFilter] = useState(false);
   const [filter, setFilter] = useState();
 
@@ -38,6 +39,8 @@ function DeliveryInfoProvider({ children }) {
         setShowModalCart,
         showModalSearch,
         setShowModalSearch,
+        setShowModalCategory,
+        showModalCategory,
         showModalFilter,
         setShowModalFilter,
         filter,

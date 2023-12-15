@@ -58,8 +58,8 @@ class HttpRequest {
 
     async get(path, options) {
         try {
-            const response = await this.httpRequest.get(path,  {
-              options,
+            const response = await this.httpRequest.get(path, {
+              ...options,
               withCredentials: true,
           });
             return response.data;

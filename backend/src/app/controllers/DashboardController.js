@@ -1,20 +1,21 @@
 const DashboardService = require('../../Services/DashboardService')
+const {StatusCodes} = require('http-status-codes')
 
 const DashboardController = {
-    homeAdmin: async (req, res) => { 
+    homeAdmin: async (req, res, next) => { 
         try {
             const response = await DashboardService.homeAdmin()
-            return res.status(200).json(response)
+            return res.status(StatusCodes.OK).json(response)
         }catch(error) {
-            res.status(404).json(error)
+            next(error)
         }
     },
     dataChart: async (req, res) => {
         try {
             const response = await DashboardService.dataChart()
-            return res.status(200).json(response)
+            return res.status(StatusCodes.OK).json(response)
         }catch(error) {
-            res.status(404).json(error)
+            next(error)
         }
     }
 }

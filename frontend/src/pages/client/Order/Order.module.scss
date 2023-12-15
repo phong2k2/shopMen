@@ -1,10 +1,12 @@
+@import './../../../components/GlobalStyles/GlobalStyle.scss';
 
 .container {
     margin: 0 auto;
-    display: flex;
-    padding: 0 5%;
     width: 90%;
-    // max-width: 78.57143em;
+}
+
+.header-order {
+    display: none;
 }
 
 .main {
@@ -14,13 +16,12 @@
 }
 
 .main-head {
-
     h2 {
-       
         a {
             font-size: 3rem;
-            color: #444141;
+            color: #333333;
             text-decoration: none;
+            font-weight: 400;
         }
     }
 }
@@ -67,3 +68,37 @@
 }
 
 
+// Responsive
+
+@media #{$tablet-size} {
+    .header-order {
+        display: block;
+        h2 {
+            a {
+                font-size: 3rem;
+                color: #333333;
+                text-decoration: none;
+                font-weight: 400;
+            }
+        }
+    }
+
+    .sidebar {
+        order: 1;
+    }
+
+    .main {
+        order: 2;
+    }
+
+    .main-head {
+        display: none;
+    }
+}
+
+
+
+@media #{$desktop-size} {
+    
+
+}

@@ -77,10 +77,6 @@ export const updateCategory = async ({id, newData}) => {
 
 //Delete a category
 export const deleteCategory = async (id) => {
-    try {
-        const res = await axiosJWT.delete(`/categories/${id}`)
-        return res
-    }catch(err) {
-        console.log(err);
-    }
+    const res = await axiosJWT.delete(`/categories/${id}`)
+    return res
 }
