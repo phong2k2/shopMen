@@ -10,7 +10,7 @@ const addressController = require('../app/controllers/AddressController');
 router.get('/', middlewareController.authAdminMiddleWare,  userController.getAllUser)
 router.get('/me', middlewareController.verifyToken, userController.getMeHandler);
 router.get('/:userId', middlewareController.authUserMiddleware, userController.getDetailUser)
-router.put('/:userId', middlewareController.authAdminMiddleWare, userController.updateUser)
+router.put('/:userId', upload.single('image'), userController.updateUser)
 router.delete('/:userId',middlewareController.authUserMiddleware, userController.deleteUser)
 
 // Address user

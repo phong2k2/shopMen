@@ -18,4 +18,22 @@ const deleteAnCloudinary = async (filename) => {
         throw err
     }
 }
-module.exports = { uploadToCloudinary, deleteAnCloudinary }
+
+const uploadFileBuffer = async (croppedImageBuffer) => {
+    return new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { resource_type: 'image' },
+        (error, result) => {
+          if (error) {
+            console.error('Error uploading to Cloudinary:', error);
+            reject(error); // Reject promise with error
+          } else {
+            resolve({ url: result.secure_url, publicId: result.public_id }); // Resolve promise with result
+          }
+        }
+      );
+  
+      uploadStream.end(croppedImageBuffer);
+    });
+  };
+module.exports = { uploadToCloudinary, deleteAnCloudinary, uploadFileBuffer }

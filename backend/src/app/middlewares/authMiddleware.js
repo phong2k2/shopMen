@@ -28,7 +28,7 @@ const middlewareController = {
     authUserMiddleware: (req, res, next) => {
         middlewareController.verifyToken(req, res, () => {
             if(req.user.id === req.params.id || req.user.isAdmin) {
-                next()
+             next()
             }else {
                 return res.status(404).json({
                     message: "You're not allowed to delete other",
@@ -40,8 +40,6 @@ const middlewareController = {
     //Phân quyền
     authAdminMiddleWare: (req, res, next) => {
         middlewareController.verifyToken(req, res, () => {
-            console.log(1)
-            console.log("🚀 ~ file: authMiddleware.js:45 ~ middlewareController.verifyToken ~ req.user.isAdmin:", req.user.isAdmin)
             if(req.user.isAdmin) {
                 next()
             }else {

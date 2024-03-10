@@ -9,6 +9,7 @@ import { persistor, store } from "./redux/store.js";
 import GlobalStyle from "@/components/GlobalStyles";
 import { DeliveryInfoProvider } from "./hook/useContext.jsx";
 import CssBaseline from "@mui/material/CssBaseline";
+import ImageCropProvider from "./providers/ImageCropProvider.jsx";
 import "react-toastify/dist/ReactToastify.css";
 import theme from "./theme";
 
@@ -26,13 +27,15 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <PersistGate loading={null} persistor={persistor}>
       <GlobalStyle>
         <DeliveryInfoProvider>
-          <QueryClientProvider client={queryClient}>
-            <CssVarsProvider theme={theme}>
-              <CssBaseline />
-              <App />
-            </CssVarsProvider>
-            <ToastContainer />
-          </QueryClientProvider>
+          <ImageCropProvider>
+            <QueryClientProvider client={queryClient}>
+              <CssVarsProvider theme={theme}>
+                <CssBaseline />
+                <App />
+              </CssVarsProvider>
+              <ToastContainer />
+            </QueryClientProvider>
+          </ImageCropProvider>
         </DeliveryInfoProvider>
       </GlobalStyle>
     </PersistGate>

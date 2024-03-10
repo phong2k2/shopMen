@@ -29,12 +29,13 @@ export const getDetailUser = async (id) => {
 
 
 export const updateUser = async (formData, id) => {
-    try{
-        const res = await axiosJWT.put(`users/${id}`, formData)
+    const res = await axiosJWT.update(`users/${id}`, formData ,{
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        },
+    })
     return res?.data
-    }catch (err) {
-        console.log(err)
-    }
+    
 }
 
 export const deleteUser = async (id) => {

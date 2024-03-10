@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import parse from "html-react-parser";
+import { toast } from "react-toastify";
 import * as productService from "@/services/productService";
 import styles from "./ProductDetail.module.scss";
 import { useQuery } from "react-query";
@@ -13,6 +14,7 @@ import { addToCart, getTotals } from "@/redux/cartSlice";
 import { formatPrice } from "@/components/formatData/formatData";
 import { useDeliveryInfo } from "@/hook/useContext";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { productSizes } from "@/contant";
 
 // Import Swiper styles
 import "swiper/css";
@@ -21,7 +23,6 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import NavContent from "@/components/NavContent";
 import ProductRelated from "../ProductRelated/index.js";
-import { toast } from "react-toastify";
 
 const cx = classNames.bind(styles);
 function ProductDetail() {
@@ -43,13 +44,6 @@ function ProductDetail() {
     Cam: "#c47a4a ",
     Đỏ: "#ff0000",
   };
-
-  const productSizes = [
-    { id: 0, name: "S" },
-    { id: 1, name: "M" },
-    { id: 2, name: "L" },
-    { id: 3, name: "2XL" },
-  ];
 
   // Get products Detail
   const { data: detailProduct } = useQuery({

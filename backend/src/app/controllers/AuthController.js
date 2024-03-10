@@ -8,7 +8,7 @@ const config = require('config');
 const AuthController = {
     register: async (req, res, next) => {
         try {
-            const {email } = req.body
+            const { email } = req.body
             const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
             const isCheckEmail = reg.test(email)
              if(!isCheckEmail) {

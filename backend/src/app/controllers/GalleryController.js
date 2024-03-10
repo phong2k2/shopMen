@@ -38,8 +38,8 @@ const GalleryController = {
     createGallery: async (req, res, next) => {
         try {
             const fileData = req.file
-                const response = await GalleryService.createGallery(req.body, fileData)
-                res.status(StatusCodes.CREATED).json(response);
+            const response = await GalleryService.createGallery(req.body, fileData)
+            res.status(StatusCodes.CREATED).json(response);
         }catch (error) {
             next(error)
         }

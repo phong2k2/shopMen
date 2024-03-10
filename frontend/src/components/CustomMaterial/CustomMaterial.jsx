@@ -38,7 +38,7 @@ export const CustomizeAccordion = ({ listCategory }) => {
           variant="h2"
           sx={{
             fontWeight: 400,
-            fontSize: 17,
+            fontSize: 15,
             fontFamily: "CriteriaCF",
           }}
         >

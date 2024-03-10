@@ -38,14 +38,14 @@ const UserController = {
     },
     updateUser: async (req, res, next) => {
         try {
+            const fileData = req.file
+
+            console.log("🚀 ~ file: UserController.js:43 ~ fileData:", fileData)
             const userId = req.params.userId
-            const urlImage = req.body.image ? req.body.image : req.file.filename 
-            const infoUpdate = {
-                ...req.body,
-                image: urlImage
-            }
-        
-            const response = await UserService.updateUser(userId, infoUpdate)
+
+            const response = await UserService.updateUser(userId, req.body, fileData)
+
+            console.log("🚀 ~ file: UserController.js:51 ~ response:", response)
             res.status(StatusCodes.OK).json(response);
         }catch(error) {
             next(error)

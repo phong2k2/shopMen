@@ -10,7 +10,6 @@ import Menu from "@/components/Menu/Menu";
 import config from "@/config";
 import { logoutFailed, logoutStart, logoutSuccess } from "@/redux/authSlice";
 import Button from "@/components/Button";
-// import Search from "../Search/Search";
 import { useDeliveryInfo } from "@/hook/useContext";
 import { useEffect, useRef, useState } from "react";
 import { getAllCategory } from "@/services/categoryService";

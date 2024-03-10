@@ -1,6 +1,9 @@
 const {StatusCodes} = require('http-status-codes');
 const User = require("../app/model/User")
-const ApiError = require('../utils/ApiError')
+const ApiError = require('../utils/ApiError');
+const { uploadToCloudinary, uploadFileBuffer } = require('./CloudinaryService');
+const sharp = require('sharp');
+
 const getAllUser = async () => {
         try {
             const allUser = await User.find()
@@ -31,15 +34,41 @@ const getDetailUser = async (userId) => {
         }
 }
 
-const updateUser = async (id, data) => {
+const updateUser = async (id, body, fileData) => {
+
         try {
+            const {y, x, width, height} = JSON.parse(body.crop)
+            const cropOptions = {
+                top: y,
+                left: x,
+                width: width,
+                height: height,
+              };
+
+            console.log("🚀 ~ file: UserService.js:51 ~ cropOptions:", cropOptions)
+
             const checkUser = await User.findOne({
                 _id: id
             })
+
             if (!checkUser) {
                 throw new ApiError(StatusCodes.NOT_FOUND, 'User not found')
             }
-            const updatedUser = await User.findByIdAndUpdate(id, data, { new: true })
+            
+            // Handle Image User
+            if(fileData) {
+                // Crop Image
+                const croppedImageBuffer = await sharp(fileData.path)
+                .extract(cropOptions)
+                .toBuffer();
+
+                const cloudinaryResult = await uploadFileBuffer(croppedImageBuffer);
+
+                publicIdToDelete = cloudinaryResult.publicId;
+                if (cloudinaryResult) body.image = cloudinaryResult
+            }
+            
+            const updatedUser = await User.findByIdAndUpdate({_id: id}, body, { new: true })
             const { password, ...other} = updatedUser._doc
            
             return {

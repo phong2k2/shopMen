@@ -157,11 +157,12 @@ const publicRoutes = [
         path: config.publicRouter.persistor,
         component: ResetPersistButton,
         layout: HeaderOnly,
-    },{
-        path: config.publicRouter.notFound,
-        component: NotFound,
-        layout: HeaderOnly,
-    },
+    }
+    // ,{
+    //     path: config.publicRouter.notFound,
+    //     component: NotFound,
+    //     layout: HeaderOnly,
+    // },
 ]
 
 export {

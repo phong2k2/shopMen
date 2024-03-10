@@ -22,7 +22,14 @@ const UserSchema = new Schema({
         required: true,
     },
     image: {
-        type: String,
+        publicId:{
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        }
     },
     password: {
         type: String,

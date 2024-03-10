@@ -1,6 +1,6 @@
-const {StatusCodes} = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const jwt = require('jsonwebtoken')
-const {env} = require('../configs/environment')
+const { env } = require('../configs/environment')
 const ApiError = require('../utils/ApiError')
 // create access token
 const  generalAccessToken = (user) => {
@@ -30,11 +30,11 @@ const generalRefreshToken = (user) => {
 // refreshToken
 const requestRefreshToken = async (refreshToken) => {
     try {
-        jwt.verify(refreshToken, env.JWT_REFRESH_TOKEN, (err, user) => {
+        jwt.verify(refreshToken, env.JWT_REFRESH_TOKEN, (error, user) => {
             if(error) {
-                throw new ApiError(StatusCodes.Unauthorized, error.message)
+                throw new ApiError(StatusCodes.UNAUTHORIZED, error.message)
             }
-            const newAccessToken =  generalAccessToken(user)
+            const newAccessToken = generalAccessToken(user)
             const newRefreshToken = generalRefreshToken(user)
             
             return {

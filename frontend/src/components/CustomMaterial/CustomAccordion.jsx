@@ -27,16 +27,17 @@ export const AccordionSummaryCustom = styled((props) => (
     transform: "rotate(90deg)",
   },
   "& p": {
-    fontSize: 20,
-    fontWeight: 600,
+    fontSize: 14,
+    fontWeight: 400,
+    textTransform: "uppercase",
   },
 });
 
 export const AccordionDetailsCustom = styled(MuiAccordionDetails)({
   padding: 0,
   "& span": {
-    fontSize: 18,
-    fontWeight: 600,
+    fontSize: 14,
+    fontWeight: 400,
   },
   marginLeft: 25,
 });
