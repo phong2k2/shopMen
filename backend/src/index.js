@@ -1,26 +1,32 @@
-const express = require('express');
-const morgan = require('morgan');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const passport = require('passport');
-
-const {corsOptions} = require('./configs/cross')
-const {errorHandlingMiddleware} = require('./app/middlewares/errorHandlingMiddlware');
-const route = require('./routes');
-const db = require('./configs/db');
+const express = require("express");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const passport = require("passport");
+const path = require("path");
+const multer = require("multer");
+const upload = multer();
+const { corsOptions } = require("./configs/cross");
+const {
+  errorHandlingMiddleware,
+} = require("./app/middlewares/errorHandlingMiddlware");
+const { APIs_VI } = require("./routes/v1");
+const db = require("./configs/db");
+const { ADMIN_API } = require("./routes/admin");
 
 const app = express();
 const port = 3000;
 
-
 //connect db
 db.connect();
 
-app.use(express.json());
-app.use(express.urlencoded({
-    extended: true,
-}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// for parsing multipart/form-data
+app.use(express.static(path.join(__dirname, "./uploads/images")));
 
 // Middleware để xử lý method spoofing
 app.use((req, res, next) => {
@@ -31,47 +37,29 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(express.static(path.join(__dirname, 'public/images')));
-
-// app.engine('.hbs', engine({
-//     extname: '.hbs',
-//     helpers: {
-//         sum: (a, b) => {
-//           return a + b;
-//         }
-//     }
-// }));
-// app.set('view engine', 'hbs');
-// app.set('views', path.join(__dirname, 'resources', 'views'));
 //HTTP logger
-app.use(morgan('combined'));
+app.use(morgan("combined"));
 
 app.use(cors(corsOptions));
 
-  
 app.use(cookieParser());
 app.use(
-    session({
-      secret: 'your-secret-key',
-      resave: false,
-      saveUninitialized: true,
-    })
-  );
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
-//routes init
-route(app);
+//Router
+app.use("/v1", APIs_VI);
+app.use("/admin", ADMIN_API);
 
 //Middleware xử lý lỗi tập trung
-app.use(errorHandlingMiddleware)
-
-
-
-
+app.use(errorHandlingMiddleware);
 
 app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
+  console.log(`App listening on port ${port}`);
 });
-
-

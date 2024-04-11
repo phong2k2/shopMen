@@ -1,13 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const slug = require('mongoose-slug-updater');
-const mongoosePaginate = require('mongoose-paginate-v2');
-
-
+const paginate = require('../../plugins/paginate');
 
 const ProductSchema = new Schema({
     name: { type: String, required: true},
-    price: { type: Number, required: true},
+    price: { type: Number, required: true, default: null},
     salePrice: { type: Number , required: true},
     countInStock: { type: Number, required: true},
     description: { type: String, required: true},
@@ -35,7 +33,9 @@ const ProductSchema = new Schema({
 },{
     timestamps: true,
 })
-ProductSchema.plugin(mongoosePaginate);
+
+ProductSchema.plugin(paginate);
 mongoose.plugin(slug);
+
 const Product =  mongoose.model('Product',ProductSchema)
 module.exports = Product

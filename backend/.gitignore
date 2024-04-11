@@ -3,6 +3,7 @@
 node_modules/
 src/public/css/
 src/public/images/
+src/uploads/
 
 .env.local
 .env.development.local

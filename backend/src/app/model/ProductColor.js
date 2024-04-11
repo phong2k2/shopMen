@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const paginate = require('../../plugins/paginate');
 
 const ProductColorSchema = new Schema ({
     nameColor: {
@@ -28,6 +29,6 @@ const ProductColorSchema = new Schema ({
     ]
 })
 
-
+ProductColorSchema.plugin(paginate);
 const ProductColor = mongoose.model('ProductColor', ProductColorSchema)
 module.exports = ProductColor

@@ -6,7 +6,6 @@ const ApiError = require('../utils/ApiError')
 // Cấu hình CORS Option trong dự án thực tế 
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log('WHITELIST_DOMAINS', origin);
     // Cho phép việc gọi API bằng POSTMAN trên môi trường dev,
     // Thông thường khi sử dụng postman thì cái origin sẽ có giá trị là undefined
     if (!origin && env.BUILD_MODE === 'dev') {

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const paginate = require('../../plugins/paginate');
 
 const AddressSchema = new Schema({
     name: {
@@ -63,5 +64,7 @@ const AddressSchema = new Schema({
 },{
     timestamps: true,
 })
+
+AddressSchema.plugin(paginate);
 const Address =  mongoose.model('Address',AddressSchema)
 module.exports = Address

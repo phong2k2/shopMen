@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const paginate = require('../../plugins/paginate');
 
 const ProductSizeSchema = new Schema ({
     size: {
@@ -25,6 +26,6 @@ const ProductSizeSchema = new Schema ({
     }
 })
 
-
+ProductSizeSchema.plugin(paginate);
 const ProductSize = mongoose.model('ProductSize', ProductSizeSchema)
 module.exports = ProductSize

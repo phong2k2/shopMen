@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const paginate = require('../../plugins/paginate');
 
 const OrderSchema = new Schema({
     orderItems: [
@@ -45,5 +46,7 @@ const OrderSchema = new Schema({
 },{
     timestamps: true,
 })
+
+OrderSchema.plugin(paginate);
 const Order =  mongoose.model('Order',OrderSchema)
 module.exports = Order
