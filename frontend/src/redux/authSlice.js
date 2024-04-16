@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
   const initialState = {
     login: {
         currentUser: null,
+        tokens: null,
         isFetching: false,
         error: false,
         isLogin: false,
@@ -21,9 +22,17 @@ const authSlice = createSlice({
         loginStart: (state) => {
             state.login.isFetching = true
         },
-        loginSuccess: (state, action) => {
+        loginSuccess: (state, { payload }) => {
             state.login.isFetching = false
-            state.login.currentUser = action.payload
+            state.login.currentUser = {
+                ...state.login.currentUser,
+                ...payload.data
+            };
+            state.login.tokens = {
+                ...state.login.tokens,
+                ...payload.meta
+            }
+            payload.meta
             state.login.error = false
             state.login.isLogin = true
         },
@@ -49,6 +58,7 @@ const authSlice = createSlice({
         logoutSuccess: (state) => {
             state.login.isFetching = false
             state.login.currentUser = null
+            state.login.tokens = null
             state.login.error = false
             state.login.isLogin = false
         },

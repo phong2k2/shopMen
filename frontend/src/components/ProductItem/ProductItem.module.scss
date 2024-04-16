@@ -1,106 +1,137 @@
-@import './../../components/GlobalStyles/GlobalStyle.scss';
+@import "./../../components/GlobalStyles/GlobalStyle.scss";
 
-// product
- .product-img {
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 20px;
-
-    .img-resize {
-        height: 295px;
-        display: block;
-    }
-
-    picture {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        img {
-            display: block;
-            width: 100%;
-            object-fit: cover;
-            opacity: 1;
-        }
-
-        & img + img {
-            opacity: 0;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-    }
-    &:hover {
-        cursor: pointer;
-        transition: all .5s
-    };
-
-    &:hover > a > picture > img {
-        opacity: 0;
-        transition: opacity .1s ease-in-out;
-        -webkit-transition: opacity .1s ease-in-out;
-    }
-
-    &:hover > a > picture >img + img{
-        opacity: 1;
-        transition: opacity .1s ease-in-out;
-        overflow: hidden;
-        -webkit-transition: opacity .1s ease-in-out;
-    }
+.product-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  background-color: var(--while);
+  height: 100%;
 }
 
-.pro-name{
-    padding-bottom: 6px;
-    font-weight: 500;
-    text-transform: capitalize;
+.product-img {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 
-    .conformName {
-        color: var(--black);
-        font-size: 1.5rem;
-        font-family: var(--font-family-text);
-        font-weight: 500;
-        text-transform: capitalize;
-        cursor: pointer;
-        text-decoration: none;
+  .img-resize {
+    height: 295px;
+    display: block;
+  }
 
-        &:hover {
-            color: #4eb5ec;
-        }
-
-    }
-}
-
-.box-pro-detail {
+  picture {
     display: flex;
-    justify-content: space-between;
-    padding-bottom: 5px;
-    
-    .product-price{
-        font-size: 1.8rem;
-        font-weight: 600;
-        display: flex;
-        flex-wrap: wrap;
-        .price-del {
-            del {
-                margin-left: 5px;
-                font-size: 1.4rem;
-                opacity: .7;
-            }
-        }
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    img {
+      display: block;
+      width: 100%;
+      object-fit: cover;
+      opacity: 1;
     }
+
+    & img + img {
+      opacity: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
 }
 
+.pro-name {
+  padding-bottom: 6px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
 
+.product-image {
+  position: relative;
+}
+
+.lazy-img {
+  position: relative;
+  display: block;
+  padding-bottom: 128%;
+  width: 100%;
+  cursor: pointer;
+
+  img {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    max-height: 100%;
+    width: 100%;
+  }
+
+  & img + img {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.product-detail {
+  padding: 10px 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.product-name {
+  width: 100%;
+}
+
+.name {
+  display: -webkit-box;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  font-size: 1.4rem;
+  color: #000;
+  font-weight: 300;
+  text-transform: capitalize;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.product-price {
+  width: 100%;
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin-top: auto;
+
+  .price {
+    color: var(--color-price);
+    margin-right: 6px;
+  }
+
+  .price-del {
+    color: var(--color-price-del);
+    text-decoration: line-through;
+    font-weight: 400;
+    font-size: 1.3rem;
+  }
+}
 // Responsive
 
-@media #{$mobile-size} { 
-    .col-6 {
-        flex: 0 0 50%;
-        max-width: 50%;
-        position: relative;
-        width: 100%;
-        padding-right: 5px;
-        padding-left: 5px;
-    }
+@media #{$mobile-size} {
+  .col-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+    position: relative;
+    width: 100%;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
 }

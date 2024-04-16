@@ -20,23 +20,23 @@ function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth?.login);
-  const name = user?.currentUser?.data?.username;
+  const name = user?.currentUser?.username;
   const cart = useSelector((state) => state.cart);
   const { setShowModalCart, setShowModalSearch, setShowModalCategory } =
     useDeliveryInfo();
   const [showHeader, setShowHeader] = useState();
-  const isAdmin = user?.currentUser?.data?.isAdmin;
+  const isAdmin = user?.currentUser?.isAdmin;
   const navRef = useRef();
 
   const userMenus = [
     {
       title: "Hồ sơ",
       check: true,
-      to: config.publicRouter.account,
+      to: config.PUBLICROUTER.account,
     },
     {
       title: "Đơn hàng",
-      to: config.publicRouter.listOrders,
+      to: config.PUBLICROUTER.orderStatistics.index,
       check: true,
     },
     {
@@ -49,12 +49,12 @@ function Header() {
   const menuItem = [
     {
       title: "Quản Trị website",
-      to: config.privateRouter.dashboard,
+      to: config.PRIVATEROUTER.dashboard,
     },
     ...userMenus,
   ];
 
-  const listCategory = useQuery({
+  const { data: listCategory } = useQuery({
     queryKey: "listCategoryHeader",
     queryFn: () => getAllCategory(),
   });
@@ -66,15 +66,11 @@ function Header() {
       if (res) {
         dispatch(logoutSuccess());
         toast.success("Đã đăng xuất", { position: "top-right" });
-        navigate(config.publicRouter.home);
+        navigate(config.PUBLICROUTER.home);
       }
     } catch (err) {
       dispatch(logoutFailed());
     }
-  };
-
-  const handleClickNavigate = (item) => {
-    navigate(`/collections/${item?.slug}`, { state: { stateNav: item } });
   };
 
   const handleShowModalNavigation = () => {
@@ -101,6 +97,7 @@ function Header() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   return (
     <div
       className={cx("scroller-inner", {
@@ -124,7 +121,7 @@ function Header() {
                     ) : (
                       <Button
                         className={cx("login")}
-                        to={config.publicRouter.auth}
+                        to={config.PUBLICROUTER.auth}
                       >
                         Đăng nhập
                       </Button>
@@ -155,7 +152,7 @@ function Header() {
                 className={cx("col-md-2", "col-sm-6 col-7", "wrap-header-2")}
               >
                 <div className={cx("header-logo")}>
-                  <a href={config.publicRouter.home}>
+                  <a href={config.PUBLICROUTER.home}>
                     <img
                       className={cx("image-header")}
                       src="https://file.hstatic.net/1000096703/file/logo_website__191___70_px__979fdef210f7474d8a09b42724033b5c.png"
@@ -169,13 +166,9 @@ function Header() {
                 <nav className={cx("navbar-main")}>
                   {
                     <ul className={cx("list-main")}>
-                      {listCategory?.data?.map((category) => {
+                      {listCategory?.map((category) => {
                         return (
-                          <Category
-                            key={category?._id}
-                            categories={category}
-                            handleClickNavigate={handleClickNavigate}
-                          />
+                          <Category key={category?._id} categories={category} />
                         );
                       })}
                     </ul>

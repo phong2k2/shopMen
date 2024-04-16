@@ -6,16 +6,18 @@ const PrivateRoute = ({ children, route }) => {
   const { pathname } = useLocation();
   const authState = useSelector((state) => state?.auth?.login);
   const isLogin = authState?.isLogin;
-
+  const accessToken = authState?.login?.tokens?.accessToken
+  
   // Nếu route yêu cầu đăng nhập (protected)
   if (route?.protected) {
-    // Nếu đã đăng nhập, hiển thị nội dung của route con
-    if (!isLogin) {
+    // Nếu chưa đăng nhập, hiển thị nội dung của route con
+    if (!isLogin && !accessToken) {
       return <Navigate to={`/auth?redirect=${pathname}`} />;
     }
   }
   return children;
 };
+
 PrivateRoute.propTypes = {
   children: PropTypes.node,
   route: PropTypes.shape({

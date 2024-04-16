@@ -19,7 +19,7 @@ const cx = classNames.bind(styles);
 function Cart() {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.login?.currentUser?.data);
+  const user = useSelector((state) => state.auth.login?.currentUser);
 
   useEffect(() => {
     dispatch(getTotals());
@@ -265,7 +265,7 @@ function Cart() {
                       </div>
                     ) : (
                       <div className={cx("summary-actions")}>
-                        <Link to={config.publicRouter.auth}>
+                        <Link to={config.PUBLICROUTER.auth}>
                           Đăng nhập để thanh toán
                         </Link>
                       </div>

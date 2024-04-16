@@ -8,7 +8,10 @@ import {
   registerStart,
   registerSuccess,
 } from "@/redux/authSlice";
-import { useLocation, useNavigate, Navigate } from "react-router-dom";
+import {
+    useNavigate, 
+    useSearchParams 
+  } from "react-router-dom";
 import config from "@/config";
 import { toast } from "react-toastify";
 
@@ -19,10 +22,10 @@ function Auth() {
   const dispatch = useDispatch();
   const divRef = useRef(null);
   const navigate = useNavigate();
-  const { search } = useLocation();
-  const user = useSelector((state) => state?.auth?.login?.currentUser);
   const [statusAuth, setStatusAuth] = useState(false);
   const [statusRegister, setStatusRegister] = useState(false);
+  const [searchParams] = useSearchParams()
+  const redirectPath = searchParams.get("redirect");
 
   const handleClickSignUp = () => {
     if (divRef.current) {
@@ -41,12 +44,10 @@ function Auth() {
       const res = await authService.loginUser(values);
       dispatch(loginSuccess(res));
 
-      const queryParams = new URLSearchParams(search);
-      const redirectPath = queryParams.get("redirect");
       if (redirectPath) {
-        navigate(redirectPath);
+        navigate(redirectPath)
       } else {
-        navigate(config.publicRouter.home);
+        navigate(config.PUBLICROUTER.home);
       }
 
       toast.success("Đăng nhập thành công");
@@ -76,7 +77,6 @@ function Auth() {
     }
   };
 
-  if (user) return <Navigate to={"/"} />;
   return (
     <div className="auth">
       <div ref={divRef} className="container-auth">

@@ -26,7 +26,7 @@ function Sidebar() {
       {/*  */}
       {/* Nav Item - Dashboard --> */}
       <li className="nav-item active">
-        <NavLink to={config.privateRouter.dashboard} className="nav-link">
+        <NavLink to={config.PRIVATEROUTER.dashboard} className="nav-link">
           <i className="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span>
         </NavLink>
@@ -62,13 +62,13 @@ function Sidebar() {
         >
           <div className="bg-white py-2 collapse-inner rounded">
             <NavLink
-              to={config.privateRouter.indexCategory}
+              to={config.PRIVATEROUTER.indexCategory}
               className="collapse-item"
             >
               Danh mục
             </NavLink>
             <NavLink
-              to={config.privateRouter.createCategory}
+              to={config.PRIVATEROUTER.createCategory}
               className="collapse-item"
             >
               Thêm danh mục
@@ -99,13 +99,13 @@ function Sidebar() {
         >
           <div className="bg-white py-2 collapse-inner rounded">
             <NavLink
-              to={config.privateRouter.indexProduct}
+              to={config.PRIVATEROUTER.indexProduct}
               className="collapse-item"
             >
               Danh sách sản phẩm
             </NavLink>
             <NavLink
-              to={config.privateRouter.createProduct}
+              to={config.PRIVATEROUTER.createProduct}
               className="collapse-item"
             >
               Thêm Sản Phẩm
@@ -134,12 +134,12 @@ function Sidebar() {
         >
           <div className="bg-white py-2 collapse-inner rounded">
             <NavLink
-              to={config.privateRouter.indexUser}
+              to={config.PRIVATEROUTER.indexUser}
               className="collapse-item"
             >
               Danh sách Người dùng
             </NavLink>
-            {/* <NavLink to={config.privateRouter.createProduct} className="collapse-item" >Thêm danh mục</NavLink> */}
+            {/* <NavLink to={config.PRIVATEROUTER.createProduct} className="collapse-item" >Thêm danh mục</NavLink> */}
           </div>
         </div>
       </li>
@@ -206,7 +206,7 @@ function Sidebar() {
           <div className="bg-white py-2 collapse-inner rounded">
             <NavLink
               className="collapse-item"
-              to={config?.privateRouter?.payment}
+              to={config?.PRIVATEROUTER?.payment}
             >
               Danh sách phương thức
             </NavLink>

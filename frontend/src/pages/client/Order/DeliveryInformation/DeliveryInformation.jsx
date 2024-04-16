@@ -25,7 +25,7 @@ const initValue = {
 const cx = classNames.bind(styles);
 const DeliveryInformation = function DeliveryInformation({
   addressUserOrder,
-  diliveryPrice,
+  shippingCost,
   payments,
   activePayment,
   handleChangeActivePayment,
@@ -154,6 +154,7 @@ const DeliveryInformation = function DeliveryInformation({
                     Họ và tên
                   </label>
                   <InputField
+                    className={cx("input-delivery")}
                     name="name"
                     validate={register("name")}
                     errors={errors}
@@ -166,6 +167,7 @@ const DeliveryInformation = function DeliveryInformation({
                     Email
                   </label>
                   <InputField
+                    className={cx("input-delivery")}
                     name="email"
                     validate={register("email")}
                     errors={errors}
@@ -178,6 +180,7 @@ const DeliveryInformation = function DeliveryInformation({
                     Số điện thoại
                   </label>
                   <InputField
+                    className={cx("input-delivery")}
                     name="phone"
                     validate={register("phone")}
                     errors={errors}
@@ -255,10 +258,10 @@ const DeliveryInformation = function DeliveryInformation({
                               <ul className={cx("list-country", "list-city")}>
                                 {provinces?.map((itemProvince) => (
                                   <li
-                                    data-id={itemProvince?.code}
+                                    data-id={itemProvince?.id}
                                     data-name={itemProvince?.name}
                                     onClick={handleClickActiveProvinces}
-                                    key={itemProvince?.code}
+                                    key={itemProvince?.id}
                                     className={cx("item-list")}
                                   >
                                     {itemProvince?.name}
@@ -330,7 +333,7 @@ const DeliveryInformation = function DeliveryInformation({
                           Giao hàng tận nơi
                         </span>
                         <span className={cx("radio-price")}>
-                          {formatPrice(diliveryPrice)}
+                          {formatPrice(shippingCost)}
                         </span>
                       </div>
                     </div>
@@ -409,7 +412,7 @@ const DeliveryInformation = function DeliveryInformation({
 
 DeliveryInformation.propTypes = {
   addressUserOrder: PropTypes.object,
-  diliveryPrice: PropTypes.number,
+  shippingCost: PropTypes.number,
   payments: PropTypes.array,
   onChange: PropTypes.func,
   handleSubmitCreateOrder: PropTypes.func,

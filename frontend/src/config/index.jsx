@@ -1,10 +1,10 @@
 import {
-    privateRouter,
-    publicRouter
+    PRIVATEROUTER,
+    PUBLICROUTER
 } from './routes';
 
 const config = {
-    privateRouter,
-    publicRouter
+    PRIVATEROUTER,
+    PUBLICROUTER
 };
 export default config

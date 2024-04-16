@@ -12,7 +12,7 @@ function Menu({ items, handleClickLogout }) {
                 handleClickLogout();
               }
             }}
-            tabItem={item}
+            item={item}
           />
         );
       })}

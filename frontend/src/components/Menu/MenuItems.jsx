@@ -1,17 +1,21 @@
+import classNames from "classnames/bind";
 import Button from "../Button";
 import PropTypes from "prop-types";
-function MenuItems({ tabItem, onClick }) {
+import styles from "./Menu.module.scss";
+
+const cx = classNames.bind(styles);
+function MenuItems({ item, onClick }) {
   return (
-    <li>
-      <Button to={tabItem?.to} onClick={onClick}>
-        {tabItem?.title}
+    <li className={cx("item")}>
+      <Button to={item?.to} onClick={onClick}>
+        {item?.title}
       </Button>
     </li>
   );
 }
 
 MenuItems.propTypes = {
-  tabItem: PropTypes.object,
+  item: PropTypes.object,
   onClick: PropTypes.func,
 };
 export default MenuItems;

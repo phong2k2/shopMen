@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   Container,
   Button,
@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import InputField from "@/components/form-controls/InputField";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import CloseIcon from "@mui/icons-material/Close";
@@ -48,11 +49,11 @@ function HomeCate() {
   const [openLoading, setOpenLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [isAddMode, setIsAddMode] = useState(true);
-  const [slug, setSlug] = useState();
+  const [idEdit, setIdEdit] = useState();
   const queryClient = useQueryClient();
 
   const schema = yup.object().shape({});
-
+  
   const {
     register,
     formState: { errors },
@@ -72,8 +73,8 @@ function HomeCate() {
     setOpen(true);
   };
 
-  const handleUpdateCategory = (slug) => {
-    setSlug(slug);
+  const handleUpdateCategory = (idEdit) => {
+    setIdEdit(idEdit);
     setIsAddMode(false);
     setOpen(true);
   };
@@ -84,9 +85,9 @@ function HomeCate() {
   });
 
   const getCategoryDetailQuery = useQuery({
-    queryKey: ["categoryDetail", slug],
-    queryFn: () => getDetailCategory(slug),
-    enabled: slug !== undefined,
+    queryKey: ["categoryDetail", idEdit],
+    queryFn: () => getDetailCategory(idEdit),
+    enabled: idEdit !== undefined,
   });
 
   const addCategoryMutation = useMutation({
@@ -182,8 +183,6 @@ function HomeCate() {
     deleteCategoryMutation.mutate(id);
   };
 
-  console.log(categoryDetail);
-
   return (
     <>
       <LoadingBackdrop openLoading={openLoading} />
@@ -201,27 +200,48 @@ function HomeCate() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>STT</TableCell>
-                  <TableCell>Màu sắc sản phẩm</TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>Thao tác</TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>STT</TableCell>
+                  <TableCell  sx={{ textAlign: 'center' }}>Tên Danh mục</TableCell>
+                  <TableCell  sx={{ textAlign: 'center' }}>Thao tác</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {listCate?.map((item, index) => (
                   <TableRow key={item?._id}>
-                    <TableCell>{++index}</TableCell>
-                    <TableCell>
+                    <TableCell  sx={{ textAlign: 'center' }}>{++index}</TableCell>
+                    <TableCell  sx={{ textAlign: 'center' }}>
                       <Link to={`/admin/cate-item/${item?._id}`}>
                         {item?.name}
                       </Link>
                     </TableCell>
                     <TableCell sx={{ textAlign: "center" }}>
-                      <Button onClick={() => handleUpdateCategory(item?.slug)}>
+                      <NavLink
+                        style={{
+                          marginRight: '15px'
+                        }}
+                        to={`/admin/cate-item/${item?._id}`}
+                      >
+                        <Tooltip title="Xem chi tiết" placement="top">
+                          <RemoveRedEyeIcon 
+                            sx={{
+                              fontSize: 18
+                            }}
+                          />
+                        </Tooltip>
+                      </NavLink>
+                      <NavLink 
+                        style={{
+                          marginRight: '15px'
+                        }}
+                       onClick={() => handleUpdateCategory(item?._id)}>
                         <Tooltip title="Sửa" placement="top">
                           <BorderColorIcon />
                         </Tooltip>
-                      </Button>
-                      <Button
+                      </NavLink>
+                      <NavLink
+                        style={{
+                          marginRight: '15px'
+                        }}
                         onClick={() =>
                           handleDeleteCategory(item?._id, item?.image?.publicId)
                         }
@@ -229,7 +249,7 @@ function HomeCate() {
                         <Tooltip title="Xóa" placement="top">
                           <DeleteForeverIcon />
                         </Tooltip>
-                      </Button>
+                      </NavLink>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -239,9 +259,9 @@ function HomeCate() {
             {listCate?.length <= 0 && <EmptyBox title="Danh sách trống." />}
           </TableContainer>
         </Paper>
-        <Dialog open={open} onClose={handleCloseModal}>
+        <Dialog  open={open} onClose={handleCloseModal}>
           <DialogTitle variant="h6">
-            {isAddMode ? "Thêm danh mục sản phẩm" : "Sửa danh mục sản phẩm"}
+            {isAddMode ? "Thêm danh mục" : "Sửa danh mục"}
           </DialogTitle>
           <IconButton
             aria-label="close"
@@ -255,8 +275,9 @@ function HomeCate() {
           >
             <CloseIcon />
           </IconButton>
-          <DialogContent>
-            <form
+          <DialogContent sx={{ paddingTop: 0, width: 600 }}>
+            <Box 
+              component="form"
               onSubmit={handleSubmit(handleCategory)}
               encType="multipart/form-data"
               style={{ marginTop: 0 }}
@@ -273,7 +294,7 @@ function HomeCate() {
                   />
                 </Grid>
                 <Button
-                  sx={{ marginTop: 1 }}
+                  sx={{ marginTop: 1, fontSize: 12 }}
                   variant="contained"
                   color="primary"
                   type="submit"
@@ -281,7 +302,7 @@ function HomeCate() {
                   Hoàn thành
                 </Button>
               </Grid>
-            </form>
+            </Box>
           </DialogContent>
         </Dialog>
       </Container>

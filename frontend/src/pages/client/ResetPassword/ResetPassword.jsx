@@ -28,7 +28,7 @@ function ResetPassword() {
     mutationFn: (values) => resetPassword(userId, code, values),
     onSuccess: (response) => {
       toast.success(response.message);
-      navigate(config.publicRouter.auth);
+      navigate(config.PUBLICROUTER.auth);
     },
     onError: (error) => {
       if (error?.statusCode !== 500) {
@@ -48,7 +48,7 @@ function ResetPassword() {
   return (
     <div className="wrap-card">
       <div className="card-reset">
-        <Link to={config.publicRouter.home}>
+        <Link to={config.PUBLICROUTER.home}>
           <img
             className="image-header"
             src="https://file.hstatic.net/1000096703/file/logo_website__191___70_px__979fdef210f7474d8a09b42724033b5c.png"

@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./Product.module.scss";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import {  useParams, useSearchParams } from "react-router-dom";
 import * as productService from "@/services/productService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
@@ -14,21 +14,22 @@ import Pagination from "@mui/material/Pagination";
 
 const cx = classNames.bind(styles);
 function Product() {
-  let location = useLocation();
-  const selectRef = useRef();
-  const { slug } = useParams();
-  const stateNav = location.state?.stateNav;
-  const [sortOption, setSortOption] = useState();
-  const { setShowModalFilter, filter } = useDeliveryInfo();
-  const [pageNumber, setPageNumber] = useState(0);
   const limit = 10;
-  const navName = [stateNav?.name];
+  const selectRef = useRef();
+  const { id } = useParams();
+  const [sortBy, setSortBy] = useState();
+  const { setShowModalFilter, filter } = useDeliveryInfo();
+  const [page, setPage] = useState(0);
+  const [searchParams] = useSearchParams();
+  const categoryId = searchParams.get('categoryId')
+  const subCategoryId = searchParams.get('subCategoryId')
+  const name = searchParams.get('categoryName')
 
   const sortingOptions = useMemo(
     () => [
-      { value: "default", label: "Mặc định" },
-      { value: "salePrice-asc", label: "Giá: Tăng dần" },
-      { value: "salePrice-desc", label: "Giá: Giảm dần" },
+      { value: null, label: "Mặc định" },
+      { value: "price-asc", label: "Giá: Tăng dần" },
+      { value: "price-desc", label: "Giá: Giảm dần" },
       { value: "name-asc", label: "Tên: A-Z" },
       { value: "name-desc", label: "Tên: Z-A" },
     ],
@@ -37,44 +38,41 @@ function Product() {
 
   useEffect(() => {
     selectRef.current.textContent = sortingOptions[0].label;
-    setSortOption(sortingOptions[0].value);
-  }, [slug, sortingOptions]);
+    setSortBy(sortingOptions[0].value);
+  }, [id, sortingOptions]);
 
   // Sort Product
   const handleSortChange = (selectedOption) => {
     selectRef.current.textContent = selectedOption.label;
-    setSortOption(selectedOption.value);
+    setSortBy(selectedOption.value);
   };
 
   // Get Product
-  const getProductQuery = useQuery({
-    queryKey: ["productByCate", slug, limit, pageNumber, sortOption, filter],
+  const { data: allProducts, isLoading } = useQuery({
+    queryKey: ["allProduct", categoryId, subCategoryId, sortBy, filter],
     queryFn: () => {
-      return productService.getProductByCategory({
-        slug,
+      return productService.getAllProducts({
+        [categoryId ? 'category' : 'subCategory']: categoryId || subCategoryId,
         limit,
-        pageNumber,
-        sortOption,
+        page,
+        sortBy,
         ...filter,
       });
     },
-    enabled: slug !== undefined,
   });
-
-  const { data: allProducts, isLoading } = getProductQuery;
 
   const handleShowModalFilter = () => {
     setShowModalFilter(true);
   };
 
   const handlePageChange = (event, value) => {
-    setPageNumber(value);
+    setPage(value);
   };
 
   return (
     <section className={cx("collections")}>
       <div className={cx("main-content")}>
-        <NavContent navName={navName} />
+        <NavContent  name={name}/>
         {/* List Product */}
         <div className={cx("list-collections")}>
           <div className={cx("container")}>
@@ -83,7 +81,7 @@ function Product() {
               <div className={cx(" col-md-12")}>
                 <div className={cx("row", "hed-title")}>
                   <div className={cx("col-md-6")}>
-                    <h1 className={cx("product-name")}>{stateNav?.name}</h1>
+                    <h1 className={cx("product-name")}>{name}</h1>
                   </div>
                   <div className={cx("col-md-6", "select")}>
                     <div className={cx("control-filter")}>
@@ -113,7 +111,7 @@ function Product() {
                             <li
                               key={option.value}
                               className={cx("option", {
-                                active: option.value === sortOption,
+                                active: option.value === sortBy,
                               })}
                               onClick={() => handleSortChange(option)}
                             >
@@ -126,7 +124,7 @@ function Product() {
                   </div>
                 </div>
                 <div className={cx("row")}>
-                  {allProducts?.docs?.map((itemPro, index) => {
+                  {allProducts?.map((itemPro, index) => {
                     return (
                       <ProductItem
                         key={index}

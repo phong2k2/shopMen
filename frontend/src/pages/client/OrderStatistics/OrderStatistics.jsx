@@ -1,16 +1,17 @@
+/* eslint-disable no-undef */
+import { useSelector } from "react-redux";
 import { useQuery } from "react-query";
 import { getOrderStatistical } from "@/services/orderService";
 import { NavLink } from "react-router-dom";
+import { PUBLICROUTER } from "@/config/routes";
 
 function OrderStatistics() {
+  const userId = useSelector(state => state.auth.login.currentUser._id)
+  
   const { data: itemTotal } = useQuery({
-    queryKey: "dataStatistics",
-    queryFn: () => getOrderStatistical(),
+    queryKey: ["dataStatistics", userId],
+    queryFn: () => getOrderStatistical({ userId }),
   });
-  console.log(
-    "🚀 ~ file: OrderStatistics.jsx:9 ~ OrderStatistics ~ data:",
-    itemTotal
-  );
 
   return (
     <div className="container">
@@ -51,7 +52,7 @@ function OrderStatistics() {
                 <h1 className=" mb-1 fw-bold ml-4">
                   {itemTotal?.totalProcessing}
                 </h1>
-                <NavLink to={"/order/processing"} className="mb-0">
+                <NavLink to={PUBLICROUTER.listOrders.status('processing', userId)} className="mb-0">
                   <span
                     className="text-success me-2"
                     style={{ fontSize: "1.4rem" }}
@@ -102,7 +103,7 @@ function OrderStatistics() {
                 <h1 className="  mb-1 fw-bold ml-4">
                   {itemTotal?.totalConfirmed}
                 </h1>
-                <NavLink to={"/order/confirmed"} className="mb-0">
+                <NavLink to={PUBLICROUTER.listOrders.status('confirmed', userId)} className="mb-0">
                   <span
                     className="text-success me-2"
                     style={{ fontSize: "1.4rem" }}
@@ -151,7 +152,7 @@ function OrderStatistics() {
                 <h1 className="  mb-1 fw-bold ml-4">
                   {itemTotal?.totalComplete}
                 </h1>
-                <NavLink to={"/order/complete"} className="mb-0">
+                <NavLink to={PUBLICROUTER.listOrders.status('complete', userId)} className="mb-0">
                   <span
                     className="text-success me-2"
                     style={{ fontSize: "1.4rem" }}
@@ -199,7 +200,7 @@ function OrderStatistics() {
                 <h1 className="  mb-1 fw-bold ml-4">
                   {itemTotal?.totalCancelled}
                 </h1>
-                <NavLink to={"/order/cancelled"} className="mb-0">
+                <NavLink to={PUBLICROUTER.listOrders.status('cancelled', userId)} className="mb-0">
                   <span
                     className="text-success me-2"
                     style={{ fontSize: "1.4rem" }}

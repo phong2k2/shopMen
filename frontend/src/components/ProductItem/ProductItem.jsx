@@ -4,25 +4,10 @@ import PropTypes from "prop-types";
 import Skeleton from "@mui/material/Skeleton";
 import { Link, NavLink } from "react-router-dom";
 import { formatPrice } from "@/components/formatData/formatData";
+import { PUBLICROUTER } from "@/config/routes";
 
 const cx = classNames.bind(styles);
 function ProductItem({ itemPro, loading }) {
-  const renderImages = (proItem) => {
-    const imageProduct = proItem?.color[0]?.gallery;
-    if (imageProduct && imageProduct.length >= 2) {
-      const twoImages = imageProduct.slice(0, 2);
-      const imageElements = twoImages.map((itemImage) => (
-        <img
-          key={itemImage._id}
-          src={itemImage.image.url}
-          alt={`image-${itemImage._id}`}
-        />
-      ));
-      return <>{imageElements}</>;
-    }
-    return null;
-  };
-
   return (
     <div className={cx(" col-md-3 col-sm-6 mt-5", "col-6")}>
       {loading ? (
@@ -37,32 +22,37 @@ function ProductItem({ itemPro, loading }) {
           <Skeleton animation="wave" width="60%" />
         </div>
       ) : (
-        <div className={cx("product-block")}>
+        <div className={cx("product-inner")}>
           <div className={cx("product-img")}>
-            <Link to={`/products/${itemPro?.slug}`}>
+            <Link
+              to={PUBLICROUTER.productDetail.slug(itemPro?.slug, itemPro?._id)}
+            >
               <picture>
                 <source media="(max-width: 767px)" />
-                {renderImages(itemPro)}
+                <img src={itemPro?.thumbnail} alt={`image-${itemPro?._id}`} />
               </picture>
             </Link>
           </div>
 
           <div className={cx("product-detail")}>
-            <div className={cx("pro-name")}>
+            <div className={cx("product-name")}>
               <NavLink
-                className={cx("conformName")}
-                to={`/products/${itemPro?.slug}`}
+                className={cx("name")}
+                to={PUBLICROUTER.productDetail.slug(
+                  itemPro?.slug,
+                  itemPro?._id
+                )}
               >
                 {itemPro?.name}
               </NavLink>
             </div>
-            <div className={cx("box-pro-detail")}>
-              <div className={cx("product-price", "conformName")}>
+            <div className={cx("product-price")}>
+              <span className={cx("price")}>
                 {formatPrice(itemPro?.salePrice)}
-                <span className={cx("price-del")}>
-                  <del>{formatPrice(itemPro?.price)}</del>
-                </span>
-              </div>
+              </span>
+              <span className={cx("price-del")}>
+                {formatPrice(itemPro?.price)}
+              </span>
             </div>
           </div>
         </div>

@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import {
+  Box,
+  Button,
   Container,
   Paper,
   Table,
@@ -14,6 +16,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
@@ -79,66 +82,86 @@ function HomeProduct() {
         <Typography variant="h4" sx={{ fontWeight: "bold" }} className="pb-4 ">
           Sản phẩm
         </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>#</TableCell>
-                <TableCell>Loại</TableCell>
-                <TableCell>Tên sản phẩm</TableCell>
-                <TableCell>Giá gốc</TableCell>
-                <TableCell>Giá sale</TableCell>
-                <TableCell>Hành động</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {allProduct?.map((pro, index) => {
-                return (
-                  <TableRow key={index}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>
-                      {pro?.subCategory?.name || pro?.category?.name}
-                    </TableCell>
-                    <TableCell>{pro?.name}</TableCell>
-                    <TableCell>{formatPrice(pro?.price)}</TableCell>
-                    <TableCell>{formatPrice(pro?.salePrice)}</TableCell>
-                    <TableCell>
-                      <NavLink
-                        className="btn btn-primary mr-2"
-                        to={`/admin/variant/${pro?._id}`}
-                      >
-                        <Tooltip title="Xem chi tiết" placement="top">
-                          <RemoveRedEyeIcon />
-                        </Tooltip>
-                      </NavLink>
-                      <NavLink
-                        className="btn btn-primary"
-                        to={`/admin/product/${pro?.slug}`}
-                      >
-                        <Tooltip title="Sửa" placement="top">
-                          <BorderColorIcon />
-                        </Tooltip>
-                      </NavLink>
-                      <button
-                        className="btn btn-danger ml-2"
-                        onClick={() =>
-                          handleDeleteProduct(pro?._id, pro?.image?.publicId)
-                        }
-                      >
-                        <Tooltip title="Xóa" placement="top">
-                          <DeleteForeverIcon />
-                        </Tooltip>
-                      </button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-          {allProduct?.length <= 0 && (
-            <EmptyBox title="Danh sách sản phẩm trống." />
-          )}
-        </TableContainer>
+        <Paper sx={{ width: "100%", padding: "10px" }} elevation={1} square>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Button startIcon={<AddIcon />}>Thêm</Button>
+          </Box>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>#</TableCell>
+                  <TableCell>Loại</TableCell>
+                  <TableCell>Tên sản phẩm</TableCell>
+                  <TableCell>Giá gốc</TableCell>
+                  <TableCell>Giá sale</TableCell>
+                  <TableCell>Hành động</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {allProduct?.map((pro, index) => {
+                  return (
+                    <TableRow key={index}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>
+                        {pro?.subCategory?.name || pro?.category?.name}
+                      </TableCell>
+                      <TableCell>{pro?.name}</TableCell>
+                      <TableCell>{formatPrice(pro?.price)}</TableCell>
+                      <TableCell>{formatPrice(pro?.salePrice)}</TableCell>
+                      <TableCell>
+                        <NavLink
+                          style={{
+                            marginRight: "15px",
+                          }}
+                          to={`/admin/variant/${pro?._id}`}
+                        >
+                          <Tooltip title="Xem chi tiết" placement="top">
+                            <RemoveRedEyeIcon
+                              sx={{
+                                fontSize: 18,
+                              }}
+                            />
+                          </Tooltip>
+                        </NavLink>
+                        <NavLink
+                          style={{
+                            marginRight: "15px",
+                          }}
+                          to={`/admin/product/${pro?._id}`}
+                        >
+                          <Tooltip title="Sửa" placement="top">
+                            <BorderColorIcon
+                              sx={{
+                                fontSize: 18,
+                              }}
+                            />
+                          </Tooltip>
+                        </NavLink>
+                        <NavLink
+                          onClick={() =>
+                            handleDeleteProduct(pro?._id, pro?.image?.publicId)
+                          }
+                        >
+                          <Tooltip title="Xóa" placement="top">
+                            <DeleteForeverIcon
+                              sx={{
+                                fontSize: 18,
+                              }}
+                            />
+                          </Tooltip>
+                        </NavLink>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+            {allProduct?.length <= 0 && (
+              <EmptyBox title="Danh sách sản phẩm trống." />
+            )}
+          </TableContainer>
+        </Paper>
       </Container>
     </>
   );

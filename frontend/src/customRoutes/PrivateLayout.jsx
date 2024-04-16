@@ -6,9 +6,7 @@ import { useSelector } from "react-redux";
 function PrivateRoutes({ children }) {
   let Layout;
   const user = useSelector((state) => state.auth.login.currentUser);
-
-  const roleAdmin = user?.data?.isAdmin;
-  if (roleAdmin) {
+  if (user?.isAdmin) {
     Layout = AdminLayout;
   } else {
     Layout = Unauthorized;

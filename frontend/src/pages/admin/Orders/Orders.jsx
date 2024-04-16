@@ -33,11 +33,13 @@ function Orders() {
   // Get list orders
   const listOrderQuery = useQuery({
     queryKey: ["listOrder", status],
-    queryFn: () => orderService.getAllOrderStatus(status),
+    queryFn: () => orderService.getAllOrderStatus({status}),
     enabled: status !== undefined,
   });
 
   const { data: listOrders } = listOrderQuery;
+
+  console.log("🚀 ~ listOrders:", listOrders)
 
   const deleteOrderMutation = useMutation({
     mutationFn: (id) => orderService.deleteOrder(id),

@@ -54,13 +54,21 @@ const stateSizes = [
   },
 ];
 
+const initSize = {
+  height: '',
+  mass: '',
+  productColor: '',
+  size: '',
+  width: '',
+}
+
 function SizeModal({
   handleOpenModal,
   handleCloseModal,
   onSubmitAddSize,
   handleUpdateSize,
   handleDeleteSize,
-  getProductDetailsSize,
+  getSizeDetail,
   isAddMode,
   getAllSizes,
   open,
@@ -79,12 +87,15 @@ function SizeModal({
   });
 
   useEffect(() => {
-    if (!isAddMode) {
-      if (getProductDetailsSize?.data) {
-        reset(getProductDetailsSize?.data);
+    console.log("🚀 ~ isAddMode:", isAddMode)
+    if (isAddMode) {
+      reset(initSize);
+    } else {
+      if (getSizeDetail?.data) {
+        reset(getSizeDetail?.data);
       }
     }
-  }, [getProductDetailsSize?.data, reset]);
+  }, [getSizeDetail?.data, isAddMode, reset]);
 
   return (
     <div>
@@ -245,7 +256,7 @@ SizeModal.propTypes = {
   handleOpenModal: PropTypes.func,
   handleCloseModal: PropTypes.func,
   handleUpdateSize: PropTypes.func,
-  getProductDetailsSize: PropTypes.object,
+  getSizeDetail: PropTypes.object,
   handleDeleteSize: PropTypes.func,
   isAddMode: PropTypes.bool,
   getAllSizes: PropTypes.object,

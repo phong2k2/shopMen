@@ -14,13 +14,13 @@ import ImageCropModalContent from "@/components/Cropper/ImageCropModalContent";
 import { useImageCropContext } from "@/providers/ImageCropProvider";
 import { readFile } from "@/helpers/cropImage";
 import Modal from "@/components/Cropper/Modal";
+import { pathProcessing } from "@/helpers/image";
 
 const cx = classNames.bind(styles);
 function Account() {
   const user = useSelector((state) => state?.auth?.login?.currentUser);
-  const [userProfile, setUserProfile] = useState(user?.data);
+  const [userProfile, setUserProfile] = useState(user);
   const [cropImage, setCropImage] = useState({});
-
   const [openModal, setOpenModal] = useState(false);
   const [preview, setPreview] = useState();
   const { getProcessedImage, croppedAreaPixels, setImage, resetStates } =
@@ -101,8 +101,6 @@ function Account() {
     });
   };
 
-  // -------- ++++++ TEST ++++++ --------------------
-
   const handleDone = async () => {
     const crop = croppedAreaPixels;
 
@@ -112,13 +110,6 @@ function Account() {
     resetStates();
     setOpenModal(false);
   };
-
-  // const handleInputChange = async ({ target: { files } }) => {
-  //   const file = files && files[0];
-  //   const imageDataUrl = await readFile(file);
-  //   setImage(imageDataUrl);
-  //   setOpenModal(true);
-  // };
 
   return (
     <>
@@ -193,9 +184,7 @@ function Account() {
                         </td>
                         <td className={cx("info")}>
                           <div className={cx("input-info")}>
-                            {user?.data?.role === 0
-                              ? "Thành viên"
-                              : "Quản trị viên"}
+                            {user?.role === 0 ? "Thành viên" : "Quản trị viên"}
                           </div>
                         </td>
                       </tr>
@@ -209,7 +198,7 @@ function Account() {
                   <div className={cx("img-right")}>
                     <ImageSrc
                       className={cx("object-cover rounded-full h-80 w-80")}
-                      src={preview || user?.data?.image?.url}
+                      src={preview || pathProcessing(user?.image)}
                       fallBack="https://fullstack.edu.vn/static/media/fallback-avatar.155cdb2376c5d99ea151.jpg"
                     />
                   </div>

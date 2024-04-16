@@ -4,9 +4,6 @@ import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Footer from "./components/Footer/Footer";
 
-// type AdminLayoutProps = {
-//     children: React.ReactNode
-// }
 const cx = classNames.bind(styles);
 
 function AdminLayout({ children }) {

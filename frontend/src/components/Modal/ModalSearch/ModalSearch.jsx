@@ -3,13 +3,14 @@ import styles from "./ModalSearch.module.scss";
 import { useEffect, useRef, useState } from "react";
 import { IconSearch } from "@/components/Icons/icon";
 import useDebounce from "@/hook/useDebounce";
-import * as searchServices from "@/services/searchServices";
+import * as productService from "@/services/productService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import ItemSearch from "@/components/ItemSearch";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { useDeliveryInfo } from "@/hook/useContext";
+import { PUBLICROUTER } from "@/config/routes";
 
 const cx = classNames.bind(styles);
 function ModalSearch() {
@@ -22,20 +23,18 @@ function ModalSearch() {
   //Hook custom
   let debouncedValue = useDebounce(searchValue, 500);
 
-  const searchQuery = useQuery({
+  const { data: searchResult, isLoading } = useQuery({
     queryKey: ["search", debouncedValue],
     queryFn: () => {
       if (!debouncedValue?.trim()) {
         return;
       }
-      return searchServices.search(debouncedValue);
-    },
-    onError: (error) => {
-      console.log(error);
+      return productService.getAllProducts({
+        name: debouncedValue,
+        limit: 6
+      });
     },
   });
-
-  const { data: searchResult, isLoading } = searchQuery;
 
   const handleChangeSearch = (e) => {
     let searchValue = e.target.value;
@@ -51,9 +50,15 @@ function ModalSearch() {
     inputRef.current.focus();
   };
 
+  const handleNextPageSearch = (itemSearch) => {
+    navigate(PUBLICROUTER.productDetail.slug(itemSearch?.slug, itemSearch?._id));
+    setSearchValue("")
+    setShowModalSearch(false)
+};
+
   const handleSearchProduct = (e) => {
     e.preventDefault();
-    navigate(`/search?q=${searchValue}&type=more`);
+    navigate(`/search?name=${searchValue}`);
     setShowModalSearch(false);
   };
 
@@ -87,7 +92,7 @@ function ModalSearch() {
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
-                  handleSearchProduct(e); // Gọi hàm xử lý tìm kiếm ở đây
+                  handleSearchProduct(e);
                 }
               }}
               type="text"
@@ -112,22 +117,21 @@ function ModalSearch() {
             </button>
           </div>
         </form>
-        {showResult && searchResult?.data?.length > 0 ? (
+        {showResult && searchResult?.length > 0 ? (
           <ul className={cx("list-search")}>
-            {searchResult?.data?.map((item, index) => {
+            {searchResult?.map((itemSearch, index) => {
               return (
                 <ItemSearch
                   key={index}
-                  data={item}
-                  setSearchValue={setSearchValue}
-                  setShowModalSearch={setShowModalSearch}
+                  itemSearch={itemSearch}
+                  handleNextPageSearch={handleNextPageSearch}
                 />
               );
             })}
             <div className={cx("results-more")}>
               <a
                 onClick={handleSearchProduct}
-              >{`Xem thêm sản ${searchResult?.total} phẩm`}</a>
+              >Xem thêm</a>
             </div>
           </ul>
         ) : (

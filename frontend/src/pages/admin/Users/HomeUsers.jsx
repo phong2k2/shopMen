@@ -81,21 +81,33 @@ function HomeUsers() {
                     </TableCell>
                     <TableCell>
                       <NavLink
-                        className="btn btn-primary ml-3"
+                        style={{
+                          marginRight: '15px'
+                        }}
                         to={`/admin/user/${user?._id}`}
                       >
                         <Tooltip title="Sửa" placement="top">
-                          <BorderColorIcon />
+                          <BorderColorIcon 
+                            sx={{
+                                fontSize: 18
+                              }}
+                          />
                         </Tooltip>
                       </NavLink>
-                      <button
-                        className="btn btn-danger ml-3"
+                      <NavLink
+                        style={{
+                          marginRight: '15px'
+                        }}
                         onClick={() => handleClickDelete(user?._id)}
                       >
                         <Tooltip title="Xóa" placement="top">
-                          <DeleteForeverIcon />
+                          <DeleteForeverIcon 
+                            sx={{
+                                fontSize: 18
+                              }}
+                          />
                         </Tooltip>
-                      </button>
+                      </NavLink>
                     </TableCell>
                   </TableRow>
                 );

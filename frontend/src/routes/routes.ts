@@ -31,97 +31,97 @@ import OrderStatistics from '@/pages/client/OrderStatistics';
 
 const adminRoutes = [
     {
-        path: config.privateRouter.dashboard,
+        path: config.PRIVATEROUTER.dashboard,
         component: Dashboard,
     },
     {
-        path: config.privateRouter.indexCategory,
+        path: config.PRIVATEROUTER.indexCategory,
         component: HomeCate,
     },
     {
-        path: config.privateRouter.indexSubCategory,
+        path: config.PRIVATEROUTER.indexSubCategory,
         component: SubCategory
     },{
-        path: config.privateRouter.indexProduct,
+        path: config.PRIVATEROUTER.indexProduct,
         component: HomeProduct
     },
     {
-        path: config.privateRouter.createProduct,
+        path: config.PRIVATEROUTER.createProduct,
         component: AddProduct
     },
     {
-        path: config.privateRouter.editProduct,
+        path: config.PRIVATEROUTER.editProduct,
         component: AddProduct
     },
     {
-        path: config.privateRouter.variantDetails,
+        path: config.PRIVATEROUTER.variantDetails,
         component: VariantDetails
     },
     {
-        path: config.privateRouter.indexUser,
+        path: config.PRIVATEROUTER.indexUser,
         component: HomeUsers
     },
     // {
-    //     path: config.privateRouter.editUser,
+    //     path: config.PRIVATEROUTER.editUser,
     //     component: EditUser
     // },
     {
-        path: config.privateRouter.order,
+        path: config.PRIVATEROUTER.order,
         component: Orders
     },
     {
-        path: config.privateRouter.detailOrder,
+        path: config.PRIVATEROUTER.detailOrder,
         component: DetailOrder
     },
     {
-        path: config.privateRouter.variant,
+        path: config.PRIVATEROUTER.variant,
         component: VariantProduct
     },
     {
-        path: config.privateRouter.payment,
+        path: config.PRIVATEROUTER.payment,
         component: Payment
     }
 ]
 
 const privateRoutes = [
     {
-        path: config.publicRouter.order,
+        path: config.PUBLICROUTER.order,
         component: Order,
         layout: null,
         protected: true
     },{
-        path: config.publicRouter.listOrders,
+        path: config.PUBLICROUTER.listOrders.index,
         component: ListOrders,
         layout: AccountLayout,
         protected: true
     },{
-        path: config.publicRouter.orderStatistics,
+        path: config.PUBLICROUTER.orderStatistics.index,
         component: OrderStatistics,
         layout: AccountLayout,
         protected: true
     },{
-        path: config.publicRouter.account,
+        path: config.PUBLICROUTER.account,
         component: Account,
         layout: AccountLayout,
         protected: true
     },{
-        path: config.publicRouter.address,
+        path: config.PUBLICROUTER.address,
         component: Address,
         layout: AccountLayout,
         protected: true
     },
     {
-        path: config.publicRouter.resetPassword,
+        path: config.PUBLICROUTER.resetPassword,
         component: ResetPassword,
         layout: null,
         protected: false
     },{
-        path: config.publicRouter.forGotPassword,
+        path: config.PUBLICROUTER.forGotPassword,
         component: ForGotPassword,
         layout: null,
         protected: false
     },{
-        path: config.publicRouter.auth,
+        path: config.PUBLICROUTER.auth,
         component: Auth,
         layout: null,
         protected: false
@@ -130,36 +130,36 @@ const privateRoutes = [
 
 const publicRoutes = [
     {
-        path: config.publicRouter.home,
+        path: config.PUBLICROUTER.home,
         component: Home,
     },{
-        path: config.publicRouter.product,
+        path: config.PUBLICROUTER.product.index,
         component: Product,
         layout: HeaderOnly
     },
     {
-        path: config.publicRouter.productDetail,
+        path: config.PUBLICROUTER.productDetail.index,
         component: ProductDetail,
         layout: HeaderOnly
     },
     {
-        path: config.publicRouter.cart,
+        path: config.PUBLICROUTER.cart,
         component: Cart,
         layout: HeaderOnly
     },
     {
-        path: config.publicRouter.search,
+        path: config.PUBLICROUTER.search,
         component: ListProSearch,
         layout: HeaderOnly,
     }
     ,
     {
-        path: config.publicRouter.persistor,
+        path: config.PUBLICROUTER.persistor,
         component: ResetPersistButton,
         layout: HeaderOnly,
     }
     // ,{
-    //     path: config.publicRouter.notFound,
+    //     path: config.PUBLICROUTER.notFound,
     //     component: NotFound,
     //     layout: HeaderOnly,
     // },

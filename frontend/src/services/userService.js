@@ -1,44 +1,36 @@
-
 import HttpRequest from "@/utils/httpRequest";
 
 const axiosJWT = new HttpRequest();
 
 export const getAllUsers = async () => {
-    try {
-        const res = await axiosJWT.get('/users');
-        return res?.data
-    }catch (err) {
-        console.error(err)
-    }
-}
-
+  try {
+    const res = await axiosJWT.get("/v1/users");
+    return res?.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 export const getMe = async () => {
-    const res = await axiosJWT.get('/users/me')
-    return res
-}
+  const res = await axiosJWT.get("/v1/users/me");
+  return res;
+};
 
 export const getDetailUser = async (id) => {
-    try {
-        const res = await axiosJWT.get(`/users/${id}`)
-        return res?.data
-    }catch (err) {
-        console.log(err)
-    }
-}
-
+  try {
+    const res = await axiosJWT.get(`/v1/users/${id}`);
+    return res?.data;
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 export const updateUser = async (formData, id) => {
-    const res = await axiosJWT.update(`users/${id}`, formData ,{
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        },
-    })
-    return res?.data
-    
-}
+  const res = await axiosJWT.update(`/v1/users/${id}`, formData);
+  return res?.data;
+};
 
 export const deleteUser = async (id) => {
-    const res = await axiosJWT.delete('/users/' + id)
-    return res
-}
+  const res = await axiosJWT.delete("/v1/users/" + id);
+  return res;
+};

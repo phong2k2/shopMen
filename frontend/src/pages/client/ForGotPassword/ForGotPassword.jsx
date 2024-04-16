@@ -43,7 +43,7 @@ function ForGotPassword() {
     <div className="wrap-card">
       <div className="card-forgot">
         <form onSubmit={handleSubmit(handleSubmitForgotPass)}>
-          <Link to={config.publicRouter.home}>
+          <Link to={config.PUBLICROUTER.home}>
             <img
               className="image-header"
               src="https://file.hstatic.net/1000096703/file/logo_website__191___70_px__979fdef210f7474d8a09b42724033b5c.png"

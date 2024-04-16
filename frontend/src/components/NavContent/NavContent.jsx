@@ -3,7 +3,7 @@ import styles from "./NavContent.module.scss";
 import PropTypes from "prop-types";
 
 const cx = classNames.bind(styles);
-function NavContent({ navName }) {
+function NavContent({ name, subName, nameProduct }) {
   return (
     <div className={cx("breadcrumb-shop")}>
       <div className={cx("container")}>
@@ -15,13 +15,21 @@ function NavContent({ navName }) {
                   <span>Home</span>
                 </a>
               </li>
-              {navName.map((name, index) => (
-                <li key={index}>
-                  <a>
-                    <span>{name}</span>
-                  </a>
-                </li>
-              ))}
+              <li >
+                <a>
+                  <span>{name}</span>
+                </a>
+              </li>
+              {subName ? <li >
+                <a>
+                  <span>{subName}</span>
+                </a>
+              </li> : ''}
+              {nameProduct ? <li >
+                <a>
+                  <span>{nameProduct}</span>
+                </a>
+              </li> : ''}
             </ol>
           </div>
         </div>
@@ -31,7 +39,9 @@ function NavContent({ navName }) {
 }
 
 NavContent.propTypes = {
-  navName: PropTypes.array,
+  name: PropTypes.string,
+  subName: PropTypes.string, 
+  nameProduct: PropTypes.string
 };
 
 export default NavContent;

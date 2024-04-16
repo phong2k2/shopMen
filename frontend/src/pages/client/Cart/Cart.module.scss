@@ -85,10 +85,12 @@
     display: flex;
     padding: 10px 0;
     border-bottom: 1px solid #f1f1f1;
+    justify-content: center;
+    align-items: center;
     
     .left {
-        width: 15%;
         text-align: center;
+        margin-right: 10px;
 
         img {
             width: 50px;
@@ -99,7 +101,7 @@
 
     .right {
         display: flex;
-        width: 85%;
+        flex: 1;
         align-items: center;
         .item-info {
             width: 40%;

@@ -65,7 +65,7 @@ function EditUser() {
       const res = await userService.updateUser(formData, id);
       console.log(res);
       if (res) {
-        navigate(config.privateRouter.indexUser);
+        navigate(config.PRIVATEROUTER.indexUser);
       }
     } catch (err) {
       console.log(err);

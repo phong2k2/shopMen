@@ -1,7 +1,6 @@
 import classNames from "classnames/bind";
 import styles from "./ModalFilter.module.scss";
 import { Slider } from "@mui/material";
-
 import { CustomizeAccordion } from "@/components/CustomMaterial/CustomMaterial";
 import { formatPrice } from "@/components/formatData/formatData";
 import { useState } from "react";
@@ -59,13 +58,12 @@ function ModalFilter() {
   };
 
   const handleFilterSize = () => {
-    console.log(1);
   };
 
   return (
     <div className={cx("site-cart", { active: showModalFilter })}>
       <div className={cx("header")}>
-        LỌC SẢN PHẨM
+        <h2 className={cx("title")}>LỌC SẢN PHẨM</h2>
         <button onClick={handleCloseModal} className={cx("close")}>
           <span className={cx("bar")}></span>
         </button>
@@ -85,77 +83,75 @@ function ModalFilter() {
 
         {/* control filter */}
         <div className={cx("content")}>
-          <div className={cx("option")}>
-            <div className={cx("group")}>
-              <div className={cx("group-menu")}>
-                <div className={cx("accordion")}>
-                  <CustomizeAccordion listCategory={listCategory} />
-                </div>
+          <div className={cx("group")}>
+            <div className={cx("group-menu-action")}>
+              <div className={cx("filter-box")}>
+                <CustomizeAccordion listCategory={listCategory} />
+              </div>
 
-                <div className={cx("filter-box")}>
-                  <div className={cx("accordion-header")}>
-                    <h2>Màu sắc</h2>
-                    <div className={cx("filter-box-color")}>
-                      <div className={cx("slider-price")}>
-                        <ul className={cx("list-chosee")}>
-                          {productSizes?.map((itemSize) => (
-                            <li onClick={handleFilterSize} key={itemSize.id}>
-                              <input
-                                type="checkbox"
-                                id={itemSize.name}
-                                hidden
-                              />
-                              {itemSize.name}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+              <div className={cx("filter-box")}>
+                <div className={cx("accordion-header")}>
+                  <h2>Màu sắc</h2>
+                  <div className={cx("filter-box-color")}>
+                    <div className={cx("slider-price")}>
+                      <ul className={cx("list-size")}>
+                        {productSizes?.map((itemSize) => (
+                          <li onClick={handleFilterSize} key={itemSize.id}>
+                            <input
+                              type="checkbox"
+                              id={itemSize.name}
+                              hidden
+                            />
+                            {itemSize.name}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
-                </div>
-
-                <div className={cx("filter-box")}>
-                  <div className={cx("accordion-header")}>
-                    <h2>Khoảng giá</h2>
-                    <div className={cx("filter-box-price")}>
-                      <div className={cx("slider-price")}>
-                        <Slider
-                          getAriaLabel={() => "Temperature range"}
-                          sx={{
-                            color: "#000",
-                          }}
-                          value={priceScroll}
-                          disableSwap
-                          size={"medium"}
-                          onChange={handleChangeFindPrice}
-                          max={10000000}
-                          min={0}
-                          valueLabelFormat={(value) =>
-                            `${value.toLocaleString("vi-VN")} VND`
-                          }
-                        />
-                      </div>
-                      <div className={cx("display-number")}>
-                        <span className={cx("min-value")}>
-                          {formatPrice(filter?.price_min[0] || priceScroll[0])}
-                        </span>
-                        <span className={cx("max-value")}>
-                          {formatPrice(filter?.price_max[1] || priceScroll[1])}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className={cx("footer")}>
-                  <button
-                    onClick={handleClickFilter}
-                    className={cx("btn-filter")}
-                  >
-                    Áp dụng
-                  </button>
                 </div>
               </div>
+
+              <div className={cx("filter-box")}>
+                <div className={cx("accordion-header")}>
+                  <h2>Khoảng giá</h2>
+                  <div className={cx("filter-box-price")}>
+                    <div className={cx("slider-price")}>
+                      <Slider
+                        getAriaLabel={() => "Temperature range"}
+                        sx={{
+                          color: "#000",
+                        }}
+                        value={priceScroll}
+                        disableSwap
+                        size={"medium"}
+                        onChange={handleChangeFindPrice}
+                        max={10000000}
+                        min={0}
+                        valueLabelFormat={(value) =>
+                          `${value.toLocaleString("vi-VN")} VND`
+                        }
+                      />
+                    </div>
+                    <div className={cx("display-number")}>
+                      <span className={cx("min-value")}>
+                        {formatPrice(filter?.price_min[0] || priceScroll[0])}
+                      </span>
+                      <span className={cx("max-value")}>
+                        {formatPrice(filter?.price_max[1] || priceScroll[1])}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div className={cx("footer")}>
+              <button
+                onClick={handleClickFilter}
+                className={cx("btn-filter")}
+              >
+                Áp dụng
+              </button>
             </div>
           </div>
         </div>

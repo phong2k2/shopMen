@@ -12,6 +12,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  NativeSelect,
   Grid,
 } from "@mui/material";
 import HeaderPageAdmin from "@/components/HeaderPageAdmin";
@@ -48,9 +49,10 @@ const statusProduct = [
 ];
 
 function EditProduct() {
-  const { slug } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [productDetail, setProductDetail] = useState();
+  const [categoryId, setCategoryId] = useState();
   const addMatch = useMatch("/admin/product/create");
   const isAddMode = Boolean(addMatch);
   const [openLoading, setOpenLoading] = useState(false);
@@ -59,7 +61,6 @@ function EditProduct() {
     register,
     formState: { errors },
     reset,
-    watch,
     control,
     handleSubmit,
   } = useForm({
@@ -68,14 +69,19 @@ function EditProduct() {
     defaultValues: productDetail,
   });
 
-  const id = watch("category");
-
   // [Get] Product Details
-  const getProductDetails = useQuery({
-    queryKey: ["productDetail", slug],
-    queryFn: () => productService.getProductDetail(slug),
-    enabled: slug !== undefined,
+  const { data: getProductDetails } = useQuery({
+    queryKey: ["productDetail", id],
+    queryFn: () => productService.getProductDetailByAdmin(id),
+    enabled: id !== undefined,
     staleTime: 10000 * 60,
+  });
+
+  // [Get] Sub Category
+  const { data: getSubCategory } = useQuery({
+    queryKey: ["subCategoryByCategory", categoryId],
+    queryFn: () => subCategoryService.getSubCategoryByCategory(categoryId),
+    enabled: categoryId !== undefined,
   });
 
   useEffect(() => {
@@ -83,36 +89,26 @@ function EditProduct() {
       reset(initValues);
       setProductDetail("");
     } else {
-      if (getProductDetails?.data) {
-        reset(getProductDetails?.data);
-        setProductDetail(getProductDetails?.data);
+      if (getProductDetails) {
+        reset(getProductDetails);
+        setProductDetail(getProductDetails);
+        setCategoryId(getProductDetails.category);
       }
     }
-  }, [getProductDetails?.data, reset, isAddMode]);
+  }, [getProductDetails, reset, isAddMode]);
 
   // Get All Category
-  const categoryQuery = useQuery({
+  const { data: listCategory } = useQuery({
     queryKey: ["category"],
     queryFn: () => categoryService.getAllCategory(),
   });
-
-  // Get Sub Category
-  const subCategoryQuery = useQuery({
-    queryKey: ["subCategory", id],
-    queryFn: () => subCategoryService.getSubCategoryByCategory(id),
-    enabled: id !== undefined && !!id,
-    staleTime: 10000 * 60,
-  });
-
-  const { data: category } = categoryQuery;
-  const { data: subCategory } = subCategoryQuery;
 
   // Mutations Add Product
   const addProductMutation = useMutation({
     mutationFn: (formData) => productService.createProduct(formData),
     onSuccess: () => {
       setOpenLoading(false);
-      navigate(config.privateRouter.indexProduct);
+      navigate(config.PRIVATEROUTER.indexProduct);
       toast.success("Thêm sản phẩm thành công");
     },
     onError: (error) => {
@@ -125,9 +121,9 @@ function EditProduct() {
 
   // Mutations Update Product
   const updateProductMutation = useMutation({
-    mutationFn: (values) => productService.updateProduct(values, slug),
+    mutationFn: (values) => productService.updateProduct(values, id),
     onSuccess: () => {
-      navigate(config.privateRouter.indexProduct);
+      navigate(config.PRIVATEROUTER.indexProduct);
       setOpenLoading(false);
       toast.success("Sửa sản phẩm thành công");
     },
@@ -140,7 +136,8 @@ function EditProduct() {
 
   const handleOnSubmitAddProduct = (values) => {
     setOpenLoading(true);
-
+    if (!values) return;
+    values.salePrice = values.price - values.salePrice;
     if (isAddMode) {
       addProductMutation.mutate(values);
     } else {
@@ -172,17 +169,17 @@ function EditProduct() {
             </Grid>
 
             <Grid item xs={4}>
+              <InputLabel id="category-label">Danh mục</InputLabel>
               <FormControl fullWidth error={!!errors.category}>
-                <InputLabel id="category-label">Danh mục</InputLabel>
                 <Controller
                   render={({ field }) => (
-                    <Select
-                      labelId={`labelId`}
-                      {...field}
-                      value={field.value || ""}
-                    >
-                      {category?.map((item) => (
-                        <MenuItem value={item._id} key={item._id}>
+                    <Select {...field} value={field.value || ""}>
+                      {listCategory?.map((item) => (
+                        <MenuItem
+                          onClick={() => setCategoryId(item._id)}
+                          value={item._id}
+                          key={item._id}
+                        >
                           {item.name}
                         </MenuItem>
                       ))}
@@ -196,17 +193,13 @@ function EditProduct() {
             </Grid>
 
             <Grid item xs={4}>
+              <InputLabel id="category-label">Loại sản phẩm</InputLabel>
               <FormControl fullWidth error={!!errors.subCategory}>
-                <InputLabel id="category-label">Loại sản phẩm</InputLabel>
                 <Controller
                   render={({ field }) => (
-                    <Select
-                      labelId={`labelId`}
-                      {...field}
-                      value={field?.value || ""}
-                    >
-                      {subCategory?.length > 0 ? (
-                        subCategory?.map((item) => (
+                    <Select {...field} value={field?.value || ""}>
+                      {getSubCategory?.length > 0 ? (
+                        getSubCategory?.map((item) => (
                           <MenuItem value={item._id} key={item._id}>
                             {item.name}
                           </MenuItem>
@@ -224,8 +217,8 @@ function EditProduct() {
             </Grid>
 
             <Grid item xs={4}>
+              <InputLabel>Trạng thái</InputLabel>
               <FormControl fullWidth error={!!errors.hot}>
-                <InputLabel>Trạng thái</InputLabel>
                 <Controller
                   render={({ field }) => (
                     <Select {...field} value={field?.value || ""}>

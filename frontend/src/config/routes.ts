@@ -1,10 +1,10 @@
-const privateRouter = {
+const PRIVATEROUTER = {
     dashboard: '/admin/dashboard',
     indexCategory: '/admin/category/index',
     indexSubCategory: '/admin/cate-item/:id',
     indexProduct: '/admin/product/index',
     createProduct: '/admin/product/create',
-    editProduct: '/admin/product/:slug',
+    editProduct: '/admin/product/:id',
     variant: '/admin/variant/:id',
     variantDetails: '/admin/variant-details/:id',
     indexUser: '/admin/user/index',
@@ -13,15 +13,30 @@ const privateRouter = {
     payment: '/admin/payment/index',
 }
 
-const publicRouter = {
+const PUBLICROUTER = {
     home: '/',
     auth: '/auth',
-    product: '/collections/:slug',
-    productDetail: '/products/:slug',
+    product: {
+        index: '/collections',
+        slug: (slug, id) => `/collections/${slug}?id=${id}`,
+        category: (categoryId, categoryName) =>
+          `/collections?categoryId=${categoryId}&categoryName=${encodeURIComponent(categoryName)}`,
+        subCategory: (categoryId, categoryName) =>
+            `/collections?subCategoryId=${categoryId}&categoryName=${encodeURIComponent(categoryName)}`,
+    },
+    productDetail: {
+        index: '/product/:id',
+        slug: (slug, id) => `/product/${slug}?id=${id}`,
+    },
     cart: '/cart',
     order: '/checkout/:id',
-    listOrders: '/order/:status',
-    orderStatistics: '/orderStatistics',
+    listOrders: {
+        index: '/order',
+        status: (status, user) => `/order?status=${status}&user=${user}`,
+    },
+    orderStatistics: {
+        index: '/orderStatistics',
+    },
     account: '/account',
     search: '/search',
     address: '/address',
@@ -32,6 +47,6 @@ const publicRouter = {
 }
 
 export {
-    privateRouter,
-    publicRouter,
+    PRIVATEROUTER,
+    PUBLICROUTER,
 }

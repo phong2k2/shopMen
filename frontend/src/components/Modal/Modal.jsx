@@ -21,7 +21,7 @@ function Modal() {
     showModalCategory,
   } = useDeliveryInfo();
 
-  const user = useSelector((state) => state.auth.login?.currentUser?.data);
+  const user = useSelector((state) => state.auth.login?.currentUser);
   const cart = useSelector((state) => state.cart);
 
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ function Modal() {
   };
 
   const handleClickNextPageCart = () => {
-    navigate(config.publicRouter.cart);
+    navigate(config.PUBLICROUTER.cart);
     setShowModalCart(false);
   };
 
@@ -46,7 +46,7 @@ function Modal() {
   };
 
   const handleClickNextLogin = () => {
-    navigate(config.publicRouter.auth);
+    navigate(config.PUBLICROUTER.auth);
     setShowModalCart(false);
   };
 

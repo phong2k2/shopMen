@@ -12,7 +12,11 @@ import OrderInformation from "./OrderInformation/OrderInformation";
 import DeliveryInformation from "./DeliveryInformation/DeliveryInformation";
 import { useMutation, useQuery } from "react-query";
 import { getAllPayments } from "@/services/paymentService";
-import { getAddressForOrder } from "@/services/addressService";
+import {
+  getAddressDetail,
+  getAddressForOrder,
+  getAllAddress,
+} from "@/services/addressService";
 
 const cx = classNames.bind(styles);
 function Order() {
@@ -23,15 +27,14 @@ function Order() {
   const cart = useSelector((state) => state.cart);
 
   // Lấy địa chỉ của user
-  const addressQuery = useQuery({
+  const { data: addressUserOrder } = useQuery({
     queryKey: ["addressForOrder", userId],
-    queryFn: () => getAddressForOrder(userId),
+    queryFn: () => getAddressForOrder({ userId, status: 1 }),
     enabled: userId !== undefined,
   });
-  const { data: addressUserOrder } = addressQuery;
 
   // Phí vận chuyển
-  const diliveryPrice = useMemo(() => {
+  const shippingCost = useMemo(() => {
     if (cart?.cartTotalAmount > 200000) {
       return 10000;
     } else if (cart?.cartTotalAmount === 0) {
@@ -45,8 +48,8 @@ function Order() {
   const totalPrice = useMemo(() => {
     const price = cart?.cartTotalAmount;
 
-    return Number(price) + Number(diliveryPrice);
-  }, [diliveryPrice, cart?.cartTotalAmount]);
+    return Number(price) + Number(shippingCost);
+  }, [shippingCost, cart?.cartTotalAmount]);
 
   // Lấy phương thức thanh toán
   const getAllPaymentsQuery = useQuery({
@@ -73,14 +76,13 @@ function Order() {
   const addOrderMutations = useMutation({
     mutationFn: (dataOrder) => orderService.createOrder(dataOrder),
     onSuccess: () => {
-      navigate("/order");
+      navigate("/");
       dispatch(clearCart());
       dispatch(getTotals());
     },
   });
   //Tạo đơn hàng
   const handleSubmitCreateOrder = async (values) => {
-    console.log(values);
     const dataOrder = {
       orderItems: cart?.cartItems,
       fullName: values?.name,
@@ -92,7 +94,7 @@ function Order() {
       payment: activePayment?._id,
       totalPrice: totalPrice,
       user: userId,
-      shippingPrice: diliveryPrice,
+      shippingPrice: shippingCost,
     };
     addOrderMutations.mutate(dataOrder);
   };
@@ -117,9 +119,7 @@ function Order() {
       });
     },
     onApprove(data, actions) {
-      return actions.order.capture({}).then((details) => {
-        console.log(details);
-      });
+      return actions.order.capture({}).then((details) => {});
     },
   };
 
@@ -131,18 +131,18 @@ function Order() {
             <div className={cx("col-md-12")}>
               <div className={cx("header-order")}>
                 <h2>
-                  <Link to={config.publicRouter.home}>KENTA.VN</Link>
+                  <Link to={config.PUBLICROUTER.home}>KENTA.VN</Link>
                 </h2>
               </div>
             </div>
             <div className={cx("col-md-6 col-sm-12", "main")}>
               <div className={cx("main-head")}>
                 <h2>
-                  <Link to={config.publicRouter.home}>KENTA.VN</Link>
+                  <Link to={config.PUBLICROUTER.home}>KENTA.VN</Link>
                 </h2>
                 <ul className={cx("breadcrumb")}>
                   <li className={cx("breadcrumb-item")}>
-                    <Link to={config.publicRouter.cart}>Giỏ hàng</Link>
+                    <Link to={config.PUBLICROUTER.cart}>Giỏ hàng</Link>
                   </li>
                   <li className={cx("breadcrumb-item")}>
                     <FontAwesomeIcon icon={faAngleRight} />
@@ -153,7 +153,7 @@ function Order() {
               <div className={cx("main-content")}>
                 <DeliveryInformation
                   addressUserOrder={addressUserOrder}
-                  diliveryPrice={diliveryPrice}
+                  shippingCost={shippingCost}
                   payments={allPayments}
                   activePayment={activePayment}
                   handleChangeActivePayment={handleChangeActivePayment}
@@ -165,7 +165,7 @@ function Order() {
             <div className={cx("col-md-6 col-sm-12", "sidebar")}>
               <OrderInformation
                 cart={cart}
-                diliveryPrice={diliveryPrice}
+                shippingCost={shippingCost}
                 totalPrice={totalPrice}
               />
             </div>

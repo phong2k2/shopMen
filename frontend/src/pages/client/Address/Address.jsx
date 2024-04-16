@@ -43,13 +43,12 @@ function Address() {
   const [district, setDistrict] = useState(initValue);
   const [ward, setWard] = useState(initValue);
   const [activeTab, setActiveTab] = useState("provinces");
-  const [idAddress, setIdAddress] = useState();
+  const [addressId, setAddressId] = useState();
   const [isValid, setIsValid] = useState();
   const [statusAddress, setStatusAddress] = useState();
-  const user = useSelector((state) => state?.auth?.login?.currentUser?.data);
+  const userId = useSelector((state) => state?.auth?.login?.currentUser?._id);
   const queryClient = useQueryClient();
   const checkRef = useRef();
-  const userId = user?._id;
 
   const {
     register,
@@ -62,40 +61,35 @@ function Address() {
   });
 
   // Get Address
-  const addressQuery = useQuery({
+  const { data: listAddress } = useQuery({
     queryKey: ["allAddress", userId],
-    queryFn: () => getAllAddress(userId),
+    queryFn: () => getAllAddress({ userId }),
     enabled: userId !== undefined,
   });
+  console.log("🚀 ~ listAddress:", listAddress);
 
-  const provincesQuery = useQuery({
+  const { data: allProvinces } = useQuery({
     queryKey: "allProvinces",
     queryFn: () => getProvinces(),
   });
 
-  const districtQuery = useQuery({
+  const { data: allDistrict } = useQuery({
     queryKey: ["allDistricts", province?.id],
     queryFn: () => getDistricts(province?.id),
     enabled: province?.id !== undefined,
   });
 
-  const wardQuery = useQuery({
-    queryKey: ["allWards", district?.id],
-    queryFn: () => getWards(district?.id),
-    enabled: district?.id !== undefined,
+  const { data: allWard } = useQuery({
+    queryKey: ["allWards", province?.id, district?.id],
+    queryFn: () => getWards(province?.id),
+    enabled: province?.id !== undefined,
   });
 
-  const addressDetailQuery = useQuery({
-    queryKey: ["addressDetail", idAddress],
-    queryFn: () => getAddressDetail(idAddress),
-    enabled: idAddress !== undefined,
+  const { data: addressDetail } = useQuery({
+    queryKey: ["addressDetail", addressId],
+    queryFn: () => getAddressDetail({ addressId }),
+    enabled: addressId !== undefined,
   });
-
-  const { data: provinces } = provincesQuery;
-  const { data: itemDistrict } = districtQuery;
-  const { data: itemWard } = wardQuery;
-  const { data: listAddress } = addressQuery;
-  const { data: addressDetail } = addressDetailQuery;
 
   const handleClickActive = (active) => {
     setActiveTab(active);
@@ -156,7 +150,7 @@ function Address() {
   const handleClickGetEdit = (id) => {
     setShow(true);
     setIsValid(false);
-    setIdAddress(id);
+    setAddressId(id);
   };
 
   // Crate
@@ -289,16 +283,14 @@ function Address() {
             </li>
           ))}
         </ul>
-        <div className={cx("wrap-btn")}>
-          <button
-            onClick={() => {
-              setShow(true);
-              setIsValid(true);
-            }}
-            className={cx("btn", "btn-add-address")}
-          >
-            Thêm địa chỉ
-          </button>
+        <div
+          onClick={() => {
+            setShow(true);
+            setIsValid(true);
+          }}
+          className={cx("wrap-btn")}
+        >
+          <button className={cx("btn-title")}>Thêm địa chỉ</button>
           <AddIcon
             sx={{
               fontSize: 16,
@@ -313,7 +305,7 @@ function Address() {
           setShow(false);
         }}
         className={cx("modal", "fade", {
-          show: show,
+          "show-modal": show,
         })}
       >
         <div
@@ -374,15 +366,17 @@ function Address() {
                         className={cx("select-custom-group")}
                       >
                         <div className={cx("select-custom-country")}>
-                          {district?.name && province?.name
-                            ? `${ward?.name}, ${district?.name}, ${province?.name}`
+                          {province?.name
+                            ? `${ward?.name || "..."}, ${
+                                district?.name || "..."
+                              }, ${province?.name}`
                             : "Tỉnh/Thành phố, Quận/Huyện, Phường/Xã *"}
                           <i className="bi bi-chevron-down"></i>
                         </div>
                         <div
                           onClick={(e) => e.stopPropagation()}
                           className={cx("country-options", {
-                            show: showSelectCountry,
+                            "show-modal": showSelectCountry,
                           })}
                         >
                           <div className={cx("header-tabs")}>
@@ -416,15 +410,15 @@ function Address() {
                           <div className={cx("body-result")}>
                             {activeTab === "provinces" && (
                               <ul className={cx("list-country", "list-city")}>
-                                {provinces?.map((itemProvince) => (
+                                {allProvinces?.map((itemProvince) => (
                                   <li
-                                    data-id={itemProvince?.code}
+                                    data-id={itemProvince?.id}
                                     data-name={itemProvince?.name}
                                     onClick={handleClickActiveProvinces}
-                                    key={itemProvince?.code}
+                                    key={itemProvince?.id}
                                     className={cx("item-list")}
                                   >
-                                    {itemProvince?.name}
+                                    {itemProvince?.full_name}
                                   </li>
                                 ))}
                               </ul>
@@ -434,15 +428,15 @@ function Address() {
                               <ul
                                 className={cx("list-country", "list-district")}
                               >
-                                {itemDistrict?.districts?.map((district) => (
+                                {allDistrict?.map((district) => (
                                   <li
-                                    key={district?.code}
-                                    data-id={district?.code}
+                                    key={district?.id}
+                                    data-id={district?.id}
                                     data-name={district?.name}
                                     onClick={handleClickActiveDistrict}
                                     className={cx("item-list")}
                                   >
-                                    {district?.name}
+                                    {district?.full_name}
                                   </li>
                                 ))}
                               </ul>
@@ -450,15 +444,15 @@ function Address() {
 
                             {activeTab === "ward" && (
                               <ul className={cx("list-country", "list-ward")}>
-                                {itemWard?.wards?.map((ward) => (
+                                {allWard?.map((ward) => (
                                   <li
-                                    key={ward?.code}
-                                    data-id={ward?.code}
+                                    key={ward?.id}
+                                    data-id={ward?.id}
                                     data-name={ward?.name}
                                     onClick={handleClickActiveWard}
                                     className={cx("item-list")}
                                   >
-                                    {ward?.name}
+                                    {ward?.full_name}
                                   </li>
                                 ))}
                               </ul>
@@ -480,12 +474,16 @@ function Address() {
                 <div className={cx("form-group")}>
                   <div className={cx("form-check")}>
                     <input
+                      id="addressDefault"
                       type="checkbox"
                       ref={checkRef}
                       checked={!!statusAddress}
                       onChange={(e) => setStatusAddress(e.target.checked)}
                     />
-                    <label htmlFor="" className={cx("form-check-label")}>
+                    <label
+                      htmlFor="addressDefault"
+                      className={cx("form-check-label")}
+                    >
                       Đặt làm địa chỉ mặc định
                     </label>
                   </div>

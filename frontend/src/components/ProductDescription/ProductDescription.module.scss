@@ -1,0 +1,39 @@
+.tab-pane {
+  width: 100%;
+
+  .item {
+    margin-top: 20px;
+    width: 100%;
+    max-height: 550px;
+    overflow: hidden;
+    position: relative;
+  }
+}
+
+.bg-content::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, #f9fafa);
+  height: 200px;
+}
+
+.see-more {
+  width: 100%;
+  padding: 10px;
+  z-index: 99;
+
+  button {
+    display: block;
+    margin: 0 auto;
+    background-color: transparent;
+    font-size: 1.4rem;
+    padding: 10px 20px;
+    border: 1px solid rgb(25, 136, 236);
+    border-radius: 4px;
+    color: rgb(25, 136, 236);
+    font-weight: 600;
+  }
+}

@@ -77,7 +77,7 @@ function DetailOrder() {
   return (
     <>
       <LoadingBackdrop openLoading={openLoading} />
-      <Container>
+      <Container sx={{marginBottom: 5}}>
         <Typography variant="h4" sx={{ fontWeight: "bold" }} className="pb-4 ">
           Đơn hàng chi tiết
         </Typography>
@@ -151,6 +151,7 @@ function DetailOrder() {
                       sx={{
                         textAlign: "center",
                         marginLeft: "auto",
+                        marginRight: 2,
                         float: "right",
                       }}
                       variant="contained"

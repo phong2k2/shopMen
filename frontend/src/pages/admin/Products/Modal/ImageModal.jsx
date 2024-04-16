@@ -29,6 +29,12 @@ import InputField from "@/components/form-controls/InputField";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import EmptyBox from "@/components/EmptyBox";
+import { pathProcessing } from "@/helpers/image";
+
+const initValues = {
+  image: "",
+  productColor: "",
+};
 
 function ImageModal({
   onSubmitAddImage,
@@ -58,14 +64,14 @@ function ImageModal({
 
   useEffect(() => {
     if (isAddMode) {
-      // reset(initValues);
+      reset(initValues);
     } else {
       if (getProductDetailsColor?.data) {
         setImageDetail(getProductDetailsColor?.data);
         reset(getProductDetailsColor?.data);
       }
     }
-  }, [getProductDetailsColor?.data, reset]);
+  }, [getProductDetailsColor?.data, isAddMode, reset]);
 
   // Show avatar at the img
   const handlePreviewAvatar = (e) => {
@@ -107,8 +113,8 @@ function ImageModal({
                   <TableCell>{itemColor?.nameImage}</TableCell>
                   <TableCell>
                     <img
-                      src={itemColor?.image?.url}
-                      alt={itemColor?.nameImage}
+                      src={pathProcessing(itemColor?.image)}
+                      alt={itemColor?.image}
                     />
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
@@ -165,7 +171,7 @@ function ImageModal({
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <InputLabel id="category-label">Tên hình ảnh</InputLabel>
                 <InputField
                   name="nameImage"
@@ -174,8 +180,8 @@ function ImageModal({
                   sx={{ marginTop: "0", paddingTop: 0 }}
                   margin="normal"
                 />
-              </Grid>
-              <Grid item xs={12}>
+              </Grid> */}
+              {/* <Grid item xs={12}>
                 <InputLabel id="category-label">Ảnh hiển thị</InputLabel>
                 <img
                   src={
@@ -184,7 +190,7 @@ function ImageModal({
                   width="30%"
                   alt="ko có anh"
                 />
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <InputLabel id="category-label">Hình ảnh</InputLabel>
                 <InputField

@@ -10,7 +10,7 @@ class HttpRequest {
         });
 
         this.httpRequest.interceptors.request.use((config) => {
-            const accessToken = store?.getState()?.auth?.login?.currentUser?.accessToken;
+            const accessToken = store?.getState()?.auth?.login?.tokens?.accessToken;
             if (accessToken) {
               config.headers["Authorization"] = `Bearer ${accessToken}`;
             }
@@ -27,13 +27,13 @@ class HttpRequest {
               if (error.response.status === 401 ) {
                   axios.interceptors.response.eject(this.httpRequest);
                   try {
-                    const response = await axios.post('http://localhost:3000/api/auth/refresh', null, {
+                    const response = await axios.post('http://localhost:3000/v1/auth/refresh', null, {
                       withCredentials: true,
                     })
                     const responseData = response.data
                       const refreshUser = {
-                        ...user,
-                        accessToken: responseData.accessToken,
+                        currentUser: user,
+                        tokens: responseData.accessToken,
                       };
                     
                       dispatch(loginSuccess(refreshUser));
@@ -56,10 +56,10 @@ class HttpRequest {
           }  
     
 
-    async get(path, options) {
+    async get(path, params) {
         try {
             const response = await this.httpRequest.get(path, {
-              ...options,
+              params,
               withCredentials: true,
           });
             return response.data;
@@ -68,9 +68,9 @@ class HttpRequest {
         }
     }
 
-    async post(path, options) {
+    async post(path, params) {
         try {
-          const response = await this.httpRequest.post(path, options, {
+          const response = await this.httpRequest.post(path, params, {
             withCredentials: true,
         });
           return response.data;
@@ -79,9 +79,9 @@ class HttpRequest {
         }
       }
     
-      async update(path, options) {
+      async update(path, params) {
         try {
-          const response = await this.httpRequest.put(path, options, {
+          const response = await this.httpRequest.put(path, params, {
             withCredentials: true,
         });
           return response.data;
@@ -90,9 +90,9 @@ class HttpRequest {
         }
       }
     
-      async patch(path, options) {
+      async patch(path, params) {
         try {
-          const response = await this.httpRequest.patch(path, options, {
+          const response = await this.httpRequest.patch(path, params, {
             withCredentials: true,
         });
           return response.data;
@@ -101,9 +101,9 @@ class HttpRequest {
         }
       }
     
-      async delete(path, options) {
+      async delete(path, params) {
         try {
-          const response = await this.httpRequest.delete(path, options, {
+          const response = await this.httpRequest.delete(path, params, {
             withCredentials: true,
         });
           return response.data;

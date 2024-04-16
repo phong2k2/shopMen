@@ -26,67 +26,82 @@
     padding: 20px;
     position: relative;
     padding-right: 40px;
-    font-weight: 600;
-    font-size: 1.6rem;
     border-bottom: 1px solid rgba(0,0,0,0.2);
-    font-family: CriteriaCF;
+}
 
-    
-    .close {
+.title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.close {
+    position: absolute;
+    top: 13px;
+    right: 20px;
+    width: 35px;
+    height: 35px;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    cursor: pointer;
+
+}
+
+.bar{
+    position: relative;
+
+    &::after {
+        content: '';
         position: absolute;
-        top: 13px;
-        right: 20px;
-        width: 35px;
-        height: 35px;
-        background-color: transparent;
-        border: none;
-        box-shadow: none;
-        outline: none;
-        cursor: pointer;
-
-        .bar{
-            position: relative;
-
-            &::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                width: 20px;
-                height: 3px;
-                background-color: #6f6868;
-                transform: rotate(-45deg);
-            }
-
-            &::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                width: 20px;
-                height: 3px;
-                background-color: #6f6868;
-                transform: rotate(45deg);
-            }
-        }
+        top: 0;
+        width: 20px;
+        height: 3px;
+        background-color: #6f6868;
+        transform: rotate(-45deg);
     }
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 20px;
+        height: 3px;
+        background-color: #6f6868;
+        transform: rotate(45deg);
+    }
+}
+
+.filter {
+    height: 100%;
 }
 
 .content {
     padding-top: 0;
+    height: 100%;
 }
 
 .group {
-    margin-left: 10px;
+    height: 100%;
+}
+
+.group-menu-action {
+    display: flex;
+    flex-direction: column;
     padding: 0 30px;
+    min-height: 100%;
 }
 
 .filter-box {
-    margin-top: 40px;
     width: 100%;
-
+    margin-bottom: 20px;
 }
 
 .accordion-header h2 {
-    font-family: "CriteriaCF",
+    font-size: 1.6rem;
+    font-weight: 400;
 }
 
 .sub-title span {
@@ -108,38 +123,38 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    .min-value {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        border: 1px solid #000;
-        padding: 3px 10px;
-        flex: 1 1;
-        border-radius: 3px;
-        margin-right: 10px;
-        font-size: 1.4rem;
-    }
-
-    .max-value {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        border: 1px solid #000;
-        padding: 3px 10px;
-        flex: 1 1;
-        border-radius: 3px;
-        font-size: 1.4rem;
-    }
 } 
+
+.min-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid #000;
+    padding: 3px 10px;
+    flex: 1 1;
+    border-radius: 3px;
+    margin-right: 10px;
+    font-size: 1.4rem;
+}
+
+.max-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid #000;
+    padding: 3px 10px;
+    flex: 1 1;
+    border-radius: 3px;
+    font-size: 1.4rem;
+}
 
 .filter-box-color {
     margin-top: 25px;
 }
 
-.list-chosee {
+.list-size {
     padding: 0;
     margin: 0;
     display: flex;

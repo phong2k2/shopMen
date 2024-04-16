@@ -4,7 +4,7 @@ import { formatPrice } from "@/components/formatData/formatData";
 import PropTypes from "prop-types";
 
 const cx = classNames.bind(styles);
-function OrderInformation({ cart, diliveryPrice, totalPrice }) {
+function OrderInformation({ cart, shippingCost, totalPrice }) {
   return (
     <div className={cx("sidebar-content")}>
       <div className={cx("order-summary-selection")}>
@@ -45,7 +45,7 @@ function OrderInformation({ cart, diliveryPrice, totalPrice }) {
             </p>
             <p>
               Phí vận chuyển
-              <span>{formatPrice(diliveryPrice)}</span>
+              <span>{formatPrice(shippingCost)}</span>
             </p>
           </div>
           <div className={cx("total")}>
@@ -62,7 +62,7 @@ function OrderInformation({ cart, diliveryPrice, totalPrice }) {
 
 OrderInformation.propTypes = {
   cart: PropTypes.object,
-  diliveryPrice: PropTypes.number,
+  shippingCost: PropTypes.number,
   totalPrice: PropTypes.number,
 };
 

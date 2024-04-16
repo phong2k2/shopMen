@@ -1,37 +1,32 @@
+import { useMemo, useState } from "react";
 import classNames from "classnames/bind";
 import styles from "./ListProSearch.module.scss";
-import { useEffect, useMemo, useState } from "react";
-import * as searchServices from "@/services/searchServices";
+import * as productService from "@/services/productService";
 import { useSearchParams } from "react-router-dom";
 import ProductItem from "@/components/ProductItem";
 import { Pagination } from "@mui/material";
+import { useQuery } from "react-query";
 
 const cx = classNames.bind(styles);
 function ListProSearch() {
-  const params = {};
-  const [listSearch, setListSearch] = useState([]);
   const [page, setPage] = useState(1);
   let [searchParams] = useSearchParams();
+  const name = searchParams.get("name");
 
-  const q = searchParams.get("q");
-  const type = searchParams.get("type");
+  const { data: listSearch } = useQuery({
+    queryKey: ["search", name, page],
+    queryFn: () => {
+      return productService.getAllProducts({
+        name,
+        page,
+        limit: 6
+      });
+    },
+  });
+
   const pageCount = useMemo(() => {
-    return Math.ceil(listSearch?.total / 10);
-  }, [listSearch?.total]);
-
-  useEffect(() => {
-    const fetchApiProductSearch = async () => {
-      try {
-        const res = await searchServices.search(q, type, page);
-        if (res) {
-          setListSearch(res);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchApiProductSearch();
-  }, [page, params.q]);
+    return Math.ceil(listSearch?.length / 10);
+  }, [listSearch]);
 
   const handlePageChange = ({ selected }) => {
     setPage(selected);
@@ -71,16 +66,16 @@ function ListProSearch() {
               </div>
 
               <div className={cx("col-md-12")}>
-                <h3>{`Từ khóa tìm kiếm: ${q}`}</h3>
+                <h3>{`Từ khóa tìm kiếm: ${name}`}</h3>
               </div>
               <span className={cx("dart-line")}></span>
             </div>
             {/* List Product */}
             <div className={cx("result")}>
-              <h4>{`Tìm được ${listSearch.total} kết quả`}</h4>
+              <h4>{`Tìm được ${listSearch?.length} kết quả`}</h4>
             </div>
             <div className={cx("row")}>
-              {listSearch?.data?.map((itemPro, index) => {
+              {listSearch?.map((itemPro, index) => {
                 return <ProductItem key={index} itemPro={itemPro} />;
               })}
             </div>

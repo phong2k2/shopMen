@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Typography } from "@mui/material";
 import * as productColorService from "@/services/colorService";
@@ -5,7 +6,6 @@ import * as productSizeService from "@/services/sizeSercvice";
 import { useMutationHooks } from "@/hook/useMutationHook";
 import ImageModal from "./Modal/ImageModal";
 import { useQuery, useQueryClient } from "react-query";
-import { useState } from "react";
 import SizeModal from "./Modal/SizeModal";
 
 function VariantProduct() {
@@ -16,6 +16,7 @@ function VariantProduct() {
   const [isAddMode, setIsAddMode] = useState(true);
 
   const handleOpenModal = () => {
+    setIsAddMode(true);
     setOpen(true);
   };
 
@@ -25,6 +26,7 @@ function VariantProduct() {
 
   const handleOpenSizeModal = () => {
     setOpenSize(true);
+    setIsAddMode(true);
   };
 
   const handleCloseSizeModal = () => {
@@ -53,7 +55,6 @@ function VariantProduct() {
   });
 
   const handleUpdateImage = (id) => {
-    console.log(id);
     setOpen(true);
     setIsAddMode(false);
     getProductDetailsColor.mutate(id);
@@ -106,7 +107,6 @@ function VariantProduct() {
         },
       });
     } else {
-      console.log("ok");
       const requestData = {
         newData: formData,
         id: values?._id,
@@ -203,23 +203,23 @@ function VariantProduct() {
       <ImageModal
         onSubmitAddImage={handleOnSubmitAddImage}
         getAllImages={getAllImages}
+        getProductDetailsColor={getProductDetailsColor}
         handleOpenModal={handleOpenModal}
         handleCloseModal={handleCloseModal}
         handleUpdateImage={handleUpdateImage}
         handleDeleteImage={handleDeleteImage}
-        getProductDetailsColor={getProductDetailsColor}
         open={open}
         isAddMode={isAddMode}
       />
       {/* Add Size */}
       <SizeModal
         onSubmitAddSize={onSubmitAddSize}
+        getSizeDetail={getSizeDetail}
+        getAllSizes={getAllSizes}
         handleOpenModal={handleOpenSizeModal}
         handleCloseModal={handleCloseSizeModal}
-        getProductDetailsSize={getSizeDetail}
         handleDeleteSize={handleDeleteSize}
         handleUpdateSize={handleUpdateSize}
-        getAllSizes={getAllSizes}
         open={openSize}
         isAddMode={isAddMode}
       />

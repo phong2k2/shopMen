@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
   AccordionCustom,
@@ -8,21 +8,14 @@ import {
   AccordionSummaryCustom,
 } from "./CustomAccordion";
 import { useDeliveryInfo } from "@/hook/useContext";
+import { PUBLICROUTER } from "@/config/routes";
 
 export const CustomizeAccordion = ({ listCategory }) => {
   const [expanded, setExpanded] = useState("panel1");
   const { setShowModalFilter } = useDeliveryInfo();
-  const navigate = useNavigate();
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
-  };
-
-  const handleClickShowProduct = (subItem) => {
-    navigate(`/collections/${subItem?.slug}`, {
-      state: { stateNav: subItem },
-    });
-    setShowModalFilter(false);
   };
 
   return (
@@ -39,7 +32,6 @@ export const CustomizeAccordion = ({ listCategory }) => {
           sx={{
             fontWeight: 400,
             fontSize: 15,
-            fontFamily: "CriteriaCF",
           }}
         >
           Danh mục
@@ -61,17 +53,24 @@ export const CustomizeAccordion = ({ listCategory }) => {
             </AccordionSummaryCustom>
             {item?.subCategory?.map((subItem) => (
               <AccordionDetailsCustom key={subItem?._id}>
-                <Typography
-                  sx={{
-                    fontSize: 13,
-                    cursor: "pointer",
-                    textTransform: "capitalize",
-                  }}
-                  variant="button"
-                  onClick={() => handleClickShowProduct(subItem)}
+                <Link 
+                  style={{
+                    color: '#000'
+                  }} 
+                  to={PUBLICROUTER.product.subCategory(subItem?._id, subItem?.name)}
+                  onClick={()=>setShowModalFilter(false)} 
                 >
-                  {subItem?.name}
-                </Typography>
+                  <Typography
+                    sx={{
+                      fontSize: 13,
+                      cursor: "pointer",
+                      textTransform: "capitalize",
+                    }}
+                    variant="button"
+                  >
+                    {subItem?.name}
+                  </Typography>
+               </Link>
               </AccordionDetailsCustom>
             ))}
           </AccordionCustom>

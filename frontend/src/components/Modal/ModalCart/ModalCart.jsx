@@ -30,11 +30,12 @@ function ModalCart({
           <tbody>
             {cart?.cartItems?.length ? (
               cart?.cartItems?.map((cartItem, index) => {
+                console.log("🚀 ~ cartItem:", cartItem);
                 return (
-                  <tr key={index} className={cx("item-1")}>
-                    <td className={cx("img")}>
+                  <tr key={index} className={cx("card-item")}>
+                    <td className={cx("pro-img")}>
                       <a onClick={() => handleNextPage(cartItem?.slug)}>
-                        <img src={`${cartItem?.image}`} alt="anh san pham" />
+                        <img src={cartItem?.image} alt="anh san pham" />
                       </a>
                     </td>
                     <td className={cx("content-cart")}>
@@ -71,11 +72,11 @@ function ModalCart({
             )}
           </tbody>
         </table>
-        <span className={cx("line")}></span>
 
         <div className={cx("table-total")}>
-          <div className={cx("total")}>
-            <h3>Tổng tiền</h3>
+          <span className={cx("line")}></span>
+          <div className={cx("total-price")}>
+            <h3>Tổng tiền:</h3>
             <span>{formatPrice(cart?.cartTotalAmount)}</span>
           </div>
 

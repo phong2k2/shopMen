@@ -68,7 +68,7 @@ function FormLogin({ handleSubmitLogin, statusAuth }) {
         />
       </div>
       <div className="auth-actions">
-        <Link to={config.publicRouter.forGotPassword}>Quên mật khẩu?</Link>
+        <Link to={config.PUBLICROUTER.forGotPassword}>Quên mật khẩu?</Link>
       </div>
       <button type="submit" className="btn btn-custom">
         Đăng nhập

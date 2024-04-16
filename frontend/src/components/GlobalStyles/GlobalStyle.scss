@@ -1,7 +1,6 @@
 @import 'normalize.css';
 // @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;1,500;1,700;1,900&display=swap');
 
-
 $mobile-size: "only screen and (max-width: 767px)";
 $tablet-size: "only screen and (min-width: 768px) and (max-width: 992px)";
 $desktop-size: "only screen and (min-width: 992px)";
@@ -14,6 +13,8 @@ $desktop-size: "only screen and (min-width: 992px)";
     --price-color: rgb(230, 153, 153);
     --grey: #333;
     --color-footer: #000000;
+    --color-price: #ff2c26;
+    --color-price-del: #878c8f;
 
     --background-color-main: #f9fafa
 
@@ -56,6 +57,10 @@ a[href] {
     color: var(var(--text-color));
     text-decoration: none;
     cursor: pointer;
+}
+
+img {
+  max-width: 100%;
 }
 
 // Font embedded 
@@ -147,38 +152,54 @@ a[href] {
 
 .MuiOutlinedInput-root input {
   color: #000;
-  padding: 25.5px 14px !important; 
+  padding: 22px 14px;
+  font-size: 1.6rem;
 }
 
+// Swipper css
 
+.productHotSwiper .swiper-wrapper {
+  padding-bottom: 5rem !important;
+}
 
-// @media only screen and (min-width: 960px) {
-//   /* styles for browsers larger than 960px; */
-//   .container {
-//     max-width: 1440px !important;
-//   }
-// }
-// @media only screen and (min-width: 1440px) {
-//   /* styles for browsers larger than 1440px; */
-// }
-// @media only screen and (min-width: 2000px) {
-//   /* for sumo sized (mac) screens */
-// }
-// @media only screen and (max-device-width: 480px) {
-//  /* styles for mobile browsers smaller than 480px; (iPhone) */
-// }
-// @media only screen and (device-width: 768px) {
-//  /* default iPad screens */
-// }
-// /* different techniques for iPad screening */
-// @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) {
-// /* For portrait layouts only */
-// }
+.productHotSwiper .swiper-button-next, .productHotSwiper .swiper-button-prev {
+  width: 40px;
+  height: 40px;
+  background: rgba(0,0,0,0.1);
+  color: #fff !important;
+  border-radius: 40px;
+  opacity: 1;
+  top: 42%;
+}
 
-// @media only screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape) {
-// /* For landscape layouts only */
-// }
+.productHotSwiper .swiper-button-next:after, .productHotSwiper .swiper-button-prev:after {
+  font-size: 16px;
+}
 
+.productHotSwiper .swiper-button-next:hover, .productHotSwiper .swiper-button-prev:hover {
+  background: #fff;
+  color: #000 !important;
+}
+
+.swiper-horizontal>.swiper-scrollbar {
+  position: absolute;
+  left: 1%;
+  bottom: 3px;
+  z-index: 50;
+  height: 2px !important;
+  width: 98%;
+}
+
+.swiper-horizontal > .swiper-scrollbar {
+  height: 2px;
+  width: 100%;
+}
+
+.swiper-scrollbar-drag {
+  background: #000 !important;
+}
+
+// response
 @media #{$mobile-size} {
   .container {
     padding-right: 15px;

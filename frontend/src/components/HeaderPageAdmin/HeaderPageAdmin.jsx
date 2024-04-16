@@ -5,9 +5,6 @@ function HeaderPageAdmin({title, subTitle}) {
         <div className="">
             <div className="">
               <h4 className="card-title">{title}</h4>
-              <p className="card-description">
-                {subTitle}
-              </p>
             </div>
           </div>
      );

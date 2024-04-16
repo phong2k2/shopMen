@@ -21,6 +21,7 @@ import {
   Grid,
   Tooltip,
 } from "@mui/material";
+import { toast } from "react-toastify";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import InputField from "@/components/form-controls/InputField";
@@ -32,7 +33,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import EmptyBox from "@/components/EmptyBox";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
-import { toast } from "react-toastify";
+import styles from "./styles";
+import { pathProcessing } from "@/helpers/image";
 
 const initValues = {
   category: "",
@@ -227,21 +229,29 @@ function SubCategory() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>STT</TableCell>
-                  <TableCell>Màu sắc sản phẩm</TableCell>
-                  <TableCell>Giá thêm</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>STT</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>
+                    Tên danh mục con
+                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>Giá thêm</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>Thao tác</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {subCategory?.map((item, index) => (
-                  <TableRow key={item?._id}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item?.name}</TableCell>
-                    <TableCell>
+                  <TableRow sx={{ textAlign: "center" }} key={item?._id}>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      {index + 1}
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      {item?.name}
+                    </TableCell>
+                    <TableCell
+                      sx={{ display: "flex", justifyContent: "center" }}
+                    >
                       <img
                         className="img-thumbnail"
-                        src={item?.image?.url}
+                        src={pathProcessing(item?.image)}
                         alt=""
                       />
                     </TableCell>
@@ -316,6 +326,7 @@ function SubCategory() {
                     errors={errors}
                     type="file"
                     onChange={handlePreviewAvatar}
+                    sx={styles.inputImage}
                   />
                 </Grid>
                 {/* <Grid xs={6}>

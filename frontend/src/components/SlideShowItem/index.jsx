@@ -3,55 +3,65 @@ import {
   Swiper as SwiperContainer,
   SwiperSlide as OriginalSwiperSlide,
 } from "swiper/react";
+import { Link } from "react-router-dom";
 import { Scrollbar } from "swiper/modules";
 import { Navigation } from "swiper/modules";
-import "./SlideShowItem.scss";
 import "swiper/css";
 import "swiper/css/scrollbar";
 import "swiper/css/navigation";
 import "swiper/swiper-bundle.css";
+import { PUBLICROUTER } from "@/config/routes";
+import classNames from "classnames/bind";
+import styles from "./SlideShowItem.module.scss";
+import { formatPrice } from "../formatData/formatData";
 
-function SlideShowItem({ allProduct, name, handleClickNavigate }) {
-  const renderImages = (proItem) => {
-    const imageProduct = proItem?.color[0]?.gallery;
-    if (imageProduct && imageProduct.length >= 2) {
-      const twoImages = imageProduct.slice(0, 2);
-      const imageElements = twoImages.map((itemImage) => (
-        <img
-          key={itemImage._id}
-          src={itemImage.image.url}
-          alt={`image-${itemImage._id}`}
-        />
-      ));
-      return <>{imageElements}</>;
-    }
-    return null;
-  };
+const cx = classNames.bind(styles);
+function SlideShowItem({ allProduct }) {
   return (
     <SwiperContainer
-      spaceBetween={20}
+      spaceBetween={18}
       navigation={true}
-      scrollbar={true}
-      slidesPerView={2}
-      breakpoints={{
-        "@1.50": {
-          slidesPerView: 4,
-          spaceBetween: 50,
-        },
-      }}
+      slidesPerView={5}
       modules={[Scrollbar, Navigation]}
-      className="productHotSwiper swiper-horizontal"
       loop={true}
       direction={"horizontal"}
     >
       {allProduct?.map((proItem) => {
         return (
-          <OriginalSwiperSlide key={proItem?._id}>
-            <div className="item">
-              <a onClick={() => handleClickNavigate(proItem, name)}>
-                <div className="img-block"> {renderImages(proItem)}</div>
-                <h3 className="name-product">{proItem?.name}</h3>
-              </a>
+          <OriginalSwiperSlide style={{ height: "auto" }} key={proItem?._id}>
+            <div className={cx("product-loop")}>
+              <div className={cx("product-inner")}>
+                <div className={cx("product-image")}>
+                  <Link
+                    className={cx("lazy-img")}
+                    to={PUBLICROUTER.productDetail.slug(
+                      proItem?.slug,
+                      proItem?._id
+                    )}
+                  >
+                    <img src={proItem?.thumbnail} alt="image1" />
+                  </Link>
+                </div>
+                <div className={cx("product-detail")}>
+                  <Link
+                    to={PUBLICROUTER.productDetail.slug(
+                      proItem?.slug,
+                      proItem?._id
+                    )}
+                    className={cx("product-name")}
+                  >
+                    <h3 className={cx("name-desc")}>{proItem?.name}</h3>
+                  </Link>
+                  <div className={cx("product-price")}>
+                    <span className={cx("price")}>
+                      {formatPrice(proItem?.salePrice)}
+                    </span>
+                    <span className={cx("price-del")}>
+                      {formatPrice(proItem?.price)}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
           </OriginalSwiperSlide>
         );

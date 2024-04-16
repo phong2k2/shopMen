@@ -1,0 +1,11 @@
+.tab-pane {
+  width: 100%;
+
+  .item {
+    margin-top: 20px;
+    width: 100%;
+    max-height: 550px;
+    overflow: hidden;
+    position: relative;
+  }
+}

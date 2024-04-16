@@ -1,3 +1,5 @@
+import { useQuery } from "react-query";
+import { useSearchParams } from "react-router-dom";
 import classNames from "classnames/bind";
 import styles from "./ListOrders.module.scss";
 import { useState } from "react";
@@ -5,14 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import * as orderService from "@/services/orderService";
 import { formatPrice } from "@/components/formatData/formatData";
-import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
 
 const cx = classNames.bind(styles);
 function ListOrders() {
-  const { status } = useParams();
+  const [searchParams] = useSearchParams();
   const [idShowItem, setIdShowItem] = useState(null);
   const [idCancer, serIdCancer] = useState("");
+  const status = searchParams.get("status");
+  const user = searchParams.get("user");
 
   const handleShowDetailOrder = (index) => {
     if (idShowItem === index) {
@@ -36,8 +38,8 @@ function ListOrders() {
     }
   };
   const { data: listOrderStatus } = useQuery({
-    queryKey: ["orderStatus", status],
-    queryFn: () => orderService.getAllOrderStatus(status),
+    queryKey: ["orderStatus", status, user],
+    queryFn: () => orderService.getAllOrderStatus({ status, user }),
     enabled: status !== undefined,
   });
   console.log(
@@ -77,7 +79,7 @@ function ListOrders() {
                 </tr>
                 <tr
                   className={cx("info-order", {
-                    show: idShowItem === index,
+                    "show-modal": idShowItem === index,
                   })}
                 >
                   <td colSpan={5}>
