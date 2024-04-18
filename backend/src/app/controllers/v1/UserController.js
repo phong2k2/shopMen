@@ -14,13 +14,9 @@ const UserController = {
   getMeHandler: async (req, res, next) => {
     try {
       const userId = req.user.id;
+
       const response = await UserService.getDetailUser(userId);
-      const accessToken = req.cookies.accessToken;
-      const newRes = {
-        ...response,
-        accessToken,
-      };
-      res.status(StatusCodes.OK).json(newRes);
+      res.status(StatusCodes.OK).json(response);
     } catch (error) {
       next(error);
     }

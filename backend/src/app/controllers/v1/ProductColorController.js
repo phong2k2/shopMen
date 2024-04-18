@@ -33,7 +33,7 @@ const ProductColors = {
     // Get Detail Color
     getColorDetail: async (req, res, next) => {
       try {
-          const {id} = req.params
+          const { id } = req.params
           const response = await ProductColorService.getColorDetail(id)
           res.status(StatusCodes.OK).json(response);
       }catch (error) {

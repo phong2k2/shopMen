@@ -84,6 +84,7 @@ const getProduct = (data) => {
       name: subCategory?.name || null,
       _id: subCategory?._id || null,
     },
+    thumbnail: getImageThumbnail(color[0]?.gallery),
     createdAt,
     updatedAt,
   };

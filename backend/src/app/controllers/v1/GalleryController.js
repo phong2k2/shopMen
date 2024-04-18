@@ -45,7 +45,6 @@ const GalleryController = {
     try {
       const { filename } = req.file;
       const { id } = req.params;
-      console.log(filename);
       const response = await GalleryService.updateGallery(
         id,
         req.body,

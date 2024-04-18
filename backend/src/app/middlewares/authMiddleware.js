@@ -15,11 +15,17 @@ const middlewareController = {
     if (accessToken) {
       jwt.verify(accessToken, env.JWT_ACCESS_KEY, (err, user) => {
         if (err) {
-          return res.status(401).json({
-            message: "The token does not exist",
-            status: "ERROR",
-          });
+          if (err.name === "TokenExpiredError") {
+            return res.status(401).json({
+              message: "The token has expired",
+            });
+          } else {
+            return res.status(401).json({
+              message: "The token is invalid",
+            });
+          }
         }
+
         req.user = user;
         next();
       });

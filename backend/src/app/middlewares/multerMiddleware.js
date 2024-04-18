@@ -6,9 +6,6 @@ const ApiError = require("../../utils/ApiError");
 const uploadImageUserMiddleware = (() => {
   const storage = multer.diskStorage({
     filename: function (req, file, cb) {
-      console.log(
-        file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-      );
       cb(
         null,
         file.fieldname + "-" + Date.now() + path.extname(file.originalname)
@@ -45,8 +42,6 @@ const uploadMiddleware = (() => {
       cb(null, file.originalname);
     },
     destination: function (req, file, cb) {
-      console.log(req.body);
-
       cb(null, path.join(__dirname, "../../uploads/images"));
     },
   });
