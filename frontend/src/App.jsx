@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { adminRoutes, privateRoutes, publicRoutes } from "@/routes/routes";
 import PublicLayout from "@/customRoutes/PublicLayout";
 import PrivateLayout from "@/customRoutes/PrivateLayout";
@@ -8,9 +9,23 @@ import Modal from "./components/Modal";
 import Overlay from "./components/Overlay/Overlay";
 import ModalFilter from "./components/ModalFilter/ModalFilter";
 import PrivateRoute from "./customRoutes/PrivateRoute ";
+import { loginSuccess } from "./redux/authSlice";
+import { getMe } from "./services/userService";
 // const PublicLayout = lazy(() => import("@/customRoutes/PublicLayout"));
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await getMe();
+        dispatch(loginSuccess(response));
+      } catch (error) {}
+    };
+    fetchUser();
+  }, [dispatch]);
+
   return (
     <Router>
       <Modal />

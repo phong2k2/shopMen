@@ -30,8 +30,6 @@ export const getAllOrderStatus = async (params) => {
   try {
     const res = await axiosJWT.get(`/v1/orders`, params);
     return res?.data?.results;
-
-    console.log("🚀 ~ res:", res);
   } catch (err) {
     console.log(err);
   }

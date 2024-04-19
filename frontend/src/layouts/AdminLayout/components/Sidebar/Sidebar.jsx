@@ -158,28 +158,8 @@ function Sidebar() {
         </a>
         <div id="collapsePages" className="collapse">
           <div className="bg-white py-2 mb-1 collapse-inner rounded">
-            <NavLink className="collapse-item" to={`/admin/order/processing`}>
-              Processing
-            </NavLink>
-          </div>
-          <div className="bg-white py-2 mb-1 collapse-inner rounded">
-            <NavLink className="collapse-item" to={`/admin/order/confirmed`}>
-              Confirmed
-            </NavLink>
-          </div>
-          <div className="bg-white py-2 mb-1 collapse-inner rounded">
-            <NavLink className="collapse-item" to={`/admin/order/shipped`}>
-              Shipped
-            </NavLink>
-          </div>
-          <div className="bg-white py-2 mb-1 collapse-inner rounded">
-            <NavLink className="collapse-item" to={`/admin/order/complete`}>
-              Complete
-            </NavLink>
-          </div>
-          <div className="bg-white py-2 mb-1 collapse-inner rounded">
-            <NavLink className="collapse-item" to={`/admin/order/cancelled`}>
-              Cancelled
+            <NavLink className="collapse-item" to={`/admin/order`}>
+              Danh sách đơn hàng
             </NavLink>
           </div>
         </div>

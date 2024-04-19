@@ -48,11 +48,13 @@ function Dashboard() {
         },
       },
       data: {
-        labels: Object.keys(revenueData?.monthly),
+        labels: revenueData?.monthly ? Object.keys(revenueData?.monthly) : "",
         datasets: [
           {
             label: `Doanh thu`,
-            data: Object.values(revenueData?.monthly),
+            data: revenueData?.monthly
+              ? Object.values(revenueData?.monthly)
+              : "",
           },
         ],
       },
@@ -63,7 +65,7 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    const monthlyRevenue = revenueData ? revenueData : {};
+    const monthlyRevenue = revenueData || {};
     revenueChart(monthlyRevenue);
   }, [revenueData]);
 
@@ -409,10 +411,9 @@ function Dashboard() {
         </div>
 
         {/* All Order */}
-        <div className="row">
+        {/* <div className="row">
           <div className="col-xl-6 col-lg-12 col-md-12 col-12 mb-5 mb-xl-0">
             <div className="card h-100">
-              {/* <!-- card header  --> */}
               <div className="card-header d-flex justify-content-between align-items-center">
                 <h4 className="mb-0">My Task </h4>
                 <div className="dropdown">
@@ -445,7 +446,6 @@ function Dashboard() {
                   </ul>
                 </div>
               </div>
-              {/* <!-- table  --> */}
               <div className="card-body">
                 <div className="table-responsive table-card">
                   <table className="table text-nowrap mb-0 table-centered table-hover">
@@ -478,7 +478,7 @@ function Dashboard() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

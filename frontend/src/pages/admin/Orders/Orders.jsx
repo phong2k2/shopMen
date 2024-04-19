@@ -1,152 +1,231 @@
-import { useState } from "react";
-import * as orderService from "@/services/orderService";
-import { formatPrice } from "@/components/formatData/formatData";
-import {
-  Container,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  Tooltip,
-  TableRow,
-  Typography,
-  Chip,
-} from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import dayjs from "dayjs";
-import { orderStatus } from "@/contant";
-import EmptyBox from "@/components/EmptyBox";
-import { toast } from "react-toastify";
-import LoadingBackdrop from "@/components/LoadingBackdrop";
+import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useQuery } from "react-query";
+import { PRIVATEROUTER, PUBLICROUTER } from "@/config/routes";
+import { getOrderStatistical } from "@/services/orderService";
 
 function Orders() {
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { status } = useParams();
-  const [openLoading, setOpenLoading] = useState(false);
+  const userId = useSelector((state) => state.auth.login.currentUser._id);
 
-  // Get list orders
-  const listOrderQuery = useQuery({
-    queryKey: ["listOrder", status],
-    queryFn: () => orderService.getAllOrderStatus({status}),
-    enabled: status !== undefined,
+  const { data: itemTotal } = useQuery({
+    queryKey: ["dataStatistics", userId],
+    queryFn: () => getOrderStatistical({ userId }),
   });
-
-  const { data: listOrders } = listOrderQuery;
-
-  console.log("🚀 ~ listOrders:", listOrders)
-
-  const deleteOrderMutation = useMutation({
-    mutationFn: (id) => orderService.deleteOrder(id),
-    onSuccess: (response) => {
-      setOpenLoading(false);
-      queryClient.invalidateQueries({
-        queryKey: ["listOrder", status],
-        exact: true,
-      });
-      toast.success(response.message);
-    },
-    onError: (error) => {
-      if (error?.statusCode !== 500) {
-        toast.success(error.message);
-      }
-      setOpenLoading(false);
-    },
-  });
-
-  const handleDeleteOrder = (id) => {
-    deleteOrderMutation.mutate(id);
-  };
-
-  const handleClickNextOrderDetail = (id) => {
-    navigate(`/admin/order/detail/${id}`, { state: { status } });
-  };
   return (
-    <>
-      <LoadingBackdrop openLoading={openLoading} />
-      <Container>
-        <Typography variant="h4" sx={{ fontWeight: "bold" }} className="pb-4 ">
-          Đơn hàng
-        </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>#</TableCell>
-                <TableCell>Mã đơn hàng</TableCell>
-                <TableCell>Thời gian đặt hàng</TableCell>
-                <TableCell>Tổng tiền</TableCell>
-                <TableCell>Trạng thái</TableCell>
-                <TableCell>Tên khách hàng</TableCell>
-                <TableCell>Hành động</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {listOrders?.map((itemOrder, index) => {
-                const color = orderStatus[itemOrder?.status].color;
-                return (
-                  <TableRow key={index}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{itemOrder?.orderCode}</TableCell>
-                    <TableCell>
-                      {dayjs(itemOrder?.itemOrder?.createdAt).format(
-                        "DD/MM/YYYY HH:mm:ss"
-                      )}
-                    </TableCell>
-                    <TableCell>{formatPrice(itemOrder?.totalPrice)}</TableCell>
-                    <TableCell>
-                      <Chip
-                        label={orderStatus[itemOrder?.status].title}
-                        color={color}
-                        variant="outlined"
-                        size="small"
-                        sx={{
-                          fontSize: "10px",
-                          padding: "10px",
-                          textAlign: "center",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      {itemOrder?.shippingAddress?.fullName}
-                    </TableCell>
-
-                    <TableCell>
-                      <a
-                        className="btn btn-primary ml-3"
-                        onClick={() =>
-                          handleClickNextOrderDetail(itemOrder?._id)
-                        }
-                      >
-                        <Tooltip title="Chi tiết" placement="top">
-                          <RemoveRedEyeIcon />
-                        </Tooltip>
-                      </a>
-                      <button
-                        className="btn btn-danger ml-3"
-                        onClick={() => handleDeleteOrder(itemOrder?._id)}
-                      >
-                        <Tooltip title="Xóa" placement="top">
-                          <DeleteForeverIcon />
-                        </Tooltip>
-                      </button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-          {listOrders?.length <= 0 && (
-            <EmptyBox title="Danh sách đơn hàng trống." />
-          )}
-        </TableContainer>
-      </Container>
-    </>
+    <div className="container">
+      <div className="row">
+        <div className="col-xl-6 col-lg-6 col-md-12 col-12 mb-5">
+          <div className="card h-100 card-lift">
+            <div className="card-body">
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                  <h4 className="mb-0">Chờ thanh toán</h4>
+                </div>
+                <div className="icon-shape icon-md bg-primary-soft text-primary rounded-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-briefcase"
+                  >
+                    <rect
+                      x="2"
+                      y="7"
+                      width="20"
+                      height="14"
+                      rx="2"
+                      ry="2"
+                    ></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                  </svg>
+                </div>
+              </div>
+              <div className="lh-1">
+                <h1 className=" mb-1 fw-bold ml-4">
+                  {itemTotal?.totalProcessing}
+                </h1>
+                <NavLink
+                  to={PRIVATEROUTER.listOrderStatus.status(
+                    "processing",
+                    userId
+                  )}
+                  className="mb-0"
+                >
+                  <span
+                    className="text-success me-2"
+                    style={{ fontSize: "1.4rem" }}
+                  >
+                    Xem thêm...
+                  </span>
+                </NavLink>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-xl-6 col-lg-6 col-md-12 col-12 mb-5">
+          <div className="card h-100 card-lift">
+            <div className="card-body">
+              <div
+                className="d-flex justify-content-between align-items-center
+                      mb-3"
+              >
+                <div>
+                  <h4 className="mb-0">Đang vận chuyển</h4>
+                </div>
+                <div
+                  className="icon-shape icon-md bg-primary-soft text-primary
+                      rounded-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-list"
+                  >
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                  </svg>
+                </div>
+              </div>
+              <div className="lh-1">
+                <h1 className="  mb-1 fw-bold ml-4">
+                  {itemTotal?.totalConfirmed}
+                </h1>
+                <NavLink
+                  to={PRIVATEROUTER.listOrderStatus.status("confirmed", userId)}
+                  className="mb-0"
+                >
+                  <span
+                    className="text-success me-2"
+                    style={{ fontSize: "1.4rem" }}
+                  >
+                    Xem thêm...
+                  </span>
+                </NavLink>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-xl-6 col-lg-6 col-md-12 col-12 mb-5">
+          <div className="card h-100 card-lift">
+            <div className="card-body">
+              <div
+                className="d-flex justify-content-between align-items-center
+                      mb-3"
+              >
+                <div>
+                  <h4 className="mb-0">Hoàn thành</h4>
+                </div>
+                <div
+                  className="icon-shape icon-md bg-primary-soft text-primary
+                      rounded-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-users"
+                  >
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                </div>
+              </div>
+              <div className="lh-1">
+                <h1 className="  mb-1 fw-bold ml-4">
+                  {itemTotal?.totalComplete}
+                </h1>
+                <NavLink
+                  to={PRIVATEROUTER.listOrderStatus.status("complete", userId)}
+                  className="mb-0"
+                >
+                  <span
+                    className="text-success me-2"
+                    style={{ fontSize: "1.4rem" }}
+                  >
+                    Xem thêm...
+                  </span>
+                </NavLink>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-xl-6 col-lg-6 col-md-12 col-12 mb-5">
+          <div className="card h-100 card-lift">
+            <div className="card-body">
+              <div
+                className="d-flex justify-content-between align-items-center
+                      mb-3"
+              >
+                <div>
+                  <h4 className="mb-0">Đã hủy</h4>
+                </div>
+                <div
+                  className="icon-shape icon-md bg-primary-soft text-primary
+                      rounded-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="feather feather-target"
+                  >
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <circle cx="12" cy="12" r="6"></circle>
+                    <circle cx="12" cy="12" r="2"></circle>
+                  </svg>
+                </div>
+              </div>
+              <div className="lh-1">
+                <h1 className="  mb-1 fw-bold ml-4">
+                  {itemTotal?.totalCancelled}
+                </h1>
+                <NavLink
+                  to={PRIVATEROUTER.listOrderStatus.status("cancelled", userId)}
+                >
+                  <span
+                    className="text-success me-2"
+                    style={{ fontSize: "1.4rem" }}
+                  >
+                    Xem thêm...
+                  </span>
+                </NavLink>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

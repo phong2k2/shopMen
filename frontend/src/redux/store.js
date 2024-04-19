@@ -8,27 +8,27 @@ import {
   PERSIST,
   PURGE,
   REGISTER,
-} from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
-import authReducer from "./authSlice"
-import userReducer from "./userSlice"
-import categoryReducer from "./categorySlice"
-import cartReducer from "./cartSlice"
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import authReducer from "./authSlice";
+import categoryReducer from "./categorySlice";
+import cartReducer from "./cartSlice";
 
-
-const persistConfig = {
-  key: 'root',
-  version: 1,
+const authPersistConfig = {
+  key: "auth",
   storage,
-}
+};
 
-const rootReducer = combineReducers({
-    auth: authReducer,
-    user: userReducer,
-    category: categoryReducer,
-    cart: cartReducer
-})
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const cartPersistConfig = {
+  key: "cart",
+  storage,
+};
+
+const persistedReducer = combineReducers({
+  auth: persistReducer(authPersistConfig, authReducer),
+  category: categoryReducer,
+  cart: persistReducer(cartPersistConfig, cartReducer),
+});
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -38,7 +38,6 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
-})
+});
 
-
-export let persistor = persistStore(store)
+export let persistor = persistStore(store);

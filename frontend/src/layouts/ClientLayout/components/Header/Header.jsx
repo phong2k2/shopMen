@@ -19,7 +19,7 @@ const cx = classNames.bind(styles);
 function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.auth?.login);
+  const user = useSelector((state) => state?.auth?.login);
   const name = user?.currentUser?.username;
   const cart = useSelector((state) => state.cart);
   const { setShowModalCart, setShowModalSearch, setShowModalCategory } =

@@ -12,8 +12,12 @@ export const getAllUsers = async () => {
 };
 
 export const getMe = async () => {
-  const res = await axiosJWT.get("/v1/users/me");
-  return res;
+  try {
+    const res = await axiosJWT.get("/v1/users/me");
+    return res;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const getDetailUser = async (id) => {
