@@ -8,6 +8,7 @@ const passport = require("passport");
 const path = require("path");
 const multer = require("multer");
 const upload = multer();
+require("./configs/passport");
 const { corsOptions } = require("./configs/cross");
 const {
   errorHandlingMiddleware,

@@ -7,13 +7,22 @@ const middlewareController = require("../../app/middlewares/authMiddleware");
 router
   .route("/")
   .get(paymentController.getAllPayment)
-  .post(paymentController.createPayment);
+  .post(
+    middlewareController.authAdminMiddleWare,
+    paymentController.createPayment
+  );
 
 router
   .route("/:id")
   .get(paymentController.getPaymentDetail)
-  .put(paymentController.updatePayment)
-  .delete(paymentController.deletePayment);
+  .put(
+    middlewareController.authAdminMiddleWare,
+    paymentController.updatePayment
+  )
+  .delete(
+    middlewareController.authAdminMiddleWare,
+    paymentController.deletePayment
+  );
 
 router.route("/configId").get(paymentController.getConfigPaypal);
 

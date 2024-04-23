@@ -7,13 +7,13 @@ const middlewareController = require("../../app/middlewares/authMiddleware");
 router
   .route("/")
   .get(orderController.getAllOrders)
-  .post(orderController.createOrder);
+  .post(middlewareController.verifyToken, orderController.createOrder);
 
 router
   .route("/:id")
   .get(orderController.getOrderDetail)
-  .put(orderController.updateStatusOrder)
-  .post(orderController.cancerOrder);
+  .put(middlewareController.verifyToken, orderController.updateStatusOrder)
+  .post(middlewareController.verifyToken, orderController.cancerOrder);
 
 router.route("/list/statistical").get(orderController.getOrderStatistical);
 

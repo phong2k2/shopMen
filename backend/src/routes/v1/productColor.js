@@ -7,12 +7,21 @@ const middlewareController = require("../../app/middlewares/authMiddleware");
 router
   .route("/")
   .get(productColorController.getColorForProduct)
-  .post(productColorController.createColor);
+  .post(
+    middlewareController.authAdminMiddleWare,
+    productColorController.createColor
+  );
 
 router
   .route("/:id")
   .get(productColorController.getColorDetail)
-  .put(productColorController.updateColor)
-  .delete(productColorController.deleteColor);
+  .put(
+    middlewareController.authAdminMiddleWare,
+    productColorController.updateColor
+  )
+  .delete(
+    middlewareController.authAdminMiddleWare,
+    productColorController.deleteColor
+  );
 
 module.exports = router;

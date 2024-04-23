@@ -38,7 +38,7 @@ const register = async (newUser) => {
 
 const login = async (reqAuth) => {
   const { email, password } = reqAuth;
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({ email: email, oauth_provider: "null" });
 
   if (!user) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Thông tin đăng nhập sai");
@@ -213,7 +213,7 @@ const getGoogleUser = async ({ id_token, access_token }) => {
   }
 };
 
-const signToken = async (user) => {
+const createJwt = async (user) => {
   // Access Token
   const accessToken = jwtService.generalAccessToken(user);
   // Refresh token
@@ -234,6 +234,6 @@ module.exports = {
   findAndUpdateUser,
   getGoogleOauthToken,
   getGoogleUser,
-  signToken,
+  createJwt,
   loginSuccess,
 };

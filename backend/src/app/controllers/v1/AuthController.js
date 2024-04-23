@@ -135,57 +135,10 @@ const AuthController = {
     }
   },
 
-  googleOauthHandler: async (req, res, next) => {
-    try {
-      // Get the code from the query
-      const code = req.query.code;
-      const pathUrl = req.query.state || "/";
-      if (!code) {
-        throw new Error("khong co code");
-      }
-
-      // Use the code to get the id and access tokens
-      const { id_token, access_token } = await AuthService.getGoogleOauthToken({
-        code,
-      });
-
-      // Use the token to get the User
-      const { name, verified_email, email, picture } =
-        await AuthService.getGoogleUser({
-          id_token,
-          access_token,
-        });
-
-      // Check if user is verified
-      if (!verified_email) {
-        // return next(new ApiError('Google account not verified', 403));
-        throw new Error("Google account not verified");
-      }
-
-      // Update user if user already exist or create new user
-      const user = await AuthService.findAndUpdateUser(
-        { email },
-        {
-          username: name,
-          image: picture,
-          email,
-          oauth_provider: "Google",
-        },
-        { upsert: true, runValidators: false, new: true, lean: true }
-      );
-
-      if (!user) {
-        return res.redirect(`${config.get("origin")}/oauth/error`);
-      }
-      // Create access and refresh token
-      const { accessToken, refreshToken } = await AuthService.signToken(user);
-      res.cookie("refreshToken", refreshToken, cookieOptionsRefreshToken);
-      res.cookie("accessToken", accessToken, cookieOptionsAccessToken);
-
-      res.redirect(`http://localhost:5173/`);
-    } catch (err) {
-      next(err);
-    }
+  googleRedirect: async (req, res, next) => {
+    const { accessToken, refreshToken } = await AuthService.createJwt(req.user);
+    res.cookie("refreshToken", refreshToken, cookieOptionsRefreshToken);
+    res.redirect(`http://localhost:5173/social?token=${accessToken}`);
   },
 };
 

@@ -18,6 +18,8 @@ const getAddressDetail = async (addressId) => {
   try {
     const addressDetail = await Address.findOne({ _id: addressId });
 
+    console.log("🚀 ~ addressDetail:", addressDetail);
+
     return {
       data: addressDetail,
     };
