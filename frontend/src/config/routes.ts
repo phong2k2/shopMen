@@ -21,6 +21,7 @@ const PRIVATEROUTER = {
 const PUBLICROUTER = {
   home: "/",
   auth: "/auth",
+  social: "/social",
   product: {
     index: "/collections",
     slug: (slug, id) => `/collections/${slug}?id=${id}`,

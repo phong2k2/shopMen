@@ -39,16 +39,19 @@ const cx = classNames.bind(styles);
 function Address() {
   const [show, setShow] = useState(false);
   const [showSelectCountry, setShowSelectCountry] = useState(false);
-  const [province, setProvince] = useState(initValue);
-  const [district, setDistrict] = useState(initValue);
-  const [ward, setWard] = useState(initValue);
-  const [activeTab, setActiveTab] = useState("provinces");
+  const [activeTab, setActiveTab] = useState("province");
   const [addressId, setAddressId] = useState();
-  const [isValid, setIsValid] = useState();
+  const [isValid, setIsValid] = useState(true);
   const [statusAddress, setStatusAddress] = useState();
   const userId = useSelector((state) => state?.auth?.login?.currentUser?._id);
   const queryClient = useQueryClient();
   const checkRef = useRef();
+  const [locations, setLocations] = useState({
+    province: initValue,
+    district: initValue,
+    ward: initValue,
+  });
+  console.log(activeTab);
 
   const {
     register,
@@ -66,7 +69,6 @@ function Address() {
     queryFn: () => getAllAddress({ userId }),
     enabled: userId !== undefined,
   });
-  console.log("🚀 ~ listAddress:", listAddress);
 
   const { data: allProvinces } = useQuery({
     queryKey: "allProvinces",
@@ -74,20 +76,20 @@ function Address() {
   });
 
   const { data: allDistrict } = useQuery({
-    queryKey: ["allDistricts", province?.id],
-    queryFn: () => getDistricts(province?.id),
-    enabled: province?.id !== undefined,
+    queryKey: ["allDistricts", locations?.province?.id],
+    queryFn: () => getDistricts(locations?.province?.id),
+    enabled: locations?.province?.id !== undefined,
   });
 
   const { data: allWard } = useQuery({
-    queryKey: ["allWards", province?.id, district?.id],
-    queryFn: () => getWards(province?.id),
-    enabled: province?.id !== undefined,
+    queryKey: ["allWards", locations?.province?.id, locations?.district?.id],
+    queryFn: () => getWards(locations?.province?.id),
+    enabled: locations?.province?.id !== undefined,
   });
 
   const { data: addressDetail } = useQuery({
     queryKey: ["addressDetail", addressId],
-    queryFn: () => getAddressDetail({ addressId }),
+    queryFn: () => getAddressDetail(addressId),
     enabled: addressId !== undefined,
   });
 
@@ -97,53 +99,45 @@ function Address() {
 
   useEffect(() => {
     if (isValid) {
+      setActiveTab("province");
       reset(initAddress);
+      setLocations(initValue);
     } else {
-      reset(addressDetail);
-      setProvince(addressDetail?.province);
-      setDistrict(addressDetail?.district);
-      setWard(addressDetail?.ward);
-      setStatusAddress(addressDetail?.status);
+      if (addressDetail) {
+        reset(addressDetail);
+        setLocations(() => {
+          const { province, district, ward } = addressDetail;
+          return {
+            province,
+            district,
+            ward,
+          };
+        });
+        setStatusAddress(addressDetail?.status);
+      }
     }
   }, [addressDetail, isValid, reset]);
 
-  const handleClickActiveProvinces = (e) => {
-    const id = e.target.dataset.id;
-    const name = e.target.dataset.name;
-    if (id && name) {
-      setProvince({
-        ...province,
-        id,
-        name,
-      });
-      setActiveTab("district");
-    }
-  };
+  const handleSetLocations = (
+    { target: { dataset } },
+    nameField,
+    nextField
+  ) => {
+    const { id, name } = dataset;
+    if (!id && !name) return;
 
-  const handleClickActiveDistrict = (e) => {
-    const id = e.target.dataset.id;
-    const name = e.target.dataset.name;
-    if (id && name) {
-      setDistrict({
-        ...district,
+    setLocations({
+      ...locations,
+      [nameField]: {
         id,
         name,
-      });
-      setActiveTab("ward");
-    }
-  };
+      },
+    });
 
-  const handleClickActiveWard = (e) => {
-    const id = e.target.dataset.id;
-    const name = e.target.dataset.name;
-    if (id && name) {
-      setWard({
-        ...ward,
-        id,
-        name,
-      });
+    if (nameField === "ward") {
       setShowSelectCountry(false);
     }
+    setActiveTab(nextField);
   };
 
   //
@@ -214,9 +208,7 @@ function Address() {
   const handleSubmitAddress = (values) => {
     const myAddress = {
       ...values,
-      province: province,
-      district: district,
-      ward: ward,
+      ...locations,
       status: checkRef.current.checked ? 1 : 0,
       userId,
     };
@@ -366,10 +358,10 @@ function Address() {
                         className={cx("select-custom-group")}
                       >
                         <div className={cx("select-custom-country")}>
-                          {province?.name
-                            ? `${ward?.name || "..."}, ${
-                                district?.name || "..."
-                              }, ${province?.name}`
+                          {locations?.province?.name
+                            ? `${locations?.ward?.name || "..."}, ${
+                                locations?.district?.name || "..."
+                              }, ${locations?.province?.name}`
                             : "Tỉnh/Thành phố, Quận/Huyện, Phường/Xã *"}
                           <i className="bi bi-chevron-down"></i>
                         </div>
@@ -382,9 +374,9 @@ function Address() {
                           <div className={cx("header-tabs")}>
                             <ul className={cx("menu-tabs")}>
                               <li
-                                onClick={() => handleClickActive("provinces")}
+                                onClick={() => handleClickActive("province")}
                                 className={cx("tab-city", {
-                                  active: activeTab === "provinces",
+                                  active: activeTab === "province",
                                 })}
                               >
                                 Tỉnh/Thành phố
@@ -408,13 +400,19 @@ function Address() {
                             </ul>
                           </div>
                           <div className={cx("body-result")}>
-                            {activeTab === "provinces" && (
+                            {activeTab === "province" && (
                               <ul className={cx("list-country", "list-city")}>
                                 {allProvinces?.map((itemProvince) => (
                                   <li
                                     data-id={itemProvince?.id}
                                     data-name={itemProvince?.name}
-                                    onClick={handleClickActiveProvinces}
+                                    onClick={(e) =>
+                                      handleSetLocations(
+                                        e,
+                                        "province",
+                                        "district"
+                                      )
+                                    }
                                     key={itemProvince?.id}
                                     className={cx("item-list")}
                                   >
@@ -433,7 +431,9 @@ function Address() {
                                     key={district?.id}
                                     data-id={district?.id}
                                     data-name={district?.name}
-                                    onClick={handleClickActiveDistrict}
+                                    onClick={(e) =>
+                                      handleSetLocations(e, "district", "ward")
+                                    }
                                     className={cx("item-list")}
                                   >
                                     {district?.full_name}
@@ -449,7 +449,9 @@ function Address() {
                                     key={ward?.id}
                                     data-id={ward?.id}
                                     data-name={ward?.name}
-                                    onClick={handleClickActiveWard}
+                                    onClick={(e) =>
+                                      handleSetLocations(e, "ward", "province")
+                                    }
                                     className={cx("item-list")}
                                   >
                                     {ward?.full_name}

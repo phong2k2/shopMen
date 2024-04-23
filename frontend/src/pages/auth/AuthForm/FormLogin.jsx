@@ -7,7 +7,6 @@ import "./Form.scss";
 import { Link } from "react-router-dom";
 import config from "@/config";
 import { schemaFormLogin } from "@/Validations/yupSchema";
-import { getGoogleUrl } from "@/utils/getGoogleUrl";
 
 const initLogin = {
   email: "",
@@ -24,7 +23,6 @@ function FormLogin({ handleSubmitLogin, statusAuth }) {
   } = useForm({
     resolver: yupResolver(schemaFormLogin),
   });
-  // const urlGoogle = getGoogleUrl();
   useEffect(() => {
     reset(initLogin);
   }, [statusAuth, reset]);
@@ -42,7 +40,13 @@ function FormLogin({ handleSubmitLogin, statusAuth }) {
         <a className="mr-3" href="#">
           <i className="fab fa-facebook text-dark"></i>
         </a>
-        <a href={getGoogleUrl(from)} className="mr-3">
+        <a
+          onClick={(e) => {
+            e.preventDefault();
+            window.open("http://localhost:3000/v1/auth/google", "_self");
+          }}
+          className="mr-3"
+        >
           <i className="fab fa-google-plus-g text-dark"></i>
         </a>
         <a className="mr-3" href="#">

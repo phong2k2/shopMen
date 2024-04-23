@@ -29,6 +29,7 @@ import ResetPassword from "@/pages/client/ResetPassword";
 import NotFound from "@/pages/client/NotFound";
 import OrderStatistics from "@/pages/client/OrderStatistics";
 import ListOrderStatus from "@/pages/admin/components/ListOrderStatus";
+import Social from "@/pages/auth/Social";
 
 const adminRoutes = [
   {
@@ -165,6 +166,11 @@ const publicRoutes = [
     path: config.PUBLICROUTER.persistor,
     component: ResetPersistButton,
     layout: HeaderOnly,
+  },
+  {
+    path: config.PUBLICROUTER.social,
+    component: Social,
+    layout: null,
   },
   // ,{
   //     path: config.PUBLICROUTER.notFound,

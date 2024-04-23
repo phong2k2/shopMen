@@ -9,8 +9,8 @@ import Modal from "./components/Modal";
 import Overlay from "./components/Overlay/Overlay";
 import ModalFilter from "./components/ModalFilter/ModalFilter";
 import PrivateRoute from "./customRoutes/PrivateRoute ";
-import { loginSuccess } from "./redux/authSlice";
 import { getMe } from "./services/userService";
+import { getUserSuccess } from "./redux/authSlice";
 // const PublicLayout = lazy(() => import("@/customRoutes/PublicLayout"));
 
 function App() {
@@ -20,8 +20,11 @@ function App() {
     const fetchUser = async () => {
       try {
         const response = await getMe();
-        dispatch(loginSuccess(response));
-      } catch (error) {}
+
+        dispatch(getUserSuccess(response));
+      } catch (error) {
+        console.log(error);
+      }
     };
     fetchUser();
   }, [dispatch]);
