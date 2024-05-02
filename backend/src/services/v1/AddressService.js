@@ -1,4 +1,3 @@
-const { ObjectId } = require("mongodb");
 const { StatusCodes } = require("http-status-codes");
 const Address = require("../../app/model/Address.js");
 const ApiError = require("../../utils/ApiError.js");
