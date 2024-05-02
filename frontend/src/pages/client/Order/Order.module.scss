@@ -1,104 +1,98 @@
-@import './../../../components/GlobalStyles/GlobalStyle.scss';
-
-.container {
-    margin: 0 auto;
-    width: 90%;
+.order {
+  overflow-x: hidden;
 }
 
 .header-order {
-    display: none;
+  display: none;
 }
 
 .main {
-    width: 100%;
-    padding-right: 4em;
-    padding-top: 4em;
+  width: 100%;
+  padding-right: 4em;
+  padding-top: 4em;
 }
 
 .main-head {
-    h2 {
-        a {
-            font-size: 3rem;
-            color: #333333;
-            text-decoration: none;
-            font-weight: 400;
-        }
+  h2 {
+    a {
+      font-size: 3rem;
+      color: #333333;
+      text-decoration: none;
+      font-weight: 400;
     }
+  }
 }
 
 .breadcrumb {
-    background-color: transparent;
-    list-style: none;
-    padding-left: 0;
-    
-    .breadcrumb-item {
-        display: inline-block;
-        padding-right: 10px;
-        font-size: 1.4rem;
-        text-decoration: none;
+  background-color: transparent;
+  list-style: none;
+  padding-left: 0;
 
-        a {
-            text-decoration: none;
-            font-size: 1.4rem;
-            display: block;
-        }
+  .breadcrumb-item {
+    display: inline-block;
+    padding-right: 10px;
+    font-size: 1.4rem;
+    text-decoration: none;
+
+    a {
+      text-decoration: none;
+      font-size: 1.4rem;
+      display: block;
     }
+  }
 }
 
 .sidebar {
-    width: 100%;
-    padding-left: 4em;
-    box-shadow: 1px 0 0 #e1e1e1 inset;
-    padding-top: 4em;
-    position: relative;
-    background-position: left top;
+  width: 100%;
+  padding-left: 4em;
+  box-shadow: 1px 0 0 #e1e1e1 inset;
+  padding-top: 4em;
+  position: relative;
+  background-position: left top;
 
-    &::after {
-        content: "";
-        display: block;
-        width: 300%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        background: #fafafa;
-        z-index: -1;
-        box-shadow: 0 -1px 0 #e1e1e1 inset;
-    }
+  &::after {
+    content: "";
+    display: block;
+    width: 300%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #fafafa;
+    z-index: -1;
+    box-shadow: 0 -1px 0 #e1e1e1 inset;
+  }
 }
-
 
 // Responsive
+@include global.tablet {
+  .order {
+    overflow-y: hidden;
+  }
 
-@media #{$tablet-size} {
-    .header-order {
-        display: block;
-        h2 {
-            a {
-                font-size: 3rem;
-                color: #333333;
-                text-decoration: none;
-                font-weight: 400;
-            }
-        }
+  .header-order {
+    display: block;
+    h2 {
+      a {
+        font-size: 3rem;
+        color: #333333;
+        text-decoration: none;
+        font-weight: 400;
+      }
     }
+  }
 
-    .sidebar {
-        order: 1;
-    }
+  .sidebar {
+    order: 1;
+    padding: 15px;
+  }
 
-    .main {
-        order: 2;
-    }
+  .main {
+    order: 2;
+    padding: 15px;
+  }
 
-    .main-head {
-        display: none;
-    }
-}
-
-
-
-@media #{$desktop-size} {
-    
-
+  .main-head {
+    display: none;
+  }
 }

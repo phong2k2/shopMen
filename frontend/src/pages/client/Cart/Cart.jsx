@@ -149,7 +149,7 @@ function Cart() {
                                       <span>
                                         {formatPrice(cartItem?.price)}
                                       </span>
-                                      {/* <del>300,00d</del> */}
+                                      <del>300,00d</del>
                                     </p>
                                   </div>
                                   <div className={cx("item-total")}>

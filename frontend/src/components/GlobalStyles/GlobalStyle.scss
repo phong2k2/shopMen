@@ -1,50 +1,44 @@
-@import 'normalize.css';
-// @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;1,500;1,700;1,900&display=swap');
-
-$mobile-size: "only screen and (max-width: 767px)";
-$tablet-size: "only screen and (min-width: 768px) and (max-width: 992px)";
-$desktop-size: "only screen and (min-width: 992px)";
+@import "normalize.css";
 
 :root {
-    --black: #000;
-    --while: #fff;
-    --text-color: #555;
-    --color-main: #fff;
-    --price-color: rgb(230, 153, 153);
-    --grey: #333;
-    --color-footer: #000000;
-    --color-price: #ff2c26;
-    --color-price-del: #878c8f;
+  --black: #000;
+  --while: #fff;
+  --text-color: #555;
+  --color-main: #fff;
+  --price-color: rgb(230, 153, 153);
+  --grey: #333;
+  --color-footer: #000000;
+  --color-price: #ff2c26;
+  --color-price-del: #878c8f;
 
-    --background-color-main: #f9fafa
+  --background-color-main: #f9fafa;
 
-    --width-site-cart: 480px;
+  --width-site-cart: 480px;
 
-    --pd-top-header: calc(var(--height-body-header) + var(--height-top-header));
+  --pd-top-header: calc(var(--height-body-header) + var(--height-top-header));
 
-    // font
-  --font-family: 'svgGilroy', sans-serif;
-  --font-family-text: 'svgGilroy', sans-serif;
+  // font
+  --font-family: "svgGilroy", sans-serif;
+  --font-family-text: "svgGilroy", sans-serif;
 }
 
 html {
-    font-size: 62.5%;
+  font-size: 62.5%;
 }
 
 * {
-    margin: 0;
-    box-sizing: border-box !important;
+  margin: 0;
+  box-sizing: border-box !important;
 }
 
 body {
   font-family: var(--font-family);
   font-size: 1.6rem;
   line-height: 1.5;
-  text-rendering: 'optimizespeed';
+  text-rendering: "optimizespeed";
   overflow-y: overlay;
   overflow-x: hidden;
 }
-
 
 button,
 input,
@@ -54,87 +48,86 @@ input,
 }
 
 a[href] {
-    color: var(var(--text-color));
-    text-decoration: none;
-    cursor: pointer;
+  color: var(var(--text-color));
+  text-decoration: none;
+  cursor: pointer;
 }
 
 img {
   max-width: 100%;
 }
 
-// Font embedded 
+// Font embedded
 @font-face {
   font-family: Quicksand;
-  src: url('/src/assets/fonts/6xKtdSZaM9iE8KbpRA_hK1QN.woff2');
+  src: url("/src/assets/fonts/6xKtdSZaM9iE8KbpRA_hK1QN.woff2");
   font-weight: 400;
 }
 
 @font-face {
   font-family: Quicksand;
-  src: url('/src/assets/fonts/6xKtdSZaM9iE8KbpRA_hK1QN.woff2');
+  src: url("/src/assets/fonts/6xKtdSZaM9iE8KbpRA_hK1QN.woff2");
   font-weight: 600;
 }
 
 @font-face {
   font-family: Quicksand;
-  src: url('/src/assets/fonts/6xKtdSZaM9iE8KbpRA_hK1QN.woff2');
+  src: url("/src/assets/fonts/6xKtdSZaM9iE8KbpRA_hK1QN.woff2");
   font-weight: 800;
 }
 
 @font-face {
   font-family: Space Grotesk;
-  src: url('/src//assets//fonts//V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXskPMA.woff2');
+  src: url("/src//assets//fonts//V8mQoQDjQSkFtoMM3T6r8E7mF71Q-gOoraIAEj7oUXskPMA.woff2");
   font-weight: 800;
 }
 
 @font-face {
   font-family: GT;
-  src: url('/src/assets/fonts/GT.woff');
+  src: url("/src/assets/fonts/GT.woff");
   font-weight: 800;
 }
 @font-face {
   font-family: SVN-Gilroy;
-  src: url('/assets/fonts/SVN-Gilroy\ SemiBold.otf');
+  src: url("/assets/fonts/SVN-Gilroy\ SemiBold.otf");
   font-weight: 400;
 }
 
 @font-face {
   font-family: SVN-Gilroy;
-  src: url('/assets/fonts/SVN-Gilroy\ SemiBold.otf');
+  src: url("/assets/fonts/SVN-Gilroy\ SemiBold.otf");
   font-weight: 600;
 }
 
 @font-face {
   font-family: SVN-Gilroy;
-  src: url('/assets/fonts/SVN-Gilroy\ SemiBold.otf');
+  src: url("/assets/fonts/SVN-Gilroy\ SemiBold.otf");
   font-weight: 800;
 }
 
 @font-face {
   font-family: svgGilroy;
-  src: url('/assets/fonts/GT.woff');
+  src: url("/assets/fonts/GT.woff");
   font-weight: 400;
 }
 
 @font-face {
   font-family: CriteriaCF;
-  src: url('/src/assets/fonts/CriteriaCF-ExtraBold.otf');
+  src: url("/src/assets/fonts/CriteriaCF-ExtraBold.otf");
   font-weight: 600;
 }
 
 @font-face {
   font-family: CriteriaCF;
-  src: url('/src/assets/fonts/CriteriaCF-ExtraBold.otf');
+  src: url("/src/assets/fonts/CriteriaCF-ExtraBold.otf");
   font-weight: 400;
 }
 
 @font-face {
-  font-family: 'CriteriaCF-DemiBold';
-  src: url('/src/assets/fonts/CriteriaCF-DemiBold.otf');
+  font-family: "CriteriaCF-DemiBold";
+  src: url("/src/assets/fonts/CriteriaCF-DemiBold.otf");
   font-weight: 600;
 }
-
 
 .conformName {
   white-space: normal;
@@ -143,7 +136,7 @@ img {
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   display: -webkit-box;
-  word-break: break-all!important;
+  word-break: break-all !important;
 }
 
 .MuiInputLabel-root {
@@ -162,26 +155,29 @@ img {
   padding-bottom: 5rem !important;
 }
 
-.productHotSwiper .swiper-button-next, .productHotSwiper .swiper-button-prev {
+.productHotSwiper .swiper-button-next,
+.productHotSwiper .swiper-button-prev {
   width: 40px;
   height: 40px;
-  background: rgba(0,0,0,0.1);
+  background: rgba(0, 0, 0, 0.1);
   color: #fff !important;
   border-radius: 40px;
   opacity: 1;
   top: 42%;
 }
 
-.productHotSwiper .swiper-button-next:after, .productHotSwiper .swiper-button-prev:after {
+.productHotSwiper .swiper-button-next:after,
+.productHotSwiper .swiper-button-prev:after {
   font-size: 16px;
 }
 
-.productHotSwiper .swiper-button-next:hover, .productHotSwiper .swiper-button-prev:hover {
+.productHotSwiper .swiper-button-next:hover,
+.productHotSwiper .swiper-button-prev:hover {
   background: #fff;
   color: #000 !important;
 }
 
-.swiper-horizontal>.swiper-scrollbar {
+.swiper-horizontal > .swiper-scrollbar {
   position: absolute;
   left: 1%;
   bottom: 3px;
@@ -199,33 +195,49 @@ img {
   background: #000 !important;
 }
 
-// response
-@media #{$mobile-size} {
-  .container {
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
-  }
+.container {
+  padding: 0 15px;
+  margin: 0 auto;
+  width: 100%;
 }
-
-@media #{$tablet-size} {
+// responsive
+@include global.desktop {
   .container {
-    margin: 0 auto;
+    max-width: 1600px;
     width: 100%;
-    padding: 0 20px;
-  }
-}
-
-@media #{$desktop-size} {
-  .container {
-    width: 1600px;
     margin: 0 auto;
-    max-width: 100%;
     padding: 0 50px;
   }
 }
 
+@include global.tablet {
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    width: 100%;
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  body.locked-scroll {
+    overflow: hidden;
+  }
+}
+
+@include global.mobile {
+  .container {
+    max-width: 540px;
+    padding-right: 15px;
+    width: 100%;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .swiper-wrapper {
+    flex-direction: row !important;
+  }
+}
 
 // Scrollbar CSS
 html *::-webkit-scrollbar {
@@ -242,4 +254,3 @@ html *::-webkit-scrollbar-track {
   border-radius: 0;
   background-color: rgba(0, 0, 0, 0);
 }
-

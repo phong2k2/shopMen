@@ -57,8 +57,7 @@ function ModalFilter() {
     }
   };
 
-  const handleFilterSize = () => {
-  };
+  const handleFilterSize = () => {};
 
   return (
     <div className={cx("site-cart", { active: showModalFilter })}>
@@ -85,6 +84,9 @@ function ModalFilter() {
         <div className={cx("content")}>
           <div className={cx("group")}>
             <div className={cx("group-menu-action")}>
+              <div className={cx("menu-title")}>
+                <h2>Danh mục sản phẩm</h2>
+              </div>
               <div className={cx("filter-box")}>
                 <CustomizeAccordion listCategory={listCategory} />
               </div>
@@ -97,11 +99,7 @@ function ModalFilter() {
                       <ul className={cx("list-size")}>
                         {productSizes?.map((itemSize) => (
                           <li onClick={handleFilterSize} key={itemSize.id}>
-                            <input
-                              type="checkbox"
-                              id={itemSize.name}
-                              hidden
-                            />
+                            <input type="checkbox" id={itemSize.name} hidden />
                             {itemSize.name}
                           </li>
                         ))}
@@ -143,13 +141,9 @@ function ModalFilter() {
                   </div>
                 </div>
               </div>
-
             </div>
             <div className={cx("footer")}>
-              <button
-                onClick={handleClickFilter}
-                className={cx("btn-filter")}
-              >
+              <button onClick={handleClickFilter} className={cx("btn-filter")}>
                 Áp dụng
               </button>
             </div>

@@ -11,10 +11,14 @@ import ModalFilter from "./components/ModalFilter/ModalFilter";
 import PrivateRoute from "./customRoutes/PrivateRoute ";
 import { getMe } from "./services/userService";
 import { getUserSuccess } from "./redux/authSlice";
+import ModalCategory from "./components/ModalCategory/ModalCategory";
+import { useDeliveryInfo } from "./hook/useContext";
 // const PublicLayout = lazy(() => import("@/customRoutes/PublicLayout"));
 
 function App() {
   const dispatch = useDispatch();
+  const { showModalCart, showModalSearch, showModalCategory } =
+    useDeliveryInfo();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,10 +33,18 @@ function App() {
     fetchUser();
   }, [dispatch]);
 
+  useEffect(() => {
+    document.body.classList.remove("locked-scroll");
+    if (showModalCart || showModalSearch || showModalCategory) {
+      document.body.classList.add("locked-scroll");
+    }
+  }, [showModalCart, showModalSearch, showModalCategory]);
+
   return (
     <Router>
       <Modal />
       <ModalFilter />
+      <ModalCategory />
       <Overlay />
       <Routes>
         {privateRoutes.map((route, index) => {

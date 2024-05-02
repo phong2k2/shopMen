@@ -1,47 +1,36 @@
-@import './../../../components/GlobalStyles/GlobalStyle.scss';
-
 .wrap-img {
-    width: 60px;
-    height: 60px;
+  width: 60px;
+  height: 60px;
 }
 
-.mySwiper>.swiper-wrapper .swiper-slide-thumb-active {
-    border: 1px solid #000;
-} 
+.mySwiper > .swiper-wrapper .swiper-slide-thumb-active {
+  border: 1px solid #000;
+}
 .swiper-slide-auto {
-    width: 100%;
-} 
-
-
-@media #{$tablet-size} {
-    .container {
-      width: 1300px;
-      margin: 0 auto;
-      max-width: 100%;
-      padding: 0 50px;
-    }
-
-    .product-content {
-        margin-top: 15px;
-    }
-
-    .product-title {
-        & h1 {
-            font-size: 2.5rem;
-        }
-
-        & p {
-            font-size: 1.5rem;
-        }
-    }
-
-    .productHotSwiper {
-        order: 1 !important;
-        width: 100%;
-    }
-
-    .mySwiper {
-        order: 2 !important;
-    }
+  width: 100%;
 }
 
+@include global.tablet {
+  .product-content {
+    margin-top: 15px;
+  }
+
+  .product-title {
+    & h1 {
+      font-size: 2.5rem;
+    }
+
+    & p {
+      font-size: 1.5rem;
+    }
+  }
+
+  .productHotSwiper {
+    order: 1 !important;
+    width: 100%;
+  }
+
+  .mySwiper {
+    order: 2 !important;
+  }
+}

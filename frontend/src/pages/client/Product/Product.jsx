@@ -1,7 +1,7 @@
 import classNames from "classnames/bind";
 import styles from "./Product.module.scss";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {  useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import * as productService from "@/services/productService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "react-query";
@@ -21,9 +21,9 @@ function Product() {
   const { setShowModalFilter, filter } = useDeliveryInfo();
   const [page, setPage] = useState(0);
   const [searchParams] = useSearchParams();
-  const categoryId = searchParams.get('categoryId')
-  const subCategoryId = searchParams.get('subCategoryId')
-  const name = searchParams.get('categoryName')
+  const categoryId = searchParams.get("categoryId");
+  const subCategoryId = searchParams.get("subCategoryId");
+  const name = searchParams.get("categoryName");
 
   const sortingOptions = useMemo(
     () => [
@@ -52,7 +52,7 @@ function Product() {
     queryKey: ["allProduct", categoryId, subCategoryId, sortBy, filter],
     queryFn: () => {
       return productService.getAllProducts({
-        [categoryId ? 'category' : 'subCategory']: categoryId || subCategoryId,
+        [categoryId ? "category" : "subCategory"]: categoryId || subCategoryId,
         limit,
         page,
         sortBy,
@@ -72,7 +72,7 @@ function Product() {
   return (
     <section className={cx("collections")}>
       <div className={cx("main-content")}>
-        <NavContent  name={name}/>
+        <NavContent name={name} />
         {/* List Product */}
         <div className={cx("list-collections")}>
           <div className={cx("container")}>
@@ -89,19 +89,17 @@ function Product() {
                         onClick={handleShowModalFilter}
                         className={cx("filter")}
                       >
-                        <span className={cx("text")}>Bộ lọc</span>
+                        <span className={cx("filter-text")}>Bộ lọc</span>
                         <i className="bi bi-funnel" />
                       </div>
 
                       <div className={cx("sort-box")}>
-                        <div className={cx("sort-mobile")}>
-                          <span>Sắp xếp:</span>
-                          <i className="bi bi-filter-left"></i>
-                        </div>
-
-                        <label className={cx("title")} htmlFor="">
-                          Sắp xếp:
-                          <span className={cx("text")} ref={selectRef}></span>
+                        <label className={cx("sort-contain")}>
+                          <span className={cx("sort-title")}>Sắp xếp:</span>
+                          <span
+                            className={cx("sort-select")}
+                            ref={selectRef}
+                          ></span>
                           <span className={cx("icon")}>
                             <FontAwesomeIcon icon={faChevronDown} />
                           </span>

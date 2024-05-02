@@ -148,9 +148,16 @@ function Header() {
         <div className={cx("wrapper-header")}>
           <div className={cx("container")}>
             <div className={cx("row", "header-body")}>
-              <div
-                className={cx("col-md-2", "col-sm-6 col-7", "wrap-header-2")}
-              >
+              <div className={cx("col-2", "category-icon")}>
+                <div className={cx("div-category")}>
+                  <a onClick={() => setShowModalCategory(true)}>
+                    <i
+                      className={cx("fa-solid fa-align-justify", "icon-cate")}
+                    ></i>
+                  </a>
+                </div>
+              </div>
+              <div className={cx("col-md-2", "col-7", "wrap-logo")}>
                 <div className={cx("header-logo")}>
                   <a href={config.PUBLICROUTER.home}>
                     <img
@@ -162,29 +169,19 @@ function Header() {
                 </div>
               </div>
 
-              <div className={cx("col-md-8", "wrap-header-4", "hide")}>
+              <div className={cx("col-md-8", "col-sm-7", "wrap-category")}>
                 <nav className={cx("navbar-main")}>
-                  {
-                    <ul className={cx("list-main")}>
-                      {listCategory?.map((category) => {
-                        return (
-                          <Category key={category?._id} categories={category} />
-                        );
-                      })}
-                    </ul>
-                  }
+                  <ul className={cx("list-main")}>
+                    {listCategory?.map((category) => {
+                      return (
+                        <Category key={category?._id} categories={category} />
+                      );
+                    })}
+                  </ul>
                 </nav>
               </div>
 
-              <div
-                className={cx(
-                  "col-md-2",
-                  "col-sm-6",
-                  "col-5",
-                  "action",
-                  "wrap-header-3"
-                )}
-              >
+              <div className={cx("col-md-2", "col-3", "action")}>
                 <div className={cx("header-action")}>
                   {/* <Search /> */}
                   <div className={cx("action-item")}>
@@ -200,19 +197,6 @@ function Header() {
                         <div className={cx("count-cart")}>
                           <span>{cart?.cartTotalQuantity}</span>
                         </div>
-                      </a>
-                    </div>
-                  </div>
-                  {/* Category */}
-                  <div className={cx("action-item", "show-cate")}>
-                    <div className={cx("div-category")}>
-                      <a onClick={() => setShowModalCategory((prev) => !prev)}>
-                        <i
-                          className={cx(
-                            "fa-solid fa-align-justify",
-                            "icon-cate"
-                          )}
-                        ></i>
                       </a>
                     </div>
                   </div>

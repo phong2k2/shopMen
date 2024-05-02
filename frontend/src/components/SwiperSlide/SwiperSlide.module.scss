@@ -1,40 +1,29 @@
-@import './../../components/GlobalStyles/GlobalStyle.scss';
-
-
 .content-full {
-    padding-left: 78px;
+  padding-left: 78px;
+
+  @include global.mobile {
+    padding: 0 10px;
+    margin: 0 auto;
+  }
+
+  @include global.tablet {
+    padding: 0 10px;
+    margin: 0 auto;
+  }
 }
 
 .heading-section {
-    padding-bottom: 26px;
-    padding-top: 50px;
-    font-size: 3rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-top: 0;
-}
+  padding-bottom: 26px;
+  padding-top: 50px;
+  font-size: 3rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0;
 
-// Responsive
-@media #{$mobile-size} {
-  .heading-section {
-    padding-top: 10px;
+  @include global.mobile {
+    padding-top: 20px;
     padding-bottom: 10px;
-    font-size: 1.5rem;
+    font-size: 3rem;
   }
-    
-}
-
-@media #{$mobile-size} {
-    .content-full {
-        padding: 0 10px;
-        margin: 0 auto;
-    }
-}
-
-@media #{$tablet-size} {
-    .content-full {
-        padding: 0 10px;
-        margin: 0 auto;
-    }
 }

@@ -7,6 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  flex-wrap: wrap;
   margin-bottom: 20px;
 
   .title {
@@ -42,40 +43,40 @@
       animation: pulseSmall 1.25s linear infinite;
     }
   }
+}
 
-  .soon-group {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-left: 40px;
-  }
+.soon-group {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 40px;
+}
 
-  .soon-group-inner {
-    width: 70px;
-    background-color: #ff0000;
-    padding: 5px 8px;
-    border-radius: 10px;
-    margin-right: 10px;
-  }
+.soon-group-inner {
+  width: 70px;
+  background-color: #ff0000;
+  padding: 5px 8px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
 
-  .soon-repeater {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
+.soon-repeater {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-  .soon-slot {
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--while);
-  }
+.soon-slot {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--while);
+}
 
-  .soon-text {
-    font-size: 1.3rem;
-    font-weight: 400;
-    color: var(--while);
-  }
+.soon-text {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: var(--while);
 }
 
 .productHotSwiper .swiper-button-next,
@@ -285,5 +286,15 @@
     -webkit-transform: scale(3.4);
     transform: scale(3.4);
     opacity: 0;
+  }
+}
+
+@include global.mobile {
+  .soon-group {
+    margin-left: 10px !important;
+  }
+
+  .soon-group-inner {
+    width: 45px;
   }
 }

@@ -16,7 +16,10 @@ function CollectionNew({ allProductOutstanding }) {
         <div className={cx("section-content")}>
           <div className={cx("list-product-row row")}>
             {allProductOutstanding?.map((proItem) => (
-              <div key={proItem?._id} className={cx("col-3")}>
+              <div
+                key={proItem?._id}
+                className={cx("col-lg-3", "col-md-6", "col-xs-6")}
+              >
                 <div className={cx("product-inner")}>
                   <div className={cx("product-image")}>
                     <Link

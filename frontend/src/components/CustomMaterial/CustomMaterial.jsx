@@ -12,10 +12,15 @@ import { PUBLICROUTER } from "@/config/routes";
 
 export const CustomizeAccordion = ({ listCategory }) => {
   const [expanded, setExpanded] = useState("panel1");
-  const { setShowModalFilter } = useDeliveryInfo();
+  const { setShowModalFilter, setShowModalCategory } = useDeliveryInfo();
 
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
+  };
+
+  const handleCloseModal = () => {
+    setShowModalCategory(false);
+    setShowModalFilter(false);
   };
 
   return (
@@ -23,22 +28,11 @@ export const CustomizeAccordion = ({ listCategory }) => {
       expanded={expanded === "panel1"}
       onChange={handleChange("panel1")}
     >
-      <AccordionSummaryCustom
-        aria-controls="panel1a-content"
-        id="panel1a-header"
+      <AccordionDetailsCustom
+        sx={{
+          marginLeft: "8px",
+        }}
       >
-        <Typography
-          variant="h2"
-          sx={{
-            fontWeight: 400,
-            fontSize: 15,
-          }}
-        >
-          Danh mục
-        </Typography>
-      </AccordionSummaryCustom>
-
-      <AccordionDetailsCustom>
         {listCategory?.map((item) => (
           <AccordionCustom key={item?._id}>
             <AccordionSummaryCustom aria-controls="panel1d-content">
@@ -46,6 +40,7 @@ export const CustomizeAccordion = ({ listCategory }) => {
                 sx={{
                   fontWeight: 400,
                   fontSize: 16,
+                  textTransform: "capitalize !important",
                 }}
               >
                 {item?.name}
@@ -53,12 +48,15 @@ export const CustomizeAccordion = ({ listCategory }) => {
             </AccordionSummaryCustom>
             {item?.subCategory?.map((subItem) => (
               <AccordionDetailsCustom key={subItem?._id}>
-                <Link 
+                <Link
                   style={{
-                    color: '#000'
-                  }} 
-                  to={PUBLICROUTER.product.subCategory(subItem?._id, subItem?.name)}
-                  onClick={()=>setShowModalFilter(false)} 
+                    color: "#000",
+                  }}
+                  to={PUBLICROUTER.product.subCategory(
+                    subItem?._id,
+                    subItem?.name
+                  )}
+                  onClick={handleCloseModal}
                 >
                   <Typography
                     sx={{
@@ -70,7 +68,7 @@ export const CustomizeAccordion = ({ listCategory }) => {
                   >
                     {subItem?.name}
                   </Typography>
-               </Link>
+                </Link>
               </AccordionDetailsCustom>
             ))}
           </AccordionCustom>

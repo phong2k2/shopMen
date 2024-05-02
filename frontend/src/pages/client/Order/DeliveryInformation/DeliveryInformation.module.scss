@@ -137,6 +137,10 @@ form {
   &:hover {
     opacity: 0.7;
   }
+
+  @include global.mobile {
+    width: 100%;
+  }
 }
 
 // Select Country

@@ -21,7 +21,13 @@ function SlideShowItem({ allProduct }) {
     <SwiperContainer
       spaceBetween={18}
       navigation={true}
-      slidesPerView={5}
+      slidesPerView={3}
+      breakpoints={{
+        "@1.50": {
+          slidesPerView: 5,
+          spaceBetween: 25,
+        },
+      }}
       modules={[Scrollbar, Navigation]}
       loop={true}
       direction={"horizontal"}

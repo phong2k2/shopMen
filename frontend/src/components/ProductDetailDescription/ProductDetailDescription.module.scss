@@ -4,6 +4,10 @@
   justify-content: center;
   align-items: flex-start;
   margin-bottom: 60px;
+
+  @include global.tablet {
+    margin-top: 30px;
+  }
 }
 
 .tab-buttons {
@@ -25,6 +29,10 @@
       font-size: 1.5rem;
       font-weight: 600;
       cursor: pointer;
+
+      @include global.tablet {
+        font-size: 1.8rem;
+      }
     }
   }
 }

@@ -13,6 +13,13 @@ export default defineConfig({
     },
   },
   plugins: [react()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "./src/assets/styles/index.scss" as global;`,
+      },
+    },
+  },
 });
 
 dotenv.config();
