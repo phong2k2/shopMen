@@ -7,7 +7,6 @@ const session = require("express-session");
 const passport = require("passport");
 const path = require("path");
 const multer = require("multer");
-const upload = multer();
 require("./configs/passport");
 const { corsOptions } = require("./configs/cross");
 const {
@@ -16,6 +15,7 @@ const {
 const { APIs_VI } = require("./routes/v1");
 const db = require("./configs/db");
 const { ADMIN_API } = require("./routes/admin");
+const { env } = require("./configs/environment");
 
 const app = express();
 const port = 3000;
