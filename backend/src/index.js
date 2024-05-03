@@ -6,7 +6,6 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
 const path = require("path");
-const multer = require("multer");
 require("./configs/passport");
 const { corsOptions } = require("./configs/cross");
 const {
@@ -18,8 +17,6 @@ const { ADMIN_API } = require("./routes/admin");
 const { env } = require("./configs/environment");
 
 const app = express();
-const port = 3000;
-
 //connect db
 db.connect();
 
@@ -62,11 +59,15 @@ app.use("/admin", ADMIN_API);
 app.use(errorHandlingMiddleware);
 
 if (env.BUILD_MODE === "production") {
+  console.log("🚀 ~ env.BUILD_MODE:", env.BUILD_MODE);
   app.listen(process.env.PORT, () => {
     console.log(`App listening on port ${process.env.PORT}`);
   });
 } else {
-  app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
+  console.log("🚀 ~ env.BUILD_MODE:", env.BUILD_MODE);
+  console.log("🚀 ~ env.APP_PORT:", env.APP_PORT);
+
+  app.listen(env.APP_PORT, env.APP_HOST, () => {
+    console.log(`App listening on port ${env.APP_PORT}`);
   });
 }

@@ -16,6 +16,9 @@ const env = {
 
   EXPIRED_ACCESS_TOKEN: process.env.EXPIRED_ACCESS_TOKEN,
   EXPIRED_REFRESH_TOKEN: process.env.EXPIRED_REFRESH_TOKEN,
+
+  APP_HOST: process.env.APP_HOST,
+  APP_PORT: process.env.APP_PORT,
 };
 
 module.exports = { env };
