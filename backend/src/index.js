@@ -61,6 +61,12 @@ app.use("/admin", ADMIN_API);
 //Middleware xử lý lỗi tập trung
 app.use(errorHandlingMiddleware);
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
-});
+if (env.BUILD_MODE === "production") {
+  app.listen(process.env.PORT, () => {
+    console.log(`App listening on port ${process.env.PORT}`);
+  });
+} else {
+  app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+  });
+}
