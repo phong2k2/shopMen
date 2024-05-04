@@ -24,15 +24,12 @@ import path from "path";
 
 export default defineConfig(({ command }) => {
   const env = dotenv.config({
-    path: command === "build" ? ".env" : ".env.development",
+    path: command === "build" ? ".env.production" : ".env.development",
   }).parsed;
 
   return {
     define: {
-      "process.env": Object.keys(env).reduce((prev, key) => {
-        prev[key] = env[key];
-        return prev;
-      }, {}),
+      "process.env": env,
     },
     resolve: {
       alias: {
