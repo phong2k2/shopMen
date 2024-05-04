@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import fs from "fs";
+
 // export default defineConfig({
 //   define: {
 //     "process.env": process.env,
@@ -24,12 +24,7 @@ import fs from "fs";
 
 export default defineConfig(({ command }) => {
   const env = dotenv.config({
-    path:
-      command === "build"
-        ? fs.existsSync(".env.production")
-          ? ".env.production"
-          : ".env"
-        : ".env.development",
+    path: command === "build" ? ".env.production" : ".env.production",
   }).parsed;
 
   return {
