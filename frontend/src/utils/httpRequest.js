@@ -6,7 +6,7 @@ import axios from "axios";
 class HttpRequest {
   constructor() {
     this.httpRequest = axios.create({
-      baseURL: import.meta.env.VITE_BASE_URL,
+      baseURL: process.env.VITE_BASE_API_ENDPOINT,
     });
 
     this.httpRequest.interceptors.request.use((config) => {
