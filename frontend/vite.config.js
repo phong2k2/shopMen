@@ -24,7 +24,7 @@ import path from "path";
 
 export default defineConfig(({ command }) => {
   const env = dotenv.config({
-    path: command === "build" ? ".env.production" : ".env.production",
+    path: command === "build" ? ".env" : ".env.development",
   }).parsed;
 
   return {
