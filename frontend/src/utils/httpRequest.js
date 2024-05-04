@@ -1,7 +1,7 @@
+import axios from "axios";
 import { history } from "@/helpers/history";
 import { loginSuccess, logoutSuccess } from "@/redux/authSlice";
 import { store } from "@/redux/store";
-import axios from "axios";
 
 class HttpRequest {
   constructor() {
@@ -74,6 +74,7 @@ class HttpRequest {
         params,
         withCredentials: true,
       });
+
       return response.data;
     } catch (error) {
       throw error?.response?.data;
