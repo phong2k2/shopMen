@@ -29,7 +29,10 @@ export default defineConfig(({ command }) => {
 
   return {
     define: {
-      "process.env": env,
+      "process.env": Object.keys(env).reduce((prev, key) => {
+        prev[key] = env[key];
+        return prev;
+      }, {}),
     },
     resolve: {
       alias: {
@@ -46,3 +49,5 @@ export default defineConfig(({ command }) => {
     },
   };
 });
+
+dotenv.config();
