@@ -4,17 +4,10 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig(({ command, mode }) => {
-  if (command === "serve") {
-    process.env = {
-      ...process.env.development,
-      ...loadEnv(mode, process.cwd()),
-    };
-  } else {
-    process.env = {
-      ...process.env.production,
-      ...loadEnv(mode, process.cwd()),
-    };
-  }
+  process.env = {
+    ...process.env,
+    ...loadEnv(mode, process.cwd()),
+  };
 
   return {
     define: {
