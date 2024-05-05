@@ -1,38 +1,24 @@
 import dotenv from "dotenv";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
-// export default defineConfig({
-//   define: {
-//     "process.env": process.env,
-//   },
-//   resolve: {
-//     alias: {
-//       "@": path.resolve(__dirname, "src"),
-//     },
-//   },
-//   plugins: [react()],
-//   css: {
-//     preprocessorOptions: {
-//       scss: {
-//         additionalData: `@use "./src/assets/styles/index.scss" as global;`,
-//       },
-//     },
-//   },
-// });
-
-export default defineConfig(({ command }) => {
-  const env = dotenv.config({
-    path: command === "build" ? ".env.production" : ".env.development",
-  }).parsed;
+export default defineConfig(({ command, mode }) => {
+  if (command === "serve") {
+    process.env = {
+      ...process.env.development,
+      ...loadEnv(mode, process.cwd()),
+    };
+  } else {
+    process.env = {
+      ...process.env.production,
+      ...loadEnv(mode, process.cwd()),
+    };
+  }
 
   return {
     define: {
-      "process.env": Object.keys(env).reduce((prev, key) => {
-        prev[key] = env[key];
-        return prev;
-      }, {}),
+      "process.env": process.env,
     },
     resolve: {
       alias: {

@@ -2,12 +2,11 @@ import axios from "axios";
 import { history } from "@/helpers/history";
 import { loginSuccess, logoutSuccess } from "@/redux/authSlice";
 import { store } from "@/redux/store";
-import { API_ENDPOINT } from "./constants";
 
 class HttpRequest {
   constructor() {
     this.httpRequest = axios.create({
-      baseURL: API_ENDPOINT,
+      baseURL: process.env.VITE_BASE_API_ENDPOINT,
     });
 
     this.httpRequest.interceptors.request.use((config) => {
