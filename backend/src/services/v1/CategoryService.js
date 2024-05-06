@@ -1,7 +1,6 @@
 const { ObjectId } = require("mongodb");
 const { StatusCodes } = require("http-status-codes");
 const Category = require("../../app/model/Category");
-const Product = require("../../app/model/Product");
 const ApiError = require("../../utils/ApiError");
 const SubCategory = require("../../app/model/SubCategory");
 
@@ -9,6 +8,7 @@ const createCategory = async (newCategory) => {
   const { name } = newCategory;
   try {
     const checkCategory = await Category.findOne({ name: name });
+
     if (checkCategory) {
       throw new ApiError(StatusCodes.NOT_FOUND, "Category not found");
     }
@@ -26,6 +26,7 @@ const createCategory = async (newCategory) => {
 const getAllCategories = async () => {
   try {
     const getAllCategories = await Category.find({}).populate("subCategory");
+
     return {
       data: getAllCategories,
     };
@@ -37,8 +38,9 @@ const getAllCategories = async () => {
 const getCategoryDetail = async (id) => {
   try {
     const getCategoryDetail = await Category.findById({
-      _id: new ObjectId(id),
+      _id: id,
     });
+
     if (!getCategoryDetail) {
       throw new ApiError(StatusCodes.NOT_FOUND, "Category not found");
     }
