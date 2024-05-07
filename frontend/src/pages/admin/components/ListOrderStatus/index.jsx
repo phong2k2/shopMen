@@ -39,7 +39,6 @@ function ListOrderStatus() {
     queryFn: () => orderService.getAllOrderStatus({ status, user }),
     enabled: status !== undefined,
   });
-  console.log(listOrders);
 
   const deleteOrderMutation = useMutation({
     mutationFn: (id) => orderService.deleteOrder(id),

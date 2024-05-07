@@ -14,6 +14,7 @@ import { PUBLICROUTER } from "@/config/routes";
 import classNames from "classnames/bind";
 import styles from "./SlideShowItem.module.scss";
 import { formatPrice } from "../formatData/formatData";
+import { pathProcessing } from "@/helpers/image";
 
 const cx = classNames.bind(styles);
 function SlideShowItem({ allProduct }) {
@@ -45,7 +46,10 @@ function SlideShowItem({ allProduct }) {
                       proItem?._id
                     )}
                   >
-                    <img src={proItem?.thumbnail} alt="image1" />
+                    <img
+                      src={pathProcessing(proItem?.thumbnail)}
+                      alt="image1"
+                    />
                   </Link>
                 </div>
                 <div className={cx("product-detail")}>

@@ -5,6 +5,7 @@ import Skeleton from "@mui/material/Skeleton";
 import { Link, NavLink } from "react-router-dom";
 import { formatPrice } from "@/components/formatData/formatData";
 import { PUBLICROUTER } from "@/config/routes";
+import { pathProcessing } from "@/helpers/image";
 
 const cx = classNames.bind(styles);
 function ProductItem({ itemPro, loading }) {
@@ -26,10 +27,14 @@ function ProductItem({ itemPro, loading }) {
           <div className={cx("product-img")}>
             <Link
               to={PUBLICROUTER.productDetail.slug(itemPro?.slug, itemPro?._id)}
+              className={cx("lazy-img")}
             >
               <picture>
                 <source media="(max-width: 767px)" />
-                <img src={itemPro?.thumbnail} alt={`image-${itemPro?._id}`} />
+                <img
+                  src={pathProcessing(itemPro?.thumbnail)}
+                  alt={`image-${itemPro?._id}`}
+                />
               </picture>
             </Link>
           </div>

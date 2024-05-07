@@ -55,12 +55,12 @@ const stateSizes = [
 ];
 
 const initSize = {
-  height: '',
-  mass: '',
-  productColor: '',
-  size: '',
-  width: '',
-}
+  height: "",
+  mass: "",
+  productColor: "",
+  size: "",
+  width: "",
+};
 
 function SizeModal({
   handleOpenModal,
@@ -87,7 +87,6 @@ function SizeModal({
   });
 
   useEffect(() => {
-    console.log("🚀 ~ isAddMode:", isAddMode)
     if (isAddMode) {
       reset(initSize);
     } else {

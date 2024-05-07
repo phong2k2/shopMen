@@ -14,6 +14,7 @@ import { formatPrice } from "@/components/formatData/formatData";
 import config from "@/config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { pathProcessing } from "@/helpers/image";
 
 const cx = classNames.bind(styles);
 function Cart() {
@@ -107,7 +108,10 @@ function Cart() {
                               <div key={index} className={cx("item-cart")}>
                                 <div className={cx("left")}>
                                   <a>
-                                    <img src={cartItem?.image} alt="" />
+                                    <img
+                                      src={pathProcessing(cartItem?.image)}
+                                      alt="hinh anh"
+                                    />
                                   </a>
                                 </div>
                                 <div className={cx("right")}>

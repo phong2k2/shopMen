@@ -10,7 +10,7 @@ import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import PayPal from "../../Paypal";
 import { useQuery } from "react-query";
 import { getClientIdPaypal } from "@/services/paymentService";
-import { schemaCheckout } from "@/Validations/yupSchema";
+import { schemaCheckout } from "@/validations/yupSchema";
 import {
   getDistricts,
   getProvinces,

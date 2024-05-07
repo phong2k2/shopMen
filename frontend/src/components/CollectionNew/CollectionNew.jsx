@@ -3,6 +3,7 @@ import styles from "./CollectionNew.module.scss";
 import { Link } from "react-router-dom";
 import { PUBLICROUTER } from "@/config/routes";
 import { formatPrice } from "../formatData/formatData";
+import { pathProcessing } from "@/helpers/image";
 
 const cx = classNames.bind(styles);
 function CollectionNew({ allProductOutstanding }) {
@@ -29,7 +30,10 @@ function CollectionNew({ allProductOutstanding }) {
                         proItem?._id
                       )}
                     >
-                      <img src={proItem?.thumbnail} alt="image1" />
+                      <img
+                        src={pathProcessing(proItem?.thumbnail)}
+                        alt="image1"
+                      />
                     </Link>
                   </div>
                   <div className={cx("product-detail")}>

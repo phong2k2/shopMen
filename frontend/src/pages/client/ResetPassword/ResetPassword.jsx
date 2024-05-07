@@ -7,7 +7,7 @@ import config from "@/config";
 import InputField from "@/components/form-controls/InputField";
 import { resetPassword } from "@/services/authService";
 import { toast } from "react-toastify";
-import { schemaResetPassword } from "@/Validations/yupSchema";
+import { schemaResetPassword } from "@/validations/yupSchema";
 
 function ResetPassword() {
   const [searchParams] = useSearchParams();

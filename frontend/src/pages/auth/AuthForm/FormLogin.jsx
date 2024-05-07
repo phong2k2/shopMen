@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import "./Form.scss";
 import { Link } from "react-router-dom";
 import config from "@/config";
-import { schemaFormLogin } from "@/Validations/yupSchema";
+import { schemaFormLogin } from "@/validations/yupSchema";
 
 const initLogin = {
   email: "",

@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import * as orderService from "@/services/orderService";
 import { formatPrice } from "@/components/formatData/formatData";
+import { pathProcessing } from "@/helpers/image";
 
 const cx = classNames.bind(styles);
 function ListOrders() {
@@ -115,7 +116,7 @@ function ListOrders() {
                                   <div className={cx("wrap-oder")}>
                                     <div className={cx("img")}>
                                       <img
-                                        src={`http://localhost:3000/${itemProduct?.image}`}
+                                        src={pathProcessing(itemProduct?.image)}
                                         alt=""
                                       />
                                     </div>

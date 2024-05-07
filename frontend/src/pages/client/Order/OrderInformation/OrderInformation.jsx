@@ -2,6 +2,7 @@ import classNames from "classnames/bind";
 import styles from "./OrderInformation.module.scss";
 import { formatPrice } from "@/components/formatData/formatData";
 import PropTypes from "prop-types";
+import { pathProcessing } from "@/helpers/image";
 
 const cx = classNames.bind(styles);
 function OrderInformation({ cart, shippingCost, totalPrice }) {
@@ -15,7 +16,7 @@ function OrderInformation({ cart, shippingCost, totalPrice }) {
                 <div className={cx("product-item")} key={index}>
                   <div className={cx("product-img")}>
                     <div className={cx("product-thumbnail-wrapper")}>
-                      <img src={proItem?.image} alt="" />
+                      <img src={pathProcessing(proItem?.image)} alt="" />
                     </div>
                     <span className={cx("product-thumbnail-quantity")}>
                       {proItem?.amount}

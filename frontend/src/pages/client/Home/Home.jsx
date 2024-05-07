@@ -1,5 +1,3 @@
-import classNames from "classnames/bind";
-import styles from "./Home.module.scss";
 import { useQuery } from "react-query";
 import { getAllSubCategory } from "@/services/subCategoryService";
 import { getAllProducts } from "@/services/productService";
@@ -8,7 +6,6 @@ import CollectionFlashSale from "@/components/CollectionFlashSale";
 import CollectionNew from "@/components/CollectionNew/CollectionNew";
 import CollectionCategoryNew from "@/components/CollectionCategoryNew";
 
-const cx = classNames.bind(styles);
 function Home() {
   const { data: allListSubCategory } = useQuery({
     queryKey: "allSubCate",

@@ -37,7 +37,7 @@ import { formatPrice } from "@/components/formatData/formatData";
 import EmptyBox from "@/components/EmptyBox";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
 import { toast } from "react-toastify";
-import { schemaColor } from "@/Validations/adminValidations";
+import { schemaColor } from "@/validations/adminValidations";
 
 const stateColor = [
   {
@@ -185,7 +185,6 @@ function VariantProduct() {
   });
 
   const handleUpdateProductColor = (id) => {
-    console.log(id);
     setIsAddMode(false);
     setOpen(true);
     setIdColor(id);

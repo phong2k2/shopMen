@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { formatPrice } from "../../formatData/formatData";
 import { Button } from "@mui/material";
 import PropTypes from "prop-types";
+import { pathProcessing } from "@/helpers/image";
 
 const cx = classNames.bind(styles);
 function ModalCart({
@@ -30,12 +31,14 @@ function ModalCart({
           <tbody>
             {cart?.cartItems?.length ? (
               cart?.cartItems?.map((cartItem, index) => {
-                console.log("🚀 ~ cartItem:", cartItem);
                 return (
                   <tr key={index} className={cx("card-item")}>
                     <td className={cx("pro-img")}>
                       <a onClick={() => handleNextPage(cartItem?.slug)}>
-                        <img src={cartItem?.image} alt="anh san pham" />
+                        <img
+                          src={pathProcessing(cartItem?.image)}
+                          alt="anh san pham"
+                        />
                       </a>
                     </td>
                     <td className={cx("content-cart")}>

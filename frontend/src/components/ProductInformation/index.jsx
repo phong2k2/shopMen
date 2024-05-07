@@ -1,17 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
 import classNames from "classnames/bind";
-import styles from "./ProductDetailDescription.module.scss";
+import styles from "./ProductInformation.module.scss";
 import ProductRelated from "@/components/ProductRelated";
 import ProductDescription from "../ProductDescription";
 import ProductPreview from "../ProductPreview";
 
 const cx = classNames.bind(styles);
-function ProductDetailDescription({
-  detailProduct,
-  selectedSize,
-  allProductRelatedFilter,
-}) {
+function ProductDetail({ detailProduct, allProductRelatedFilter }) {
   const [activeTab, setActiveTab] = useState(1);
   const lineActiveRef = useRef(null);
   const tabContentRef = useRef(null);
@@ -80,4 +76,4 @@ function ProductDetailDescription({
   );
 }
 
-export default ProductDetailDescription;
+export default ProductDetail;

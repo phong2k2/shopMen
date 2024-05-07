@@ -17,7 +17,7 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import NavContent from "@/components/NavContent";
 import MainProductDetail from "@/components/MainProductDetail";
-import ProductDetailDescription from "@/components/ProductDetailDescription";
+import ProductInformation from "@/components/ProductInformation";
 
 const cx = classNames.bind(styles);
 function ProductDetail() {
@@ -151,7 +151,7 @@ function ProductDetail() {
           selectedSize={selectedSize}
         />
         {/* Descriptions */}
-        <ProductDetailDescription
+        <ProductInformation
           detailProduct={detailProduct}
           selectedSize={selectedSize}
           allProductRelatedFilter={allProductRelatedFilter}

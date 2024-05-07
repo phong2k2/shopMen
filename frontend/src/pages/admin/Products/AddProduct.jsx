@@ -21,7 +21,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import TextArea from "@/components/TextArea";
 import { useMutation, useQuery } from "react-query";
-import { schemaHandleProduct } from "@/Validations/adminValidations";
+import { schemaHandleProduct } from "@/validations/adminValidations";
 import { toast } from "react-toastify";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
 

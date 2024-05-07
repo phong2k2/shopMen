@@ -6,29 +6,28 @@ const defaultOptions = {
   data: [
     [new Date("2019-07-20"), 70.1],
     [new Date("2019-07-21"), 70.6],
-    [new Date("2019-07-22"), 70.1]
+    [new Date("2019-07-22"), 70.1],
   ],
   tableOptions: {
     name: "TableExport",
     ref: "A1",
     style: {
       theme: "TableStyleLight3",
-      showRowStripes: true
+      showRowStripes: true,
     },
     columns: [
-        { name: 'ID', filterButton: true },
-        { name: 'Product Name', filterButton: true },
-        { name: 'Quantity', filterButton: true },
-        { name: 'Total Price', filterButton: true },
-    ]
-  }
+      { name: "ID", filterButton: true },
+      { name: "Product Name", filterButton: true },
+      { name: "Quantity", filterButton: true },
+      { name: "Total Price", filterButton: true },
+    ],
+  },
 };
 
 export const useExcelExport = () => {
   const generate = (data, workbookOptions, tableOptions) => {
     const configuration = { ...defaultOptions.tableOptions, ...tableOptions };
 
-    console.log("CONFIG", configuration);
     var workbook = new Workbook();
     var sheet = workbook.addWorksheet(workbookOptions.name);
 
@@ -42,16 +41,16 @@ export const useExcelExport = () => {
       totalsRow: configuration.totalsRow,
       style: configuration.style,
       columns: configuration.columns,
-      rows: data
+      rows: data,
     });
 
-    workbook.xlsx.writeBuffer().then(data => {
+    workbook.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data], { type: "text/plain;charset=utf-8" });
       saveAs(blob, `${workbookOptions.name}.xlsx`);
     });
   };
 
   return {
-    generate
+    generate,
   };
 };

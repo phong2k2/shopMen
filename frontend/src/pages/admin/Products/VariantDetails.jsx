@@ -169,7 +169,6 @@ function VariantProduct() {
   };
 
   const onSubmitAddSize = (values) => {
-    console.log(values);
     if (isAddMode) {
       values.productColor = id;
       addSizeProduct.mutate(values, {

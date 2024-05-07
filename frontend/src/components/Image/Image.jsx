@@ -11,7 +11,6 @@ function Images({
   fallBack: customFallBack = images.noImage,
   ...props
 }) {
-  console.log("🚀 ~ file: Image.jsx:15 ~ src:", src);
   const [fallBack, setFallBack] = useState("");
 
   const handleError = () => {

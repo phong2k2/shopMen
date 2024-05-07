@@ -15,7 +15,7 @@ import {
   updateStatusAddress,
 } from "@/services/addressService";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { schemaAddress } from "@/Validations/yupSchema";
+import { schemaAddress } from "@/validations/yupSchema";
 import InputField from "@/components/form-controls/InputField";
 import {
   getDistricts,
@@ -51,7 +51,6 @@ function Address() {
     district: initValue,
     ward: initValue,
   });
-  console.log(activeTab);
 
   const {
     register,

@@ -8,6 +8,7 @@ import styles from "./CollectionFlashSale.module.scss";
 import { Link } from "react-router-dom";
 import { PUBLICROUTER } from "@/config/routes";
 import { formatPrice } from "../formatData/formatData";
+import { pathProcessing } from "@/helpers/image";
 
 const cx = classNames.bind(styles);
 function CollectionFlashSale({ allProductFlashSeal }) {
@@ -118,7 +119,10 @@ function CollectionFlashSale({ allProductFlashSeal }) {
                             item?._id
                           )}
                         >
-                          <img src={item?.thumbnail} alt="image1" />
+                          <img
+                            src={pathProcessing(item?.thumbnail)}
+                            alt="image1"
+                          />
                         </Link>
                       </div>
                       <div className={cx("product-detail")}>

@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import PropTypes from "prop-types";
 import InputField from "@/components/form-controls/InputField/InputField";
 import "./Form.scss";
-import { schemaFormRegister } from "@/Validations/yupSchema";
+import { schemaFormRegister } from "@/validations/yupSchema";
 import { useEffect } from "react";
 
 const initRegister = {
@@ -34,7 +34,6 @@ const FormRegister = forwardRef(function FormRegister(
   }, [statusRegister]);
 
   const handleOnSubmit = (values) => {
-    console.log(values);
     handleSubmitRegister(values);
   };
   return (

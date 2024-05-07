@@ -25,6 +25,7 @@ import { orderStatus } from "@/contant";
 import { useExcelExport } from "@/hook/useExcelExport";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
 import { toast } from "react-toastify";
+import { pathProcessing } from "@/helpers/image";
 
 function DetailOrder() {
   const { id } = useParams();
@@ -77,7 +78,7 @@ function DetailOrder() {
   return (
     <>
       <LoadingBackdrop openLoading={openLoading} />
-      <Container sx={{marginBottom: 5}}>
+      <Container sx={{ marginBottom: 5 }}>
         <Typography variant="h4" sx={{ fontWeight: "bold" }} className="pb-4 ">
           Đơn hàng chi tiết
         </Typography>
@@ -186,7 +187,10 @@ function DetailOrder() {
                             <Grid item xs={2}>
                               <Paper elevation={1}>
                                 <Box>
-                                  <img src={orderItem?.image} alt="Image" />
+                                  <img
+                                    src={pathProcessing(orderItem?.image)}
+                                    alt="Image"
+                                  />
                                 </Box>
                               </Paper>
                             </Grid>

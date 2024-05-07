@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import Input from "@/components/Input";
 import * as userService from "@/services/userService";
 import config from "@/config";
+import { pathProcessing } from "@/helpers/image";
 
 function EditUser() {
   const { id } = useParams();
   const [stateNewUser, setStateNewUser] = useState([]);
   const navigate = useNavigate();
 
-  console.log(stateNewUser);
   useEffect(() => {
     const fetchGetEditUser = async () => {
       try {
@@ -58,12 +58,8 @@ function EditUser() {
       formData.append(property, stateNewUser[property]);
     });
 
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    });
     try {
       const res = await userService.updateUser(formData, id);
-      console.log(res);
       if (res) {
         navigate(config.PRIVATEROUTER.indexUser);
       }
@@ -163,7 +159,7 @@ function EditUser() {
           <div className="col-sm-6">
             <img
               width="30%"
-              src={`http://localhost:3000/${stateNewUser?.image}`}
+              src={pathProcessing(stateNewUser?.image)}
               alt="ko có anh"
             />
           </div>

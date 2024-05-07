@@ -7,7 +7,7 @@ import config from "@/config";
 import InputField from "@/components/form-controls/InputField";
 import { forgotPassword } from "@/services/authService";
 import { useSelector } from "react-redux";
-import { schemaForgotPassword } from "@/Validations/yupSchema";
+import { schemaForgotPassword } from "@/validations/yupSchema";
 import { toast } from "react-toastify";
 
 function ForGotPassword() {
