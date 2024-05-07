@@ -17,8 +17,8 @@ export const schemaHandleProduct = yup.object().shape({
     .transform((value) => (Number.isNaN(value) ? null : value))
     .nullable()
     .required("Vui lòng nhập giảm giá"),
-  // category: yup.string().required("Vui lòng chọn danh mục"),
-  // subCategory: yup.string().required("Vui lòng chọn loại sản phẩm"),
+  category: yup.string().required("Vui lòng chọn danh mục"),
+  subCategory: yup.string().required("Vui lòng chọn loại sản phẩm"),
   hot: yup.string().required("Vui lòng chọn trạng thái"),
   description: yup
     .string()
