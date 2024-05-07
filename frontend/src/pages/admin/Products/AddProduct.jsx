@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import * as productService from "@/services/productService";
 import * as categoryService from "@/services/categoryService";
 import * as subCategoryService from "@/services/subCategoryService";
@@ -12,7 +13,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  NativeSelect,
   Grid,
 } from "@mui/material";
 import HeaderPageAdmin from "@/components/HeaderPageAdmin";
@@ -22,7 +22,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import TextArea from "@/components/TextArea";
 import { useMutation, useQuery } from "react-query";
 import { schemaHandleProduct } from "@/validations/adminValidations";
-import { toast } from "react-toastify";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
 
 const initValues = {
