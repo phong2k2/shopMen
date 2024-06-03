@@ -1,4 +1,4 @@
-import Footer from "@/layouts/ClientLayout/components/Footer/Footer";
+import Footer from "@/layouts/components/Footer/Footer";
 import Header from "../components/Header/Header";
 import "./HeaderOnly.css";
 

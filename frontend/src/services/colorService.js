@@ -1,17 +1,15 @@
 import HttpRequest from "@/utils/httpRequest";
 
-const axiosJWT = new HttpRequest();
-
 // Create product color
 export const createColorProduct = async (data) => {
-  const res = await axiosJWT.post(`/v1/colors`, data);
+  const res = await HttpRequest.post(`/v1/colors`, data);
   return res?.data;
 };
 
 // Get Product color
 export const getAllColor = async (id) => {
   try {
-    const res = await axiosJWT.get(`/v1/colors?product=${id}`);
+    const res = await HttpRequest.get(`/v1/colors?product=${id}`);
     return res?.data?.results;
   } catch (err) {
     console.log(err);
@@ -20,7 +18,7 @@ export const getAllColor = async (id) => {
 
 export const getColorDetail = async (id) => {
   try {
-    const res = await axiosJWT.get(`/v1/colors/${id}`);
+    const res = await HttpRequest.get(`/v1/colors/${id}`);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -29,13 +27,13 @@ export const getColorDetail = async (id) => {
 
 // Update Color
 export const updateColorProduct = async ({ id, newData }) => {
-  const res = await axiosJWT.update(`/v1/colors/${id}`, newData);
+  const res = await HttpRequest.update(`/v1/colors/${id}`, newData);
   return res?.data;
 };
 
 //Delete color
 export const deleteColor = async (id) => {
-  const res = await axiosJWT.delete(`/v1/colors/${id}`);
+  const res = await HttpRequest.delete(`/v1/colors/${id}`);
   return res;
 };
 
@@ -43,7 +41,7 @@ export const deleteColor = async (id) => {
 
 export const createImageProduct = async (data) => {
   try {
-    const res = await axiosJWT.post(`/v1/galleries`, data);
+    const res = await HttpRequest.post(`/v1/galleries`, data);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -52,7 +50,7 @@ export const createImageProduct = async (data) => {
 
 export const getAllImageProduct = async (id) => {
   try {
-    const res = await axiosJWT.get(`/v1/galleries?productColor=${id}`);
+    const res = await HttpRequest.get(`/v1/galleries?productColor=${id}`);
     return res?.data?.results;
   } catch (err) {
     console.log(err);
@@ -61,7 +59,7 @@ export const getAllImageProduct = async (id) => {
 
 export const getImageDetails = async (id) => {
   try {
-    const res = await axiosJWT.get(`/v1/galleries/${id}`);
+    const res = await HttpRequest.get(`/v1/galleries/${id}`);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -70,7 +68,7 @@ export const getImageDetails = async (id) => {
 
 export const updateImageProduct = async ({ id, newData }) => {
   try {
-    const res = await axiosJWT.update(`/v1/galleries/${id}`, newData);
+    const res = await HttpRequest.update(`/v1/galleries/${id}`, newData);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -79,7 +77,7 @@ export const updateImageProduct = async ({ id, newData }) => {
 
 export const deleteImageProduct = async (id, publicId) => {
   try {
-    const res = await axiosJWT.delete(`/v1/galleries/${id}`, {
+    const res = await HttpRequest.delete(`/v1/galleries/${id}`, {
       params: {
         publicId,
       },

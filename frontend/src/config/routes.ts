@@ -1,23 +1,3 @@
-const PRIVATEROUTER = {
-  dashboard: "/admin/dashboard",
-  indexCategory: "/admin/category/index",
-  indexSubCategory: "/admin/cate-item/:id",
-  indexProduct: "/admin/product/index",
-  createProduct: "/admin/product/create",
-  editProduct: "/admin/product/:id",
-  variant: "/admin/variant/:id",
-  variantDetails: "/admin/variant-details/:id",
-  indexUser: "/admin/user/index",
-  order: "/admin/order",
-  listOrderStatus: {
-    index: "/admin/list-order",
-    status: (status, userId) =>
-      `/admin/list-order/?userId=${userId}&status=${status}`,
-  },
-  detailOrder: "/admin/order/detail/:id",
-  payment: "/admin/payment/index",
-};
-
 const PUBLICROUTER = {
   home: "/",
   auth: "/auth",
@@ -56,4 +36,4 @@ const PUBLICROUTER = {
   notFound: "*",
 };
 
-export { PRIVATEROUTER, PUBLICROUTER };
+export { PUBLICROUTER };

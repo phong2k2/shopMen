@@ -1,9 +1,8 @@
 import classNames from "classnames/bind";
 import styles from "./Cart.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  clearCart,
   decreaseCart,
   getTotals,
   increaseCart,
@@ -11,20 +10,30 @@ import {
 } from "@/redux/cartSlice";
 import { Link } from "react-router-dom";
 import { formatPrice } from "@/components/formatData/formatData";
-import config from "@/config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import { pathProcessing } from "@/helpers/image";
+import { PUBLICROUTER } from "@/config/routes";
 
 const cx = classNames.bind(styles);
 function Cart() {
   const cart = useSelector((state) => state.cart);
+
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.login?.currentUser);
+  const [checkItems, setCheckItems] = useState([]);
+  const [isCheckAll, setIsCheckAll] = useState(false);
+  const allCheckInput = useRef([]);
 
   useEffect(() => {
     dispatch(getTotals());
   }, [cart, dispatch]);
+
+  useEffect(() => {
+    allCheckInput.current = allCheckInput.current.filter(
+      (input) => input !== null
+    );
+  }, [cart?.cartItems]);
 
   const handleChangeCount = (type, itemProduct, limited) => {
     if (type === "decrease") {
@@ -37,11 +46,69 @@ function Cart() {
   };
 
   const handleRemoveFromCart = (itemRemove) => {
-    dispatch(removeFromCart({ itemRemove }));
+    dispatch(removeFromCart(itemRemove));
+  };
+
+  const handleCheckInput = (e, cartItem) => {
+    const { checked } = e.target;
+    const { size, color, product } = cartItem;
+
+    let checkedCheckboxes = allCheckInput.current.filter((checkbox) => {
+      if (checkbox) return checkbox.checked;
+    });
+
+    const checkAll = checkedCheckboxes.length === allCheckInput.current.length;
+    setIsCheckAll(checkAll);
+
+    if (checked) {
+      setCheckItems((prev) => [
+        ...prev,
+        {
+          product,
+          size,
+          color,
+          checked,
+        },
+      ]);
+    } else {
+      setCheckItems((prev) => {
+        return prev.filter((data) => {
+          return (
+            (data.product !== product ||
+              data.color !== color ||
+              data.size !== size) &&
+            data.checked
+          );
+        });
+      });
+    }
+  };
+
+  const handleCheckAll = (e) => {
+    const { checked } = e.target;
+    setIsCheckAll(checked);
+    if (cart?.cartItems) {
+      console.log("🚀 ~ checkItems:", checkItems);
+      if (cart.cartItems.length === checkItems?.length) {
+        setCheckItems([]);
+      } else {
+        const initialCheckItems = cart.cartItems.map((item) => ({
+          product: item.product,
+          size: item.size,
+          color: item.color,
+          checked: true,
+        }));
+        setCheckItems(initialCheckItems);
+      }
+    }
   };
 
   const handleClearCart = () => {
-    dispatch(clearCart());
+    if (checkItems) {
+      const itemRemove = checkItems.filter((cart) => cart.checked);
+      dispatch(removeFromCart(itemRemove));
+      setCheckItems((prev) => prev.filter((cart) => !cart.checked));
+    }
   };
 
   return (
@@ -106,6 +173,23 @@ function Cart() {
                           {cart?.cartItems?.map((cartItem, index) => {
                             return (
                               <div key={index} className={cx("item-cart")}>
+                                <input
+                                  className={cx("check-input")}
+                                  type="checkbox"
+                                  onChange={(e) =>
+                                    handleCheckInput(e, cartItem)
+                                  }
+                                  ref={(el) =>
+                                    (allCheckInput.current[index] = el)
+                                  }
+                                  checked={checkItems.some(
+                                    (item) =>
+                                      item?.product === cartItem?.product &&
+                                      item?.size === cartItem?.size &&
+                                      item?.color === cartItem?.color &&
+                                      item.checked
+                                  )}
+                                />
                                 <div className={cx("left")}>
                                   <a>
                                     <img
@@ -182,10 +266,19 @@ function Cart() {
                             );
                           })}
                         </div>
-                        <div className={cx("clear-car")}>
-                          <button onClick={() => handleClearCart()}>
-                            Xóa tất cả sản phẩm
-                          </button>
+                        <div className={cx("clear-cart")}>
+                          <div className={cx("check-all")}>
+                            <input
+                              onChange={handleCheckAll}
+                              type="checkbox"
+                              id="selectAllCheckbox"
+                              checked={isCheckAll}
+                            />
+                            <label htmlFor="selectAllCheckbox">
+                              Chọn tất cả
+                            </label>
+                          </div>
+                          <button onClick={handleClearCart}>Xóa</button>
                         </div>
                       </div>
                       <div className={cx("cart-row")}>
@@ -269,7 +362,7 @@ function Cart() {
                       </div>
                     ) : (
                       <div className={cx("summary-actions")}>
-                        <Link to={config.PUBLICROUTER.auth}>
+                        <Link to={PUBLICROUTER.auth}>
                           Đăng nhập để thanh toán
                         </Link>
                       </div>

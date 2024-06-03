@@ -3,12 +3,12 @@ import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "./ForgotPassword.scss";
-import config from "@/config";
 import InputField from "@/components/form-controls/InputField";
 import { forgotPassword } from "@/services/authService";
 import { useSelector } from "react-redux";
 import { schemaForgotPassword } from "@/validations/yupSchema";
 import { toast } from "react-toastify";
+import { PUBLICROUTER } from "@/config/routes";
 
 function ForGotPassword() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ function ForGotPassword() {
     <div className="wrap-card">
       <div className="card-forgot">
         <form onSubmit={handleSubmit(handleSubmitForgotPass)}>
-          <Link to={config.PUBLICROUTER.home}>
+          <Link to={PUBLICROUTER.home}>
             <img
               className="image-header"
               src="https://file.hstatic.net/1000096703/file/logo_website__191___70_px__979fdef210f7474d8a09b42724033b5c.png"

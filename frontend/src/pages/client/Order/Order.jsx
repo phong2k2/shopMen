@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import * as orderService from "@/services/orderService";
-import config from "@/config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import { clearCart, getTotals } from "@/redux/cartSlice";
@@ -17,6 +16,7 @@ import {
   getAddressForOrder,
   getAllAddress,
 } from "@/services/addressService";
+import { PUBLICROUTER } from "@/config/routes";
 
 const cx = classNames.bind(styles);
 function Order() {
@@ -131,18 +131,18 @@ function Order() {
             <div className={cx("col-md-12")}>
               <div className={cx("header-order")}>
                 <h2>
-                  <Link to={config.PUBLICROUTER.home}>KENTA.VN</Link>
+                  <Link to={PUBLICROUTER.home}>KENTA.VN</Link>
                 </h2>
               </div>
             </div>
             <div className={cx("col-md-6 col-sm-12", "main")}>
               <div className={cx("main-head")}>
                 <h2>
-                  <Link to={config.PUBLICROUTER.home}>KENTA.VN</Link>
+                  <Link to={PUBLICROUTER.home}>KENTA.VN</Link>
                 </h2>
                 <ul className={cx("breadcrumb")}>
                   <li className={cx("breadcrumb-item")}>
-                    <Link to={config.PUBLICROUTER.cart}>Giỏ hàng</Link>
+                    <Link to={PUBLICROUTER.cart}>Giỏ hàng</Link>
                   </li>
                   <li className={cx("breadcrumb-item")}>
                     <FontAwesomeIcon icon={faAngleRight} />

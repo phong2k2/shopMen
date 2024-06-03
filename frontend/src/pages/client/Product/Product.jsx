@@ -9,12 +9,11 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import ProductItem from "@/components/ProductItem";
 import { useDeliveryInfo } from "@/hook/useContext";
 import NavContent from "@/components/NavContent";
-
-import Pagination from "@mui/material/Pagination";
+import Pagination from "@/components/Pagination";
 
 const cx = classNames.bind(styles);
 function Product() {
-  const limit = 10;
+  const limit = 1;
   const selectRef = useRef();
   const { id } = useParams();
   const [sortBy, setSortBy] = useState();
@@ -48,8 +47,8 @@ function Product() {
   };
 
   // Get Product
-  const { data: allProducts, isLoading } = useQuery({
-    queryKey: ["allProduct", categoryId, subCategoryId, sortBy, filter],
+  const { data: allProducts = [], isLoading } = useQuery({
+    queryKey: ["allProduct", categoryId, subCategoryId, sortBy, filter, page],
     queryFn: () => {
       return productService.getAllProducts({
         [categoryId ? "category" : "subCategory"]: categoryId || subCategoryId,
@@ -67,6 +66,7 @@ function Product() {
 
   const handlePageChange = (event, value) => {
     setPage(value);
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -122,7 +122,7 @@ function Product() {
                   </div>
                 </div>
                 <div className={cx("row")}>
-                  {allProducts?.map((itemPro, index) => {
+                  {allProducts?.data?.map((itemPro, index) => {
                     return (
                       <ProductItem
                         key={index}
@@ -138,22 +138,7 @@ function Product() {
         </div>
 
         <Pagination
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            listStyle: "none",
-            padding: 5,
-            marginBottom: 0,
-            "&  svg": {
-              fontSize: "2.2rem",
-            },
-          }}
-          count={allProducts?.totalPages}
-          color="primary"
-          size="large"
-          boundaryCount={2}
-          showFirstButton
-          showLastButton
+          count={allProducts?.meta?.totalPages}
           onChange={handlePageChange}
         />
       </div>

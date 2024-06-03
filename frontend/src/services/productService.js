@@ -1,19 +1,17 @@
 import HttpRequest from "@/utils/httpRequest";
 import { removeUndefinedProperties } from "@/utils/removeUndefinedProperties ";
 
-const axiosJWT = new HttpRequest();
-
 // Create Product
 export const createProduct = async (dataProduct) => {
-  const res = await axiosJWT.post("/v1/products", dataProduct);
+  const res = await HttpRequest.post("/v1/products", dataProduct);
   return res?.data;
 };
 
 // Get all products
 export const getAllProducts = async (params) => {
   try {
-    const res = await axiosJWT.get("/v1/products", params);
-    return res?.data;
+    const res = await HttpRequest.get("/v1/products", params);
+    return res;
   } catch (err) {
     console.log(err);
   }
@@ -21,7 +19,7 @@ export const getAllProducts = async (params) => {
 
 export const getProductDetail = async (productId) => {
   try {
-    const res = await axiosJWT.get(`/v1/products/${productId}`);
+    const res = await HttpRequest.get(`/v1/products/${productId}`);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -30,7 +28,7 @@ export const getProductDetail = async (productId) => {
 
 export const getProductDetailByAdmin = async (productId) => {
   try {
-    const res = await axiosJWT.get(`/admin/products/${productId}`);
+    const res = await HttpRequest.get(`/admin/products/${productId}`);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -39,7 +37,7 @@ export const getProductDetailByAdmin = async (productId) => {
 
 export const getAllProductsForHome = async () => {
   try {
-    const res = await axiosJWT.get("/v1/products/all");
+    const res = await HttpRequest.get("/v1/products/all");
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -49,7 +47,7 @@ export const getAllProductsForHome = async () => {
 //Update Product
 export const updateProduct = async (dataProduct, slug) => {
   try {
-    const res = await axiosJWT.update(`/v1/products/${slug}`, dataProduct);
+    const res = await HttpRequest.update(`/v1/products/${slug}`, dataProduct);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -58,7 +56,7 @@ export const updateProduct = async (dataProduct, slug) => {
 
 //Delete An Product
 export const deleteProduct = async (id, publicId) => {
-  const res = await axiosJWT.delete(`/v1/products/${id}`, {
+  const res = await HttpRequest.delete(`/v1/products/${id}`, {
     params: {
       publicId,
     },
@@ -69,7 +67,7 @@ export const deleteProduct = async (id, publicId) => {
 // Get Product Details to edit
 export const getProductId = async (id) => {
   try {
-    const res = await axiosJWT.get(`/products/${id}`);
+    const res = await HttpRequest.get(`/products/${id}`);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -94,10 +92,8 @@ export const getProductByCategory = async ({
       price_max,
     };
 
-    // Loại bỏ các đối số có giá trị undefined
     const processedParams = removeUndefinedProperties(params);
-
-    const res = await axiosJWT.get(`/v1/products/by-category/${slug}`, {
+    const res = await HttpRequest.get(`/v1/products/by-category/${slug}`, {
       params: processedParams,
     });
     return res?.data;
@@ -108,7 +104,7 @@ export const getProductByCategory = async ({
 
 export const getProductBySubCategory = async (slug, limit) => {
   try {
-    const res = await axiosJWT.get(`/v1/products/by-sub-category/${slug}`, {
+    const res = await HttpRequest.get(`/v1/products/by-sub-category/${slug}`, {
       params: {
         limit,
       },
@@ -122,7 +118,7 @@ export const getProductBySubCategory = async (slug, limit) => {
 // get All Products Related
 export const getAllProductsRelated = async (id) => {
   try {
-    const res = await axiosJWT.get(`/v1/products?category=${id}&limit=4`);
+    const res = await HttpRequest.get(`/v1/products?category=${id}&limit=4`);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -132,7 +128,7 @@ export const getAllProductsRelated = async (id) => {
 //Get size
 export const getAllSize = async (id) => {
   try {
-    const res = await axiosJWT.get(`/v1/product/size/${id}`);
+    const res = await HttpRequest.get(`/v1/product/size/${id}`);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -141,7 +137,7 @@ export const getAllSize = async (id) => {
 
 export const createSizeProduct = async (formData) => {
   try {
-    const res = await axiosJWT.post(`/v1/product/createSize`, formData);
+    const res = await HttpRequest.post(`/v1/product/createSize`, formData);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -150,7 +146,7 @@ export const createSizeProduct = async (formData) => {
 
 export const deleteSize = async (id) => {
   try {
-    const res = await axiosJWT.destroy(`/v1/product/deleteSize/${id}`);
+    const res = await HttpRequest.destroy(`/v1/product/deleteSize/${id}`);
     return res;
   } catch (err) {
     console.log(err);
@@ -159,7 +155,7 @@ export const deleteSize = async (id) => {
 
 export const getProductSize = async (id) => {
   try {
-    const res = await axiosJWT.get(`/v1/product/size/${id}`);
+    const res = await HttpRequest.get(`/v1/product/size/${id}`);
     return res?.data;
   } catch (err) {
     console.log(err);

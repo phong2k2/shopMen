@@ -45,6 +45,7 @@ function SlideShowItem({ allProduct }) {
                       proItem?.slug,
                       proItem?._id
                     )}
+                    onClick={() => window.scrollTo(0, 0)}
                   >
                     <img
                       src={pathProcessing(proItem?.thumbnail)}

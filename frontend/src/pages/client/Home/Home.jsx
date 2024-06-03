@@ -18,11 +18,11 @@ function Home() {
   });
 
   const allProductOutstanding = useMemo(() => {
-    return allProduct?.filter((item) => item.hot === "hot");
+    return allProduct?.data?.filter((item) => item.hot === "hot");
   }, [allProduct]);
 
   const allProductFlashSeal = useMemo(() => {
-    return allProduct?.filter((item) => item.salePrice);
+    return allProduct?.data?.filter((item) => item.salePrice);
   }, [allProduct]);
 
   return (

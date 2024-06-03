@@ -23,7 +23,7 @@ function ModalSearch() {
   //Hook custom
   let debouncedValue = useDebounce(searchValue, 500);
 
-  const { data: searchResult, isLoading } = useQuery({
+  const { data: searchResult = [], isLoading } = useQuery({
     queryKey: ["search", debouncedValue],
     queryFn: () => {
       if (!debouncedValue?.trim()) {
@@ -31,7 +31,7 @@ function ModalSearch() {
       }
       return productService.getAllProducts({
         name: debouncedValue,
-        limit: 6
+        limit: 6,
       });
     },
   });
@@ -51,10 +51,12 @@ function ModalSearch() {
   };
 
   const handleNextPageSearch = (itemSearch) => {
-    navigate(PUBLICROUTER.productDetail.slug(itemSearch?.slug, itemSearch?._id));
-    setSearchValue("")
-    setShowModalSearch(false)
-};
+    navigate(
+      PUBLICROUTER.productDetail.slug(itemSearch?.slug, itemSearch?._id)
+    );
+    setSearchValue("");
+    setShowModalSearch(false);
+  };
 
   const handleSearchProduct = (e) => {
     e.preventDefault();
@@ -117,9 +119,9 @@ function ModalSearch() {
             </button>
           </div>
         </form>
-        {showResult && searchResult?.length > 0 ? (
+        {showResult && searchResult?.data?.length > 0 ? (
           <ul className={cx("list-search")}>
-            {searchResult?.map((itemSearch, index) => {
+            {searchResult?.data?.map((itemSearch, index) => {
               return (
                 <ItemSearch
                   key={index}
@@ -129,9 +131,7 @@ function ModalSearch() {
               );
             })}
             <div className={cx("results-more")}>
-              <a
-                onClick={handleSearchProduct}
-              >Xem thêm</a>
+              <a onClick={handleSearchProduct}>Xem thêm</a>
             </div>
           </ul>
         ) : (

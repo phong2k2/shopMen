@@ -126,4 +126,4 @@ class HttpRequest {
   }
 }
 
-export default HttpRequest;
+export default new HttpRequest();

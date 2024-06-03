@@ -7,13 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { IconCart, IconSearch } from "@/components/Icons/icon";
 import Menu from "@/components/Menu/Menu";
-import config from "@/config";
 import { logoutFailed, logoutStart, logoutSuccess } from "@/redux/authSlice";
 import Button from "@/components/Button";
 import { useDeliveryInfo } from "@/hook/useContext";
 import { useEffect, useRef, useState } from "react";
 import { getAllCategory } from "@/services/categoryService";
 import Category from "@/components/Category";
+import { PUBLICROUTER } from "@/config/routes";
 
 const cx = classNames.bind(styles);
 function Header() {
@@ -25,18 +25,17 @@ function Header() {
   const { setShowModalCart, setShowModalSearch, setShowModalCategory } =
     useDeliveryInfo();
   const [showHeader, setShowHeader] = useState();
-  const isAdmin = user?.currentUser?.isAdmin;
   const navRef = useRef();
 
   const userMenus = [
     {
       title: "Hồ sơ",
       check: true,
-      to: config.PUBLICROUTER.account,
+      to: PUBLICROUTER.account,
     },
     {
       title: "Đơn hàng",
-      to: config.PUBLICROUTER.orderStatistics.index,
+      to: PUBLICROUTER.orderStatistics.index,
       check: true,
     },
     {
@@ -44,14 +43,6 @@ function Header() {
       check: true,
       logout: true,
     },
-  ];
-
-  const menuItem = [
-    {
-      title: "Quản Trị website",
-      to: config.PRIVATEROUTER.dashboard,
-    },
-    ...userMenus,
   ];
 
   const { data: listCategory } = useQuery({
@@ -66,7 +57,7 @@ function Header() {
       if (res) {
         dispatch(logoutSuccess());
         toast.success("Đã đăng xuất", { position: "top-right" });
-        navigate(config.PUBLICROUTER.home);
+        navigate(PUBLICROUTER.home);
       }
     } catch (err) {
       dispatch(logoutFailed());
@@ -119,10 +110,7 @@ function Header() {
                     {name ? (
                       "Hi, " + name
                     ) : (
-                      <Button
-                        className={cx("login")}
-                        to={config.PUBLICROUTER.auth}
-                      >
+                      <Button className={cx("login")} to={PUBLICROUTER.auth}>
                         Đăng nhập
                       </Button>
                     )}
@@ -131,7 +119,7 @@ function Header() {
                     </span>
                     {user?.isLogin ? (
                       <Menu
-                        items={isAdmin ? menuItem : userMenus}
+                        items={userMenus}
                         handleClickLogout={handleClickLogout}
                       />
                     ) : (
@@ -144,12 +132,12 @@ function Header() {
           </div>
         </div>
       </div>
-      <header ref={navRef} className={cx("wrapper-header")}>
+      <header ref={navRef} className={cx("header")}>
         <div className={cx("wrapper-header")}>
           <div className={cx("container")}>
             <div className={cx("row", "header-body")}>
-              <div className={cx("col-2", "category-icon")}>
-                <div className={cx("div-category")}>
+              <div className={cx("col-2", "icon-category")}>
+                <div className={cx("icon")}>
                   <a onClick={() => setShowModalCategory(true)}>
                     <i
                       className={cx("fa-solid fa-align-justify", "icon-cate")}
@@ -159,7 +147,7 @@ function Header() {
               </div>
               <div className={cx("col-md-2", "col-7", "wrap-logo")}>
                 <div className={cx("header-logo")}>
-                  <a href={config.PUBLICROUTER.home}>
+                  <a href={PUBLICROUTER.home}>
                     <img
                       className={cx("image-header")}
                       src="https://file.hstatic.net/1000096703/file/logo_website__191___70_px__979fdef210f7474d8a09b42724033b5c.png"

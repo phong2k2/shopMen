@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import DefaultLayout from "@/layouts/ClientLayout/DefaultLayout";
+import DefaultLayout from "@/layouts/DefaultLayout";
 
 function PublicRoutes({ route, children }) {
   let Layout;

@@ -1,22 +1,18 @@
 import "./Auth.scss";
 import { useRef, useState } from "react";
 import * as authService from "@/services/authService";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   loginStart,
   loginSuccess,
   registerStart,
   registerSuccess,
 } from "@/redux/authSlice";
-import {
-    useNavigate, 
-    useSearchParams 
-  } from "react-router-dom";
-import config from "@/config";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import FormLogin from "./AuthForm/FormLogin";
 import FormRegister from "./AuthForm/FormRegister";
+import { PUBLICROUTER } from "@/config/routes";
 
 function Auth() {
   const dispatch = useDispatch();
@@ -24,7 +20,7 @@ function Auth() {
   const navigate = useNavigate();
   const [statusAuth, setStatusAuth] = useState(false);
   const [statusRegister, setStatusRegister] = useState(false);
-  const [searchParams] = useSearchParams()
+  const [searchParams] = useSearchParams();
   const redirectPath = searchParams.get("redirect");
 
   const handleClickSignUp = () => {
@@ -45,9 +41,9 @@ function Auth() {
       dispatch(loginSuccess(res));
 
       if (redirectPath) {
-        navigate(redirectPath)
+        navigate(redirectPath);
       } else {
-        navigate(config.PUBLICROUTER.home);
+        navigate(PUBLICROUTER.home);
       }
 
       toast.success("Đăng nhập thành công");

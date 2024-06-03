@@ -2,12 +2,12 @@ import classNames from "classnames/bind";
 import styles from "./Modal.module.scss";
 import { useDeliveryInfo } from "@/hook/useContext";
 import { useDispatch, useSelector } from "react-redux";
-import config from "@/config";
 import { useNavigate } from "react-router-dom";
 import { getTotals, removeFromCart } from "@/redux/cartSlice";
 import { useEffect } from "react";
 import ModalCart from "./ModalCart/ModalCart";
 import ModalSearch from "./ModalSearch/ModalSearch";
+import { PUBLICROUTER } from "@/config/routes";
 
 const cx = classNames.bind(styles);
 function Modal() {
@@ -33,7 +33,7 @@ function Modal() {
   };
 
   const handleClickNextPageCart = () => {
-    navigate(config.PUBLICROUTER.cart);
+    navigate(PUBLICROUTER.cart);
     setShowModalCart(false);
   };
 
@@ -43,7 +43,7 @@ function Modal() {
   };
 
   const handleClickNextLogin = () => {
-    navigate(config.PUBLICROUTER.auth);
+    navigate(PUBLICROUTER.auth);
     setShowModalCart(false);
   };
 

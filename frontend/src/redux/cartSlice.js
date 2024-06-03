@@ -22,16 +22,8 @@ const cartSlice = createSlice({
 
       if (itemOrder) {
         itemOrder.amount += orderItem?.amount;
-        toastify({
-          type: "success",
-          message: "Sản phẩm đã được thêm vào giỏ hàng",
-        });
       } else {
         state.cartItems.push(orderItem);
-        toastify({
-          type: "success",
-          message: "Sản phẩm đã được thêm vào giỏ hàng",
-        });
       }
     },
     decreaseCart(state, action) {
@@ -54,21 +46,29 @@ const cartSlice = createSlice({
       );
       itemOrder.amount++;
     },
-    removeFromCart(state, action) {
-      const { itemRemove } = action.payload;
-      if (!itemRemove)
+    removeFromCart(state, { payload: itemRemove }) {
+      if (!itemRemove) {
         return toastify({
           type: "error",
           message: "Xóa thất bại",
         });
+      }
+
+      const itemsToRemove = Array.isArray(itemRemove)
+        ? itemRemove
+        : [itemRemove];
+
       const nextCartItems = state?.cartItems?.filter((item) => {
-        return (
-          item.product !== itemRemove.product ||
-          item.color !== itemRemove.color ||
-          item.size !== itemRemove.size
+        return !itemsToRemove.some(
+          (removeItem) =>
+            item.product === removeItem.product &&
+            item.color === removeItem.color &&
+            item.size === removeItem.size
         );
       });
+
       state.cartItems = nextCartItems;
+
       toastify({
         type: "success",
         message: "Xóa thành công",
@@ -95,7 +95,6 @@ const cartSlice = createSlice({
       state.cartTotalQuantity = quantity;
       state.cartTotalAmount = total;
     },
-
     clearCart(state) {
       state.cartItems = [];
     },

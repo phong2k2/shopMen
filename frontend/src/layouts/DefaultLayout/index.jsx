@@ -1,7 +1,7 @@
 import Header from "../components/Header/Header";
 import classNames from "classnames/bind";
 import styles from "./DefaultLayout.module.scss";
-import Footer from "@/layouts/ClientLayout/components/Footer/Footer";
+import Footer from "@/layouts/components/Footer/Footer";
 import Slider from "../components/Slider/Slider";
 import { useDeliveryInfo } from "@/hook/useContext";
 

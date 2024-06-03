@@ -4,8 +4,8 @@ import styles from "./ListProSearch.module.scss";
 import * as productService from "@/services/productService";
 import { useSearchParams } from "react-router-dom";
 import ProductItem from "@/components/ProductItem";
-import { Pagination } from "@mui/material";
 import { useQuery } from "react-query";
+import Pagination from "@/components/Pagination";
 
 const cx = classNames.bind(styles);
 function ListProSearch() {
@@ -13,23 +13,20 @@ function ListProSearch() {
   let [searchParams] = useSearchParams();
   const name = searchParams.get("name");
 
-  const { data: listSearch } = useQuery({
+  const { data: listSearch = [] } = useQuery({
     queryKey: ["search", name, page],
     queryFn: () => {
       return productService.getAllProducts({
         name,
         page,
-        limit: 6
+        limit: 6,
       });
     },
   });
 
-  const pageCount = useMemo(() => {
-    return Math.ceil(listSearch?.length / 10);
-  }, [listSearch]);
-
   const handlePageChange = ({ selected }) => {
     setPage(selected);
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -72,30 +69,17 @@ function ListProSearch() {
             </div>
             {/* List Product */}
             <div className={cx("result")}>
-              <h4>{`Tìm được ${listSearch?.length} kết quả`}</h4>
+              <h4>{`Tìm được ${listSearch?.data?.length} kết quả`}</h4>
             </div>
             <div className={cx("row")}>
-              {listSearch?.map((itemPro, index) => {
+              {listSearch?.data?.map((itemPro, index) => {
                 return <ProductItem key={index} itemPro={itemPro} />;
               })}
             </div>
           </div>
         </div>
         <Pagination
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            listStyle: "none",
-            padding: 5,
-            marginBottom: 0,
-            "&  svg": {
-              fontSize: "2.2rem",
-            },
-          }}
-          count={pageCount}
-          color="primary"
-          size="large"
-          boundaryCount={2}
+          count={listSearch?.meta?.totalPages}
           showFirstButton
           showLastButton
           onChange={handlePageChange}

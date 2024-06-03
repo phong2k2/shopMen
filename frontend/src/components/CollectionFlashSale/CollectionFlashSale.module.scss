@@ -221,9 +221,9 @@
 .btn-see-more {
   position: relative;
   min-width: 400px;
-  background: #fff;
-  color: #000000;
-  border: 1px solid #000000;
+  background-color: var(--white);
+  color: var(--black);
+  border: 1px solid var(--black);
   font-size: 1.4rem;
   font-weight: 500;
   border-radius: 4px;
@@ -267,7 +267,6 @@
 
   &:hover::before {
     width: 120%;
-    // z-index: 1;
     color: #fff;
   }
 }

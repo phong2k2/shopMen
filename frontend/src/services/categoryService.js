@@ -1,11 +1,9 @@
 import HttpRequest from "@/utils/httpRequest";
 
-const axiosJWT = new HttpRequest();
-
 // Get All Category
 export const getAllCategory = async () => {
   try {
-    const res = await axiosJWT.get("/v1/categories");
+    const res = await HttpRequest.get("/v1/categories");
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -16,7 +14,7 @@ export const getAllCategory = async () => {
 
 export const getDetailCategoryId = async (id) => {
   try {
-    const res = await axiosJWT.get(`/v1/categories/${id}`);
+    const res = await HttpRequest.get(`/v1/categories/${id}`);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -25,7 +23,7 @@ export const getDetailCategoryId = async (id) => {
 
 export const getDetailCategory = async (idEdit) => {
   try {
-    const res = await axiosJWT.get(`/v1/categories/${idEdit}`);
+    const res = await HttpRequest.get(`/v1/categories/${idEdit}`);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -35,7 +33,7 @@ export const getDetailCategory = async (idEdit) => {
 // get Category Slide Home
 export const getCategorySlideHome = async () => {
   try {
-    const res = await axiosJWT.get("/v1/categories/slide");
+    const res = await HttpRequest.get("/v1/categories/slide");
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -45,7 +43,7 @@ export const getCategorySlideHome = async () => {
 // Add Category
 export const createCategory = async (values) => {
   try {
-    const res = await axiosJWT.post("/v1/categories", values);
+    const res = await HttpRequest.post("/v1/categories", values);
     return res?.data;
   } catch (error) {
     console.log(error);
@@ -55,7 +53,7 @@ export const createCategory = async (values) => {
 // Get Category Detail  to edit
 export const getCategoryDetail = async (id) => {
   try {
-    const res = await axiosJWT.get(`/v1/categories/${id}`);
+    const res = await HttpRequest.get(`/v1/categories/${id}`);
     // console.log(res)
     return res?.data;
   } catch (err) {
@@ -66,7 +64,7 @@ export const getCategoryDetail = async (id) => {
 // Update Category
 export const updateCategory = async ({ id, newData }) => {
   try {
-    const res = await axiosJWT.update(`/v1/categories/${id}`, newData);
+    const res = await HttpRequest.update(`/v1/categories/${id}`, newData);
     return res?.data;
   } catch (err) {
     console.log(err);
@@ -75,6 +73,6 @@ export const updateCategory = async ({ id, newData }) => {
 
 //Delete a category
 export const deleteCategory = async (id) => {
-  const res = await axiosJWT.delete(`/v1/categories/${id}`);
+  const res = await HttpRequest.delete(`/v1/categories/${id}`);
   return res;
 };

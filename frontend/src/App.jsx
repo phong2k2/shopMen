@@ -1,9 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Suspense, lazy, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { adminRoutes, privateRoutes, publicRoutes } from "@/routes/routes";
+import { privateRoutes, publicRoutes } from "@/routes/routes";
 import PublicLayout from "@/customRoutes/PublicLayout";
-import PrivateLayout from "@/customRoutes/PrivateLayout";
 import Loading from "./components/Loading";
 import Modal from "./components/Modal";
 import Overlay from "./components/Overlay/Overlay";
@@ -40,6 +39,17 @@ function App() {
     }
   }, [showModalCart, showModalSearch, showModalCategory]);
 
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener("onscroll", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("onscroll", handleBeforeUnload);
+    };
+  }, []);
   return (
     <Router>
       <Modal />
@@ -59,20 +69,6 @@ function App() {
                     <Page />
                   </PrivateRoute>
                 </PublicLayout>
-              }
-            />
-          );
-        })}
-        {adminRoutes.map((route, index) => {
-          const Page = route.component;
-          return (
-            <Route
-              key={index}
-              path={route.path}
-              element={
-                <PrivateLayout>
-                  <Page />
-                </PrivateLayout>
               }
             />
           );

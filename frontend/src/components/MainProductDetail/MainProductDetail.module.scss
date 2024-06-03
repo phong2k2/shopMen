@@ -213,7 +213,7 @@
 
 .wrap-add-cart {
   width: 60%;
-  padding-right: 10px;
+  margin-right: 10px;
 
   .out-row {
     opacity: 0.6;
@@ -226,7 +226,7 @@
   position: relative;
   font-weight: 400;
   color: #212529 !important;
-  padding: 10px 40px;
+  padding: 10px 10px;
   outline: none;
   border: 1px solid var(--grey);
   background-color: var(--white);
@@ -234,6 +234,10 @@
   font-size: 1.8rem;
   text-transform: inherit;
   border-radius: 4px;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .wrap-add-order {

@@ -5,8 +5,8 @@ import InputField from "@/components/form-controls/InputField/InputField";
 import PropTypes from "prop-types";
 import "./Form.scss";
 import { Link } from "react-router-dom";
-import config from "@/config";
 import { schemaFormLogin } from "@/validations/yupSchema";
+import { PUBLICROUTER } from "@/config/routes";
 
 const initLogin = {
   email: "",
@@ -32,7 +32,7 @@ function FormLogin({ handleSubmitLogin, statusAuth }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(handleOnSubmit)}>
+    <form className="form-login" onSubmit={handleSubmit(handleOnSubmit)}>
       <h3 className="pb-2 text-center text-uppercase font-weight-normal title-auth">
         Đăng nhập
       </h3>
@@ -72,7 +72,7 @@ function FormLogin({ handleSubmitLogin, statusAuth }) {
         />
       </div>
       <div className="auth-actions">
-        <Link to={config.PUBLICROUTER.forGotPassword}>Quên mật khẩu?</Link>
+        <Link to={PUBLICROUTER.forGotPassword}>Quên mật khẩu?</Link>
       </div>
       <button type="submit" className="btn btn-custom">
         Đăng nhập

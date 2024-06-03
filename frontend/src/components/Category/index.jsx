@@ -19,9 +19,7 @@ function Category({ categories }) {
           <KeyboardArrowDownIcon className={cx("arrowDownIcon")} />
         )}
       </Link>
-      <CategoryItem
-        subCategories={categories?.subCategory}
-      />
+      <CategoryItem subCategories={categories?.subCategory} />
     </li>
   );
 }

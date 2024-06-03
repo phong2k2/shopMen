@@ -6,10 +6,12 @@ import { formatPrice } from "../formatData/formatData";
 
 const cx = classNames.bind(styles);
 function ItemSearch({ itemSearch, handleNextPageSearch }) {
-
   return (
     <>
-      <li onClick={() =>handleNextPageSearch(itemSearch)} className={cx("content-item")}>
+      <li
+        onClick={() => handleNextPageSearch(itemSearch)}
+        className={cx("content-item")}
+      >
         <div className={cx("div-text")}>
           <p className={cx("text-search")}>
             <span>{itemSearch?.name}</span>
@@ -17,7 +19,10 @@ function ItemSearch({ itemSearch, handleNextPageSearch }) {
           <strong>{formatPrice(itemSearch?.salePrice)}</strong>
         </div>
 
-        <NavLink to={`/products/${itemSearch?.slug}`} className={cx("img-item")}>
+        <NavLink
+          to={`/products/${itemSearch?.slug}`}
+          className={cx("img-item")}
+        >
           <img src={itemSearch?.color[0]?.gallery[0]?.image?.url} alt="" />
         </NavLink>
       </li>
@@ -28,7 +33,7 @@ function ItemSearch({ itemSearch, handleNextPageSearch }) {
 
 ItemSearch.propTypes = {
   itemSearch: PropTypes.object,
-  handleNextPageSearch: PropTypes.func
+  handleNextPageSearch: PropTypes.func,
 };
 
 export default ItemSearch;

@@ -1,8 +1,8 @@
 import classNames from "classnames/bind";
 import styles from "./Sidebar.module.scss";
-import config from "@/config";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { PUBLICROUTER } from "@/config/routes";
 
 const cx = classNames.bind(styles);
 function Sidebar() {
@@ -14,17 +14,17 @@ function Sidebar() {
       <div className={cx("account-list")}>
         <ul className={cx("list-unstyled")}>
           <li>
-            <Link to={config.PUBLICROUTER.account}>
+            <Link to={PUBLICROUTER.account}>
               <i className="bi bi-stop-circle"></i>Thông tin tài khoản
             </Link>
           </li>
           <li>
-            <Link to={config.PUBLICROUTER.orderStatistics.index}>
+            <Link to={PUBLICROUTER.orderStatistics.index}>
               <i className="bi bi-stop-circle"></i> Đơn hàng
             </Link>
           </li>
           <li>
-            <Link to={config.PUBLICROUTER.address}>
+            <Link to={PUBLICROUTER.address}>
               <i className="bi bi-stop-circle"></i> Danh sách địa chỉ
             </Link>
           </li>

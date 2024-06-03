@@ -3,11 +3,11 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation } from "react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "./ResetPassword.scss";
-import config from "@/config";
 import InputField from "@/components/form-controls/InputField";
 import { resetPassword } from "@/services/authService";
 import { toast } from "react-toastify";
 import { schemaResetPassword } from "@/validations/yupSchema";
+import { PUBLICROUTER } from "@/config/routes";
 
 function ResetPassword() {
   const [searchParams] = useSearchParams();
@@ -28,7 +28,7 @@ function ResetPassword() {
     mutationFn: (values) => resetPassword(userId, code, values),
     onSuccess: (response) => {
       toast.success(response.message);
-      navigate(config.PUBLICROUTER.auth);
+      navigate(PUBLICROUTER.auth);
     },
     onError: (error) => {
       if (error?.statusCode !== 500) {
@@ -48,7 +48,7 @@ function ResetPassword() {
   return (
     <div className="wrap-card">
       <div className="card-reset">
-        <Link to={config.PUBLICROUTER.home}>
+        <Link to={PUBLICROUTER.home}>
           <img
             className="image-header"
             src="https://file.hstatic.net/1000096703/file/logo_website__191___70_px__979fdef210f7474d8a09b42724033b5c.png"

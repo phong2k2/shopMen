@@ -56,8 +56,10 @@ function ProductDetail() {
 
   // Lọc sản phẩm liên quan
   const allProductRelatedFilter = useMemo(() => {
-    return allProductRelated?.filter((item) => item._id !== detailProduct?._id);
-  }, [allProductRelated]);
+    return allProductRelated
+      ?.filter((item) => item._id !== detailProduct?._id)
+      .slice(0, 10);
+  }, [allProductRelated, productId]);
 
   const handleChangeSelectColor = (item, index) => {
     setIndexActive(index);

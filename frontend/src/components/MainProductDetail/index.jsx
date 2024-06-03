@@ -232,11 +232,11 @@ function MainProductDetail({
                           paddingRight: "5px",
                         }}
                       />
-                      <span>Thêm vào giỏ hàng</span>
+                      Thêm vào giỏ hàng
                     </button>
                   ) : (
                     <button className={cx("cart-btn", "out-row")}>
-                      <span>Sản phẩm hết hàng</span>
+                      <span>Hết hàng</span>
                     </button>
                   )}
                 </div>

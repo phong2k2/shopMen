@@ -142,12 +142,8 @@
 
 .header-body {
   height: var(--height-body-header);
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-}
-
-.category-icon {
-  display: none;
 }
 
 .image-header {
@@ -239,6 +235,10 @@
   color: var(--black);
 }
 
+.icon-category {
+  display: none;
+}
+
 @keyframes sticky_header_animation {
   from {
     opacity: 0;
@@ -253,10 +253,6 @@
 }
 
 @include global.tablet {
-  .wrap-category {
-    display: none;
-  }
-
   .wrap-logo {
     padding: 0;
   }
@@ -264,14 +260,18 @@
   .action {
     padding: 0;
   }
-
-  .category-icon {
-    display: block;
-  }
 }
 
 @include global.mobile {
   .header-body {
     margin: 0;
+  }
+
+  .wrap-category {
+    display: none;
+  }
+
+  .icon-category {
+    display: block;
   }
 }
