@@ -3,8 +3,11 @@ require("dotenv").config();
 const env = {
   BUILD_MODE: process.env.BUILD_MODE,
   MONGODB_URL: process.env.MONGODB_URL,
+
   JWT_ACCESS_KEY: process.env.JWT_ACCESS_KEY,
   JWT_REFRESH_TOKEN: process.env.JWT_REFRESH_TOKEN,
+  VERIFY_EMAIL_SECRET: process.env.VERIFY_EMAIL_SECRET,
+
   APP_URL: process.env.APP_URL,
   CLIENT_ID: process.env.CLIENT_ID,
   USER_EMAIL: process.env.USER_EMAIL,
@@ -19,6 +22,11 @@ const env = {
 
   APP_HOST: process.env.APP_HOST,
   APP_PORT: process.env.APP_PORT,
+
+  SMTP_HOST: process.env.SMTP_HOST,
+  SMTP_PORT: process.env.SMTP_PORT,
+  SMTP_USERNAME: process.env.SMTP_USERNAME,
+  SMTP_PASSWORD: process.env.SMTP_PASSWORD,
 };
 
 module.exports = { env };

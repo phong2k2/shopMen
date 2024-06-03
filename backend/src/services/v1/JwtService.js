@@ -2,6 +2,8 @@ const { StatusCodes } = require("http-status-codes");
 const jwt = require("jsonwebtoken");
 const { env } = require("../../configs/environment");
 const ApiError = require("../../utils/ApiError");
+const { totp } = require("otplib");
+
 // create access token
 const generalAccessToken = (userId, isAdmin) => {
   const accessToken = jwt.sign(
@@ -48,8 +50,14 @@ const requestRefreshToken = async (refreshToken) => {
   });
 };
 
+const generateVerifyEmailToken = () => {
+  totp.options = { step: 60, window: 1 };
+  return totp.generate(env.VERIFY_EMAIL_SECRET);
+};
+
 module.exports = {
   generalAccessToken,
   generalRefreshToken,
   requestRefreshToken,
+  generateVerifyEmailToken,
 };

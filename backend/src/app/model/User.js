@@ -24,7 +24,6 @@ const UserSchema = new Schema(
     },
     image: {
       type: String,
-      required: true,
       default: null,
     },
     password: {
@@ -34,6 +33,10 @@ const UserSchema = new Schema(
     status: {
       type: Number,
       default: 0,
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
     },
     isAdmin: {
       type: Boolean,

@@ -1,18 +1,11 @@
 const AuthService = require("../../../services/v1/AuthService");
+const EmailService = require("../../../services/v1/EmailService");
 const JwtService = require("../../../services/v1/JwtService");
+const User = require("../../model/User");
 const { StatusCodes } = require("http-status-codes");
 const ApiError = require("../../../utils/ApiError");
-const config = require("config");
 const { env } = require("../../../configs/environment");
 const { parseTimeToSeconds } = require("../../../utils/parseTime");
-
-const cookieOptionsAccessToken = {
-  httpOnly: true,
-  secure: false,
-  sameSite: false,
-  path: "/",
-  maxAge: parseTimeToSeconds(env.EXPIRED_ACCESS_TOKEN),
-};
 
 const cookieOptionsRefreshToken = {
   httpOnly: true,
@@ -139,6 +132,26 @@ const AuthController = {
     const { accessToken, refreshToken } = await AuthService.createJwt(req.user);
     res.cookie("refreshToken", refreshToken, cookieOptionsRefreshToken);
     res.redirect(`http://localhost:5173/social?token=${accessToken}`);
+  },
+
+  sendVerificationEmail: async (req, res, next) => {
+    try {
+      const { email } = req.body;
+
+      const emailVerified = await User.findOne({ email });
+
+      if (emailVerified)
+        throw new ApiError(StatusCodes.BAD_REQUEST, "Email already exists");
+
+      const verifyEmailToken = JwtService.generateVerifyEmailToken();
+
+      await EmailService.sendVerificationEmail(email, verifyEmailToken);
+      res.status(StatusCodes.OK).json({
+        message: "Xác thực thành công",
+      });
+    } catch (error) {
+      next(error);
+    }
   },
 };
 

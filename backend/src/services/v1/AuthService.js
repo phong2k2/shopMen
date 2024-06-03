@@ -26,6 +26,7 @@ const register = async (newUser) => {
       email,
       password: hash,
       phone,
+      isEmailVerified: true,
     });
 
     return {
@@ -38,7 +39,7 @@ const register = async (newUser) => {
 
 const login = async (reqAuth) => {
   const { email, password } = reqAuth;
-  const user = await User.findOne({ email: email, oauth_provider: "null" });
+  const user = await User.findOne({ email: email, oauth_provider: null });
 
   if (!user) {
     throw new ApiError(StatusCodes.BAD_REQUEST, "Thông tin đăng nhập sai");
@@ -213,7 +214,7 @@ const getGoogleUser = async ({ id_token, access_token }) => {
   }
 };
 
-const createJwt = async (user) => {
+const createJwt = (user) => {
   // Access Token
   const accessToken = jwtService.generalAccessToken(user);
   // Refresh token

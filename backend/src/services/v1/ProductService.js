@@ -7,6 +7,7 @@ const ApiError = require("../../utils/ApiError");
 const getAllProducts = async (filter, options) => {
   try {
     const data = await Product.paginate({ ...filter }, options);
+
     return productTransformer.getProductList(data);
   } catch (error) {
     throw error;

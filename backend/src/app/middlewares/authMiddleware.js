@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { env } = require("../../configs/environment");
+const { totp } = require("otplib");
 
 const middlewareController = {
   verifyToken: (req, res, next) => {
@@ -41,7 +42,6 @@ const middlewareController = {
       } else {
         return res.status(404).json({
           message: "You're not allowed to delete other",
-          status: "ERROR",
         });
       }
     });
@@ -55,6 +55,19 @@ const middlewareController = {
         return res.status(403).json("You're not allowed to do that!");
       }
     });
+  },
+  verifyEmail: (req, res, next) => {
+    const { code } = req.body;
+    const isValid = totp.check(code, env.VERIFY_EMAIL_SECRET);
+
+    if (isValid) {
+      next();
+    } else {
+      return res.status(422).json({
+        field: "otp",
+        message: "OTP không tồn tại",
+      });
+    }
   },
 };
 
