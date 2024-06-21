@@ -237,6 +237,7 @@
 
 .icon-category {
   display: none;
+  border: none;
 }
 
 @keyframes sticky_header_animation {
@@ -253,13 +254,6 @@
 }
 
 @include global.tablet {
-  .wrap-logo {
-    padding: 0;
-  }
-
-  .action {
-    padding: 0;
-  }
 }
 
 @include global.mobile {

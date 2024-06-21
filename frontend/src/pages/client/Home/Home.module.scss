@@ -159,8 +159,6 @@
   }
 }
 
-@include global.desktop {
-  .hide-md {
-    display: none;
-  }
+.hide-md {
+  display: none;
 }

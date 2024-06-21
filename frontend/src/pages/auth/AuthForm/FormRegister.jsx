@@ -59,7 +59,7 @@ const FormRegister = forwardRef(function FormRegister(
         setIsLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
     }
   };
 

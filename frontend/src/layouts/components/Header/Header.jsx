@@ -1,98 +1,100 @@
-import classNames from "classnames/bind";
-import styles from "./Header.module.scss";
-import { useQuery } from "react-query";
-import * as authService from "@/services/authService";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { IconCart, IconSearch } from "@/components/Icons/icon";
-import Menu from "@/components/Menu/Menu";
-import { logoutFailed, logoutStart, logoutSuccess } from "@/redux/authSlice";
-import Button from "@/components/Button";
-import { useDeliveryInfo } from "@/hook/useContext";
-import { useEffect, useRef, useState } from "react";
-import { getAllCategory } from "@/services/categoryService";
-import Category from "@/components/Category";
-import { PUBLICROUTER } from "@/config/routes";
+import classNames from "classnames/bind"
+import styles from "./Header.module.scss"
+import { useQuery } from "react-query"
+import * as authService from "@/services/authService"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify"
+import { IconCart, IconSearch } from "@/components/Icons/icon"
+import Menu from "@/components/Menu/Menu"
+import { logoutFailed, logoutStart, logoutSuccess } from "@/redux/authSlice"
+import Button from "@/components/Button"
+import { useDeliveryInfo } from "@/hook/useContext"
+import { useEffect, useRef, useState } from "react"
+import { getAllCategory } from "@/services/categoryService"
+import Category from "@/components/Category"
+import { PUBLICROUTER } from "@/config/routes"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faBars } from "@fortawesome/free-solid-svg-icons"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function Header() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = useSelector((state) => state?.auth?.login);
-  const name = user?.currentUser?.username;
-  const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const user = useSelector((state) => state?.auth?.login)
+  const name = user?.currentUser?.username
+  const cart = useSelector((state) => state.cart)
   const { setShowModalCart, setShowModalSearch, setShowModalCategory } =
-    useDeliveryInfo();
-  const [showHeader, setShowHeader] = useState();
-  const navRef = useRef();
+    useDeliveryInfo()
+  const [showHeader, setShowHeader] = useState()
+  const navRef = useRef()
 
   const userMenus = [
     {
       title: "Hồ sơ",
       check: true,
-      to: PUBLICROUTER.account,
+      to: PUBLICROUTER.account
     },
     {
       title: "Đơn hàng",
       to: PUBLICROUTER.orderStatistics.index,
-      check: true,
+      check: true
     },
     {
       title: "Đăng xuất",
       check: true,
-      logout: true,
-    },
-  ];
+      logout: true
+    }
+  ]
 
   const { data: listCategory } = useQuery({
     queryKey: "listCategoryHeader",
-    queryFn: () => getAllCategory(),
-  });
+    queryFn: () => getAllCategory()
+  })
 
   const handleClickLogout = async () => {
-    dispatch(logoutStart());
+    dispatch(logoutStart())
     try {
-      const res = await authService.logOut();
+      const res = await authService.logOut()
       if (res) {
-        dispatch(logoutSuccess());
-        toast.success("Đã đăng xuất", { position: "top-right" });
-        navigate(PUBLICROUTER.home);
+        dispatch(logoutSuccess())
+        toast.success("Đã đăng xuất", { position: "top-right" })
+        navigate(PUBLICROUTER.home)
       }
     } catch (err) {
-      dispatch(logoutFailed());
+      dispatch(logoutFailed())
     }
-  };
+  }
 
   const handleShowModalNavigation = () => {
-    setShowModalCart((prev) => !prev);
-  };
+    setShowModalCart((prev) => !prev)
+  }
 
   const handleShowModalSearch = () => {
-    setShowModalSearch((prev) => !prev);
-  };
+    setShowModalSearch((prev) => !prev)
+  }
 
   useEffect(() => {
-    const sticky = navRef.current.offsetTop;
+    const sticky = navRef.current.offsetTop
     const handleScroll = () => {
       if (window.pageYOffset > sticky) {
-        setShowHeader(true);
+        setShowHeader(true)
       } else {
-        setShowHeader(false);
+        setShowHeader(false)
       }
-    };
+    }
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll)
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
 
   return (
     <div
       className={cx("scroller-inner", {
-        "sticky-header": showHeader,
+        "sticky-header": showHeader
       })}
     >
       <div className={cx("header-top")}>
@@ -137,15 +139,13 @@ function Header() {
           <div className={cx("container")}>
             <div className={cx("row", "header-body")}>
               <div className={cx("col-2", "icon-category")}>
-                <div className={cx("icon")}>
+                <div>
                   <a onClick={() => setShowModalCategory(true)}>
-                    <i
-                      className={cx("fa-solid fa-align-justify", "icon-cate")}
-                    ></i>
+                    <FontAwesomeIcon icon={faBars} />
                   </a>
                 </div>
               </div>
-              <div className={cx("col-md-2", "col-7", "wrap-logo")}>
+              <div className={cx("col-md-2", "col-sm-2", "col-7", "wrap-logo")}>
                 <div className={cx("header-logo")}>
                   <a href={PUBLICROUTER.home}>
                     <img
@@ -163,7 +163,7 @@ function Header() {
                     {listCategory?.map((category) => {
                       return (
                         <Category key={category?._id} categories={category} />
-                      );
+                      )
                     })}
                   </ul>
                 </nav>
@@ -195,7 +195,7 @@ function Header() {
         </div>
       </header>
     </div>
-  );
+  )
 }
 
-export default Header;
+export default Header
