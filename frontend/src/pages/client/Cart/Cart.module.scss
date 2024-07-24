@@ -49,22 +49,12 @@
   display: flex;
   align-items: center;
   margin-top: 10px;
-
-  button {
-    background-color: var(--white);
-    color: var(--text-color);
-    padding: 8px 15px;
-    font-size: 1.5rem;
-
-    &:hover {
-      color: var(--color-price);
-    }
-  }
 }
 
 .check-all {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-right: 10px;
 
   input {
@@ -76,7 +66,20 @@
 
   label {
     font-size: 1.5rem;
+    margin-bottom: 0;
     cursor: pointer;
+  }
+}
+
+.remove-cart {
+  display: block;
+  background-color: transparent;
+  font-size: 1.5rem;
+  color: var(--text-color);
+  padding: 8px 15px;
+
+  &:hover {
+    color: var(--color-price);
   }
 }
 
@@ -265,16 +268,17 @@
 }
 
 .next-order {
-  font-size: 1.3rem;
+  display: block;
+  font-size: 1.6rem;
   opacity: 0.8;
-  color: var(--text-color);
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   margin-top: 34px;
   text-align: right;
-  display: block;
+  color: var(--black);
+  text-decoration: underline !important;
 
   &:hover {
-    color: var(--black);
+    color: var(--color-price);
   }
 
   @include global.tablet {
@@ -324,7 +328,7 @@
 
     a {
       text-decoration: none;
-      color: var(--white);
+      color: var(--black);
       font-size: 1.5rem;
       font-weight: 600;
       display: block;
@@ -333,7 +337,7 @@
     &::before {
       content: "";
       display: block;
-      background-color: #000;
+      background-color: var(--black);
       position: absolute;
       left: -10%;
       top: -10%;
@@ -350,11 +354,10 @@
 
     &:hover::before {
       width: 120%;
-      // z-index: 1;
       color: #fff;
     }
 
-    &:hover {
+    &:hover a {
       text-decoration: none;
       outline: none;
       color: #fff;

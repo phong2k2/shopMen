@@ -1,39 +1,39 @@
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import InputField from "@/components/form-controls/InputField/InputField";
-import PropTypes from "prop-types";
-import "./Form.scss";
-import { Link } from "react-router-dom";
-import { schemaFormLogin } from "@/validations/yupSchema";
-import { PUBLICROUTER } from "@/config/routes";
+import { useEffect } from "react"
+import { useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import InputField from "@/components/form-controls/InputField/InputField"
+import PropTypes from "prop-types"
+import "./Form.scss"
+import { Link } from "react-router-dom"
+import { schemaFormLogin } from "@/validations/yupSchema"
+import { PUBLICROUTER } from "@/config/routes"
 
 const initLogin = {
   email: "",
-  password: "",
-};
+  password: ""
+}
 
 function FormLogin({ handleSubmitLogin, statusAuth }) {
-  let from = location.state?.from?.pathname || "/";
   const {
     register,
     reset,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
-    resolver: yupResolver(schemaFormLogin),
-  });
+    resolver: yupResolver(schemaFormLogin)
+  })
+
   useEffect(() => {
-    reset(initLogin);
-  }, [statusAuth, reset]);
+    reset(initLogin)
+  }, [statusAuth, reset])
 
   const handleOnSubmit = (values) => {
-    handleSubmitLogin(values);
-  };
+    handleSubmitLogin(values)
+  }
 
   return (
     <form className="form-login" onSubmit={handleSubmit(handleOnSubmit)}>
-      <h3 className="pb-2 text-center text-uppercase font-weight-normal title-auth">
+      <h3 className="pb-4 text-center text-uppercase font-semibold title-auth text-5xl">
         Đăng nhập
       </h3>
       <div className="d-flex justify-content-center mb-3 icon">
@@ -42,8 +42,8 @@ function FormLogin({ handleSubmitLogin, statusAuth }) {
         </a>
         <a
           onClick={(e) => {
-            e.preventDefault();
-            window.open("http://localhost:3000/v1/auth/google", "_self");
+            e.preventDefault()
+            window.open("http://localhost:3000/v1/auth/google", "_self")
           }}
           className="mr-3"
         >
@@ -74,16 +74,14 @@ function FormLogin({ handleSubmitLogin, statusAuth }) {
       <div className="auth-actions">
         <Link to={PUBLICROUTER.forGotPassword}>Quên mật khẩu?</Link>
       </div>
-      <button type="submit" className="btn btn-custom">
-        Đăng nhập
-      </button>
+      <input type="submit" value="Đăng nhập" className="btn btn-custom" />
     </form>
-  );
+  )
 }
 
 FormLogin.propTypes = {
   handleSubmitLogin: PropTypes.func,
-  statusAuth: PropTypes.bool,
-};
+  statusAuth: PropTypes.bool
+}
 
-export default FormLogin;
+export default FormLogin

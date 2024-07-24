@@ -1,61 +1,61 @@
-import classNames from "classnames/bind";
-import styles from "./Modal.module.scss";
-import { useDeliveryInfo } from "@/hook/useContext";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { getTotals, removeFromCart } from "@/redux/cartSlice";
-import { useEffect } from "react";
-import ModalCart from "./ModalCart/ModalCart";
-import ModalSearch from "./ModalSearch/ModalSearch";
-import { PUBLICROUTER } from "@/config/routes";
+import classNames from "classnames/bind"
+import styles from "./Modal.module.scss"
+import { useDeliveryInfo } from "@/hook/useContext"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { getTotals, removeFromCart } from "@/redux/cartSlice"
+import { useEffect } from "react"
+import ModalCart from "./ModalCart/ModalCart"
+import ModalSearch from "./ModalSearch/ModalSearch"
+import { PUBLICROUTER } from "@/config/routes"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function Modal() {
   const {
     showModalCart,
     showModalSearch,
     setShowModalCart,
-    setShowModalSearch,
-  } = useDeliveryInfo();
+    setShowModalSearch
+  } = useDeliveryInfo()
 
-  const user = useSelector((state) => state.auth.login?.currentUser);
-  const cart = useSelector((state) => state.cart);
+  const user = useSelector((state) => state.auth.login?.currentUser)
+  const cart = useSelector((state) => state.cart)
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getTotals());
-  }, [cart, dispatch]);
+    dispatch(getTotals())
+  }, [cart, dispatch])
 
   const handleRemoveCart = (itemRemove) => {
-    dispatch(removeFromCart({ itemRemove }));
-  };
+    dispatch(removeFromCart({ itemRemove }))
+  }
 
   const handleClickNextPageCart = () => {
-    navigate(PUBLICROUTER.cart);
-    setShowModalCart(false);
-  };
+    navigate(PUBLICROUTER.cart)
+    setShowModalCart(false)
+  }
 
   const handleClickNextPagePay = () => {
-    navigate(`/checkout/${user?._id}`);
-    setShowModalCart(false);
-  };
+    navigate(`/checkout/${user?._id}`)
+    setShowModalCart(false)
+  }
 
   const handleClickNextLogin = () => {
-    navigate(PUBLICROUTER.auth);
-    setShowModalCart(false);
-  };
+    navigate(PUBLICROUTER.auth)
+    setShowModalCart(false)
+  }
 
   const handleCloseModal = () => {
-    setShowModalCart(false);
-    setShowModalSearch(false);
-  };
+    setShowModalCart(false)
+    setShowModalSearch(false)
+  }
 
   return (
     <div
       className={cx("site-cart", {
-        active: showModalCart || showModalSearch,
+        active: showModalCart || showModalSearch
       })}
     >
       {/* Modal Cart */}
@@ -76,7 +76,7 @@ function Modal() {
         <span className={cx("bar")}></span>
       </button>
     </div>
-  );
+  )
 }
 
-export default Modal;
+export default Modal

@@ -1,6 +1,6 @@
-import { TextField } from "@mui/material";
-import PropTypes from "prop-types";
-import "./InputField.scss";
+import { TextField } from "@mui/material"
+import PropTypes from "prop-types"
+import "./InputField.scss"
 
 function InputField(props) {
   const {
@@ -12,8 +12,9 @@ function InputField(props) {
     select,
     onChange,
     ...rest
-  } = props;
-  const hasError = errors[name];
+  } = props
+
+  const hasError = errors[name]
   return (
     <TextField
       variant="outlined"
@@ -27,7 +28,7 @@ function InputField(props) {
       onChange={onChange}
       {...rest}
     />
-  );
+  )
 }
 
 InputField.propTypes = {
@@ -38,7 +39,7 @@ InputField.propTypes = {
   errors: PropTypes.object,
   helperText: PropTypes.string,
   select: PropTypes.bool,
-  onChange: PropTypes.func,
-};
+  onChange: PropTypes.func
+}
 
-export default InputField;
+export default InputField

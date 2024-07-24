@@ -1,77 +1,76 @@
-import "./Auth.scss";
-import { useRef, useState } from "react";
-import * as authService from "@/services/authService";
-import { useDispatch } from "react-redux";
+import "./Auth.scss"
+import { useRef, useState } from "react"
+import * as authService from "@/services/authService"
+import { useDispatch } from "react-redux"
 import {
   loginStart,
   loginSuccess,
   registerStart,
-  registerSuccess,
-} from "@/redux/authSlice";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import FormLogin from "./AuthForm/FormLogin";
-import FormRegister from "./AuthForm/FormRegister";
-import { PUBLICROUTER } from "@/config/routes";
+  registerSuccess
+} from "@/redux/authSlice"
+import { useNavigate, useSearchParams } from "react-router-dom"
+import { toast } from "react-toastify"
+import FormLogin from "./AuthForm/FormLogin"
+import FormRegister from "./AuthForm/FormRegister"
+import { PUBLICROUTER } from "@/config/routes"
 
 function Auth() {
-  const dispatch = useDispatch();
-  const divRef = useRef(null);
-  const navigate = useNavigate();
-  const [statusAuth, setStatusAuth] = useState(false);
-  const [statusRegister, setStatusRegister] = useState(false);
-  const [searchParams] = useSearchParams();
-  const redirectPath = searchParams.get("redirect");
+  const dispatch = useDispatch()
+  const divRef = useRef(null)
+  const navigate = useNavigate()
+  const [statusAuth, setStatusAuth] = useState(false)
+  const [statusRegister, setStatusRegister] = useState(false)
+  const [searchParams] = useSearchParams()
+  const redirectPath = searchParams.get("redirect")
 
   const handleClickSignUp = () => {
     if (divRef.current) {
-      divRef.current.classList.add("right-pane-active");
+      divRef.current.classList.add("right-pane-active")
     }
-  };
+  }
   const handleClickSignIn = () => {
     if (divRef.current) {
-      divRef.current.classList.remove("right-pane-active");
+      divRef.current.classList.remove("right-pane-active")
     }
-  };
+  }
 
   const handleSubmitLogin = async (values) => {
-    dispatch(loginStart());
+    dispatch(loginStart())
     try {
-      const res = await authService.loginUser(values);
-      dispatch(loginSuccess(res));
+      const res = await authService.loginUser(values)
+      dispatch(loginSuccess(res))
 
       if (redirectPath) {
-        navigate(redirectPath);
+        navigate(redirectPath)
       } else {
-        navigate(PUBLICROUTER.home);
+        navigate(PUBLICROUTER.home)
       }
-
-      toast.success("Đăng nhập thành công");
-      setStatusAuth(true);
+      toast.success("Đăng nhập thành công")
+      setStatusAuth(true)
     } catch (error) {
       if (error.statusCode !== 500) {
-        toast.error(error.message);
-        setStatusAuth(false);
+        toast.error(error.message)
+        setStatusAuth(false)
       }
     }
-  };
+  }
 
   const handleSubmitRegister = async (values) => {
-    dispatch(registerStart());
+    dispatch(registerStart())
     try {
-      const res = await authService.registerUser(values);
-      dispatch(registerSuccess(res));
-      toast.success("Đăng ký thành công");
-      setStatusRegister(true);
+      const res = await authService.registerUser(values)
+      dispatch(registerSuccess(res))
+      toast.success("Đăng ký thành công")
+      setStatusRegister(true)
     } catch (error) {
       if (error?.statusCode !== 500) {
-        toast.error(error.message);
-        setStatusAuth((prev) => !prev);
-        setStatusRegister(false);
-        return;
+        toast.error(error.message)
+        setStatusAuth((prev) => !prev)
+        setStatusRegister(false)
+        return
       }
     }
-  };
+  }
 
   return (
     <div className="auth">
@@ -123,7 +122,7 @@ function Auth() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Auth;
+export default Auth

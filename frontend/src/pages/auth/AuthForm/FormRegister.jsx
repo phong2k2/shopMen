@@ -1,102 +1,102 @@
-import { useForm } from "react-hook-form";
-import { forwardRef, useRef, useState } from "react";
-import { yupResolver } from "@hookform/resolvers/yup";
-import PropTypes from "prop-types";
-import InputField from "@/components/form-controls/InputField/InputField";
-import "./Form.scss";
-import { schemaFormRegister } from "@/validations/yupSchema";
-import { useEffect } from "react";
-import * as authService from "@/services/authService";
-import { CircularProgress } from "@mui/material";
+import { useForm } from "react-hook-form"
+import { forwardRef, useRef, useState } from "react"
+import { yupResolver } from "@hookform/resolvers/yup"
+import PropTypes from "prop-types"
+import InputField from "@/components/form-controls/InputField/InputField"
+import "./Form.scss"
+import { schemaFormRegister } from "@/validations/yupSchema"
+import { useEffect } from "react"
+import * as authService from "@/services/authService"
+import { CircularProgress } from "@mui/material"
 
 const initRegister = {
   name: "",
   email: "",
   password: "",
-  phone: "",
-};
+  phone: ""
+}
 const FormRegister = forwardRef(function FormRegister(
   { handleSubmitRegister, statusRegister },
   ref
 ) {
-  const [visible, setVisible] = useState(true);
-  const [dashoffset, setDashoffset] = useState(0);
-  const [showInputOtp, setShowInputOtp] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [shouldStartInterval, setShouldStartInterval] = useState(false);
-  const svgRef = useRef();
+  const [visible, setVisible] = useState(true)
+  const [dashoffset, setDashoffset] = useState(0)
+  const [showInputOtp, setShowInputOtp] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [shouldStartInterval, setShouldStartInterval] = useState(false)
+  const svgRef = useRef()
 
   const {
     register,
     handleSubmit,
     reset,
     getValues,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
-    resolver: yupResolver(schemaFormRegister),
-  });
+    resolver: yupResolver(schemaFormRegister)
+  })
 
   useEffect(() => {
     if (statusRegister) {
-      ref.current.classList.remove("right-pane-active");
-      reset(initRegister);
+      ref.current.classList.remove("right-pane-active")
+      reset(initRegister)
     }
-  }, [statusRegister]);
+  }, [statusRegister])
 
   const handleOnSubmit = (values) => {
-    handleSubmitRegister(values);
-  };
+    handleSubmitRegister(values)
+  }
 
   const handleVerifyEmail = async () => {
     try {
-      setIsLoading(true);
-      const email = getValues("email");
-      const res = await authService.sendVerifyEmail(email);
+      setIsLoading(true)
+      const email = getValues("email")
+      const res = await authService.sendVerifyEmail(email)
       if (res.message) {
-        setVisible(false);
-        setShouldStartInterval(true);
-        setShowInputOtp(true);
-        setIsLoading(false);
+        setVisible(false)
+        setShouldStartInterval(true)
+        setShowInputOtp(true)
+        setIsLoading(false)
       }
     } catch (error) {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    if (!shouldStartInterval) return;
+    if (!shouldStartInterval) return
 
     const intervalId = setInterval(() => {
       setDashoffset((prevDashoffset) => {
-        const newDashoffset = prevDashoffset - 1.2;
+        const newDashoffset = prevDashoffset - 1.2
         if (newDashoffset < -72) {
-          return 0;
+          return 0
         }
-        return newDashoffset;
-      });
-    }, 1000);
+        return newDashoffset
+      })
+    }, 1000)
 
     const timeoutId = setTimeout(() => {
-      clearInterval(intervalId);
-      setShouldStartInterval(false);
-      setInterval(0);
-    }, 60000);
+      clearInterval(intervalId)
+      setShouldStartInterval(false)
+      setInterval(0)
+    }, 60000)
 
     return () => {
-      clearTimeout(timeoutId);
-      clearInterval(intervalId);
-    };
-  }, [shouldStartInterval]);
+      clearTimeout(timeoutId)
+      clearInterval(intervalId)
+    }
+  }, [shouldStartInterval])
 
   useEffect(() => {
     if (svgRef.current) {
-      svgRef.current.setAttribute("stroke-dashoffset", dashoffset);
+      svgRef.current.setAttribute("stroke-dashoffset", dashoffset)
     }
-  }, [dashoffset]);
+  }, [dashoffset])
 
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)}>
-      <h3 className="pb-2 text-center text-uppercase font-weight-normal title-auth">
+      <h3 className="pb-4 text-center text-uppercase font-semibold title-auth text-5xl">
         Đăng ký
       </h3>
       <div className="d-flex mb-4 justify-content-center icon">
@@ -205,12 +205,12 @@ const FormRegister = forwardRef(function FormRegister(
         ĐĂNG KÝ
       </button>
     </form>
-  );
-});
+  )
+})
 
 FormRegister.propTypes = {
   handleSubmitRegister: PropTypes.func,
-  statusRegister: PropTypes.bool,
-};
+  statusRegister: PropTypes.bool
+}
 
-export default FormRegister;
+export default FormRegister

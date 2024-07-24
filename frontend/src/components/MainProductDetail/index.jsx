@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import classNames from "classnames/bind";
-import styles from "./MainProductDetail.module.scss";
-import { formatPrice } from "../formatData/formatData";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Navigation, Thumbs } from "swiper/modules";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { productSizes } from "@/contant";
-import { pathProcessing } from "@/helpers/image";
+import { useState } from "react"
+import classNames from "classnames/bind"
+import styles from "./MainProductDetail.module.scss"
+import { formatPrice } from "../formatData/formatData"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { FreeMode, Navigation, Thumbs } from "swiper/modules"
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart"
+import { productSizes } from "@/contant"
+import { pathProcessing } from "@/helpers/image"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function MainProductDetail({
   images,
   detailProduct,
@@ -22,17 +22,17 @@ function MainProductDetail({
   handleAddToCart,
   amount,
   selectedColor,
-  selectedSize,
+  selectedSize
 }) {
-  const [thumbsSwiper, setThumbsSwiper] = useState(null);
+  const [thumbsSwiper, setThumbsSwiper] = useState(null)
 
   const colorMapping = {
     Đen: "#000",
     Xanh: "#0c2461",
     Trắng: "#ffff",
     Cam: "#c47a4a ",
-    Đỏ: "#ff0000",
-  };
+    Đỏ: "#ff0000"
+  }
 
   return (
     <div className={cx("row")}>
@@ -47,7 +47,7 @@ function MainProductDetail({
                 thumbs={{ swiper: thumbsSwiper }}
                 modules={[FreeMode, Navigation, Thumbs]}
                 className="productHotSwiper"
-                style={{ order: 2 }}
+                style={{ order: 2, maxWidth: "80%" }}
               >
                 {images?.map((item) => {
                   return (
@@ -60,7 +60,7 @@ function MainProductDetail({
                         loading="lazy"
                       />
                     </SwiperSlide>
-                  );
+                  )
                 })}
               </Swiper>
               <Swiper
@@ -72,7 +72,7 @@ function MainProductDetail({
                   display: "flex",
                   flex: "none",
                   marginLeft: "20px",
-                  marginTop: 0,
+                  marginTop: 0
                 }}
                 watchSlidesProgress={true}
                 modules={[FreeMode, Navigation, Thumbs]}
@@ -87,7 +87,7 @@ function MainProductDetail({
                           display: "block",
                           width: "100%",
                           height: "100%",
-                          objectFit: "cover",
+                          objectFit: "cover"
                         }}
                         src={pathProcessing(item?.image)}
                         className={cx("swiper-slide-auto")}
@@ -95,7 +95,7 @@ function MainProductDetail({
                         loading="lazy"
                       />
                     </SwiperSlide>
-                  );
+                  )
                 })}
               </Swiper>
             </div>
@@ -124,8 +124,8 @@ function MainProductDetail({
                     {detailProduct?.color?.map((itemColor, index) => {
                       const colorStyle = {
                         backgroundColor:
-                          colorMapping[itemColor?.nameColor] || "#defaultcolor",
-                      };
+                          colorMapping[itemColor?.nameColor] || "#defaultcolor"
+                      }
                       return (
                         <div
                           key={index}
@@ -156,7 +156,7 @@ function MainProductDetail({
                             <span style={colorStyle}>{itemColor?.color}</span>
                           </label>
                         </div>
-                      );
+                      )
                     })}
                   </div>
                 </div>
@@ -169,7 +169,7 @@ function MainProductDetail({
                           key={itemSize.id}
                           className={cx("swatch-element", {
                             hideSize: !isSizeInProduct(itemSize.name),
-                            selector: itemSize.name === selectedSize,
+                            selector: itemSize.name === selectedSize
                           })}
                         >
                           <input
@@ -189,7 +189,7 @@ function MainProductDetail({
                             <span>{itemSize.name}</span>
                           </label>
                         </div>
-                      );
+                      )
                     })}
                   </div>
                 </div>
@@ -229,7 +229,7 @@ function MainProductDetail({
                       <AddShoppingCartIcon
                         sx={{
                           fontSize: 30,
-                          paddingRight: "5px",
+                          paddingRight: "5px"
                         }}
                       />
                       Thêm vào giỏ hàng
@@ -258,7 +258,7 @@ function MainProductDetail({
                         aria-expanded="false"
                         aria-controls="collapseTwo"
                       >
-                        <i className="bi bi-credit-card"></i>
+                        <i class="bi bi-credit-card"></i>
                         <span>Đa dạng phương thức thanh toán</span>
                       </button>
                     </h2>
@@ -302,7 +302,7 @@ function MainProductDetail({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default MainProductDetail;
+export default MainProductDetail

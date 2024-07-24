@@ -1,4 +1,4 @@
-import * as yup from "yup";
+import * as yup from "yup"
 
 export const schemaCheckout = yup
   .object({
@@ -12,9 +12,9 @@ export const schemaCheckout = yup
       .required("Vui lòng nhập số điện thoại")
       .min(10, "Bắt buộc phải 10 số")
       .max(11, "Sai định dạng"),
-    address: yup.string().required("Vui lòng nhập địa chỉ"),
+    address: yup.string().required("Vui lòng nhập địa chỉ")
   })
-  .required();
+  .required()
 
 export const schemaAddress = yup.object({
   name: yup.string().required("Vui lòng nhập tên"),
@@ -24,20 +24,23 @@ export const schemaAddress = yup.object({
     .required("Vui lòng nhập số điện thoại")
     .min(10, "Bắt buộc phải 10 số")
     .max(11, "Sai định dạng"),
-  address: yup.string().required("Vui lòng nhập địa chỉ"),
-});
+  address: yup.string().required("Vui lòng nhập địa chỉ")
+})
 
 // Auth
 export const schemaFormLogin = yup.object({
   email: yup
     .string()
     .email("Email không đúng định dạng")
-    .required("Vui lòng không để trống"),
-  password: yup
-    .string()
-    .required("Vui lòng nhập mật khẩu")
-    .min(8, "Mật khẩu cần dài ít nhất 6 ký tự"),
-});
+    .required("Vui lòng không để trống")
+  // password: yup
+  //   .string()
+  //   .required(
+  //     "Vui lòng nhập mật khẩu chứa ít nhất 6 ký tự, có thể là chữ hoặc số"
+  //   )
+  //   .min(6, "Mật khẩu cần dài ít nhất 6 ký tự")
+  //   .matches(/[a-zA-Z]/, "Password can only contain Latin letters.")
+})
 
 export const schemaFormRegister = yup.object({
   name: yup
@@ -57,15 +60,15 @@ export const schemaFormRegister = yup.object({
     .transform((value) => (Number.isNaN(value) ? null : value))
     .nullable()
     .required("Vui lòng nhập số điện thoại")
-    .min(10, "Số điện thoại phải 10 chữ số"),
-});
+    .min(10, "Số điện thoại phải 10 chữ số")
+})
 
 export const schemaForgotPassword = yup.object({
   email: yup
     .string()
     .email("Email không đúng")
-    .required("Vui lòng không để trống"),
-});
+    .required("Vui lòng không để trống")
+})
 
 export const schemaResetPassword = yup.object({
   password: yup
@@ -75,5 +78,5 @@ export const schemaResetPassword = yup.object({
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("password"), null], "Mật khẩu không khớp")
-    .required("Vui lòng nhập lại mật khẩu"),
-});
+    .required("Vui lòng nhập lại mật khẩu")
+})

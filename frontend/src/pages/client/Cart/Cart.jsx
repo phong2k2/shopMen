@@ -1,64 +1,64 @@
-import classNames from "classnames/bind";
-import styles from "./Cart.module.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useRef, useState } from "react";
+import classNames from "classnames/bind"
+import styles from "./Cart.module.scss"
+import { useDispatch, useSelector } from "react-redux"
+import { useEffect, useRef, useState } from "react"
 import {
   decreaseCart,
   getTotals,
   increaseCart,
-  removeFromCart,
-} from "@/redux/cartSlice";
-import { Link } from "react-router-dom";
-import { formatPrice } from "@/components/formatData/formatData";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
-import { pathProcessing } from "@/helpers/image";
-import { PUBLICROUTER } from "@/config/routes";
+  removeFromCart
+} from "@/redux/cartSlice"
+import { Link } from "react-router-dom"
+import { formatPrice } from "@/components/formatData/formatData"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons"
+import { pathProcessing } from "@/helpers/image"
+import { PUBLICROUTER } from "@/config/routes"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function Cart() {
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector((state) => state.cart)
 
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.auth.login?.currentUser);
-  const [checkItems, setCheckItems] = useState([]);
-  const [isCheckAll, setIsCheckAll] = useState(false);
-  const allCheckInput = useRef([]);
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.auth.login?.currentUser)
+  const [checkItems, setCheckItems] = useState([])
+  const [isCheckAll, setIsCheckAll] = useState(false)
+  const allCheckInput = useRef([])
 
   useEffect(() => {
-    dispatch(getTotals());
-  }, [cart, dispatch]);
+    dispatch(getTotals())
+  }, [cart, dispatch])
 
   useEffect(() => {
     allCheckInput.current = allCheckInput.current.filter(
       (input) => input !== null
-    );
-  }, [cart?.cartItems]);
+    )
+  }, [cart?.cartItems])
 
   const handleChangeCount = (type, itemProduct, limited) => {
     if (type === "decrease") {
       if (!limited) {
-        dispatch(decreaseCart({ itemProduct }));
+        dispatch(decreaseCart({ itemProduct }))
       }
     } else {
-      dispatch(increaseCart({ itemProduct }));
+      dispatch(increaseCart({ itemProduct }))
     }
-  };
+  }
 
   const handleRemoveFromCart = (itemRemove) => {
-    dispatch(removeFromCart(itemRemove));
-  };
+    dispatch(removeFromCart(itemRemove))
+  }
 
   const handleCheckInput = (e, cartItem) => {
-    const { checked } = e.target;
-    const { size, color, product } = cartItem;
+    const { checked } = e.target
+    const { size, color, product } = cartItem
 
     let checkedCheckboxes = allCheckInput.current.filter((checkbox) => {
-      if (checkbox) return checkbox.checked;
-    });
+      if (checkbox) return checkbox.checked
+    })
 
-    const checkAll = checkedCheckboxes.length === allCheckInput.current.length;
-    setIsCheckAll(checkAll);
+    const checkAll = checkedCheckboxes.length === allCheckInput.current.length
+    setIsCheckAll(checkAll)
 
     if (checked) {
       setCheckItems((prev) => [
@@ -67,9 +67,9 @@ function Cart() {
           product,
           size,
           color,
-          checked,
-        },
-      ]);
+          checked
+        }
+      ])
     } else {
       setCheckItems((prev) => {
         return prev.filter((data) => {
@@ -78,38 +78,38 @@ function Cart() {
               data.color !== color ||
               data.size !== size) &&
             data.checked
-          );
-        });
-      });
+          )
+        })
+      })
     }
-  };
+  }
 
   const handleCheckAll = (e) => {
-    const { checked } = e.target;
-    setIsCheckAll(checked);
+    const { checked } = e.target
+    setIsCheckAll(checked)
     if (cart?.cartItems) {
-      console.log("🚀 ~ checkItems:", checkItems);
+      console.log("🚀 ~ checkItems:", checkItems)
       if (cart.cartItems.length === checkItems?.length) {
-        setCheckItems([]);
+        setCheckItems([])
       } else {
         const initialCheckItems = cart.cartItems.map((item) => ({
           product: item.product,
           size: item.size,
           color: item.color,
-          checked: true,
-        }));
-        setCheckItems(initialCheckItems);
+          checked: true
+        }))
+        setCheckItems(initialCheckItems)
       }
     }
-  };
+  }
 
   const handleClearCart = () => {
     if (checkItems) {
-      const itemRemove = checkItems.filter((cart) => cart.checked);
-      dispatch(removeFromCart(itemRemove));
-      setCheckItems((prev) => prev.filter((cart) => !cart.checked));
+      const itemRemove = checkItems.filter((cart) => cart.checked)
+      dispatch(removeFromCart(itemRemove))
+      setCheckItems((prev) => prev.filter((cart) => !cart.checked))
     }
-  };
+  }
 
   return (
     <div className={cx("cart")}>
@@ -263,7 +263,7 @@ function Cart() {
                                   </div>
                                 </div>
                               </div>
-                            );
+                            )
                           })}
                         </div>
                         <div className={cx("clear-cart")}>
@@ -278,7 +278,12 @@ function Cart() {
                               Chọn tất cả
                             </label>
                           </div>
-                          <button onClick={handleClearCart}>Xóa</button>
+                          <button
+                            className={cx("remove-cart")}
+                            onClick={handleClearCart}
+                          >
+                            Xóa
+                          </button>
                         </div>
                       </div>
                       <div className={cx("cart-row")}>
@@ -340,9 +345,9 @@ function Cart() {
                   )}
                 </div>
                 <div className={cx("col-md-3 col-sm-12")}>
-                  <a className={cx("next-order")} href="">
+                  <Link className={cx("next-order")} href="">
                     Tiếp tục mua hàng
-                  </a>
+                  </Link>
                   <div className={cx("order-summary")}>
                     <h2 className={cx("order-title")}>Thông tin đơn hàng</h2>
                     <div className={cx("summary-total")}>
@@ -375,7 +380,7 @@ function Cart() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Cart;
+export default Cart

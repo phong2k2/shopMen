@@ -1,33 +1,31 @@
-import axios from "axios";
+import axios from "axios"
 
 export const getProvinces = async () => {
   try {
-    const response = await axios.get(
-      "https://vnprovinces.pythonanywhere.com/api/provinces/?limit=100"
-    );
-    return response?.data?.results;
+    const response = await axios.get("https://vapi.vnappmob.com/api/province/")
+    return response?.data?.results
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}
 
 export const getDistricts = async (provinceId) => {
   try {
     const response = await axios.get(
-      `https://vnprovinces.pythonanywhere.com/api/districts/?province_id=${provinceId}&limit=100`
-    );
-    return response?.data?.results;
+      `https://vapi.vnappmob.com/api/province/district/${provinceId}`
+    )
+    return response?.data?.results
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
-export const getWards = async (provinceId) => {
+}
+export const getWards = async (districtId) => {
   try {
     const response = await axios.get(
-      `https://vnprovinces.pythonanywhere.com/api/wards/?province_id=${provinceId}&limit=100`
-    );
-    return response?.data?.results;
+      `https://vapi.vnappmob.com/api/province/ward/${districtId}`
+    )
+    return response?.data?.results
   } catch (err) {
-    console.log(err);
+    console.log(err)
   }
-};
+}
