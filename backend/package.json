@@ -45,6 +45,7 @@
     "otplib": "^12.0.1",
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.1",
     "sharp": "^0.32.6",
     "util": "^0.12.5",
     "util.promisify": "^1.1.2"

@@ -1,70 +1,73 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const paginate = require('../../plugins/paginate');
+const mongoose = require("mongoose")
+const Schema = mongoose.Schema
+const paginate = require("../../plugins/paginate")
 
-const AddressSchema = new Schema({
+const AddressSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true
     },
     phone: {
-        type: String,
-        required: true,
+      type: String,
+      required: true
     },
     email: {
-        type: String,
-        required: true,
+      type: String,
+      required: true
     },
     province: {
-        id: {
-            type: Number,
-            required: true,
-        },
-        name: {
-            type: String,
-            required: true,
-        }
+      id: {
+        type: Number,
+        required: true
+      },
+      name: {
+        type: String,
+        required: true
+      }
     },
     district: {
-        id: {
-            type: Number,
-            required: true,
-        },
-        name: {
-            type: String,
-            required: true,
-        }
+      id: {
+        type: Number,
+        required: true
+      },
+      name: {
+        type: String,
+        required: true
+      }
     },
     ward: {
-        id: {
-            type: Number,
-            required: true,
-        },
-        name: {
-            type: String,
-            required: true,
-        }
+      id: {
+        type: Number,
+        required: true
+      },
+      name: {
+        type: String,
+        required: true
+      }
     },
     address: {
-        type: String,
-        required: true,
+      type: String,
+      required: true
     },
     image: {
-        type: String,
+      type: String
     },
     status: {
-        type: Number,
-        default: 0,
+      type: Number,
+      default: 0
     },
     userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     }
-},{
-    timestamps: true,
-})
+  },
+  {
+    timestamps: true
+  }
+)
 
-AddressSchema.plugin(paginate);
-const Address =  mongoose.model('Address',AddressSchema)
+AddressSchema.plugin(paginate)
+const Address = mongoose.model("Address", AddressSchema)
 module.exports = Address
