@@ -6,6 +6,7 @@
 .title-delivery {
   font-size: 1.4rem;
   font-weight: 400;
+  margin-top: 8px;
   color: #000;
   opacity: 0.8;
   text-transform: capitalize;
@@ -119,23 +120,18 @@ form {
   width: 33.33333% !important;
 }
 
-.clear {
-  clear: both;
-}
-
-.btn-complete {
-  padding: 15px 20px;
+.btn-complete-order {
+  padding: 10px;
   margin-top: 10px;
   border-radius: 4px;
   font-size: 1.5rem;
   font-weight: 400;
   float: right;
-  background-color: var(--black);
+  background-color: #286f94;
   color: #fff;
-  font-weight: 600;
 
   &:hover {
-    opacity: 0.7;
+    opacity: 0.95;
   }
 
   @include global.mobile {
@@ -143,6 +139,9 @@ form {
   }
 }
 
+.clear {
+  clear: both;
+}
 // Select Country
 .select-custom-group {
   position: relative;

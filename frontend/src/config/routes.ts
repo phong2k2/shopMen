@@ -12,20 +12,20 @@ const PUBLICROUTER = {
     subCategory: (categoryId, categoryName) =>
       `/collections?subCategoryId=${categoryId}&categoryName=${encodeURIComponent(
         categoryName
-      )}`,
+      )}`
   },
   productDetail: {
     index: "/product/:id",
-    slug: (slug, id) => `/product/${slug}?id=${id}`,
+    slug: (slug, id) => `/product/${slug}?id=${id}`
   },
   cart: "/cart",
   order: "/checkout/:id",
   listOrders: {
     index: "/order",
-    status: (status, user) => `/order?status=${status}&user=${user}`,
+    status: (status, user) => `/order?status=${status}&user=${user}`
   },
   orderStatistics: {
-    index: "/orderStatistics",
+    index: "/orderStatistics"
   },
   account: "/account",
   search: "/search",
@@ -33,7 +33,7 @@ const PUBLICROUTER = {
   forGotPassword: "/forgot-password",
   resetPassword: "/reset-password",
   persistor: "/persistor",
-  notFound: "*",
-};
+  notFound: "/404"
+}
 
-export { PUBLICROUTER };
+export { PUBLICROUTER }

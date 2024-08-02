@@ -1,0 +1,89 @@
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.select-custom-group {
+  position: relative;
+  cursor: pointer;
+}
+
+.select-custom-country {
+  padding: 10px;
+  border-radius: 5px;
+  border-radius: 5px;
+  font-weight: 400;
+  font-size: 1.4rem;
+  border: 1px solid #ced4da;
+  color: #212529;
+  position: relative;
+
+  i {
+    position: absolute;
+    right: 15px;
+    top: 12px;
+  }
+}
+
+.country-options {
+  width: 100%;
+  min-height: 300px;
+  background: #fff;
+  margin-top: 10px;
+  border: 0.5px solid #ced4da;
+  box-sizing: border-box;
+  box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  z-index: 9999;
+  display: none;
+}
+.show-modal {
+  display: block;
+}
+
+.header-tabs {
+  margin-bottom: 5px;
+}
+
+.menu-tabs {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+
+  .active {
+    color: #000;
+    border-bottom: 1px solid #000;
+  }
+}
+
+.tab-city,
+.tab-district,
+.tab-ward {
+  padding: 10px;
+  font-size: 15px;
+  color: #6d6e6e;
+  font-weight: 700;
+  text-align: center;
+  width: 50%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.list-country {
+  height: 326px;
+  overflow: hidden;
+  overflow-y: scroll;
+  list-style: none;
+  padding: 0;
+}
+
+.item-list {
+  padding: 10px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}

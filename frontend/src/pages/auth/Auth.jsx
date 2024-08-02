@@ -21,6 +21,8 @@ function Auth() {
   const [statusAuth, setStatusAuth] = useState(false)
   const [statusRegister, setStatusRegister] = useState(false)
   const [searchParams] = useSearchParams()
+  const [messageError, setMessageError] = useState(null)
+
   const redirectPath = searchParams.get("redirect")
 
   const handleClickSignUp = () => {
@@ -37,19 +39,18 @@ function Auth() {
   const handleSubmitLogin = async (values) => {
     dispatch(loginStart())
     try {
+      setMessageError(null)
       const res = await authService.loginUser(values)
       dispatch(loginSuccess(res))
-
       if (redirectPath) {
         navigate(redirectPath)
       } else {
         navigate(PUBLICROUTER.home)
       }
-      toast.success("Đăng nhập thành công")
       setStatusAuth(true)
     } catch (error) {
-      if (error.statusCode !== 500) {
-        toast.error(error.message)
+      if (error.message) {
+        setMessageError(error.message)
         setStatusAuth(false)
       }
     }
@@ -89,6 +90,7 @@ function Auth() {
           <FormLogin
             handleSubmitLogin={handleSubmitLogin}
             statusAuth={statusAuth}
+            messageError={messageError}
           />
         </div>
 
@@ -97,25 +99,29 @@ function Auth() {
             <div className=" ovelaypane overlay-left">
               <h1>Welcome Back!</h1>
               <span>
-                To keep connected with us please login with your personal info
+                Để duy trì kết nối với chúng tôi vui lòng đăng nhập bằng thông
+                tin cá nhân của bạn
               </span>
               <button
                 type="submit"
                 className="mt-3 btn btn-custom--tem btn-left signIn"
                 onClick={handleClickSignIn}
               >
-                Log in
+                Đăng Nhập
               </button>
             </div>
             <div className=" ovelaypane overlay-right">
               <h1>Hello, Friend</h1>
-              <span>Enter your personal details and start journey with us</span>
+              <span>
+                Nhập thông tin cá nhân của bạn và bắt đầu hành trình với chúng
+                tôi
+              </span>
               <button
                 type="submit"
                 className="mt-3 btn btn-custom--tem signUp"
                 onClick={handleClickSignUp}
               >
-                Sign up
+                Đăng Ký
               </button>
             </div>
           </div>

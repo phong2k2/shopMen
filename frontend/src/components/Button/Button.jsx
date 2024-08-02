@@ -1,15 +1,16 @@
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import classNames from 'classnames/bind';
-import styles from './Button.module.scss';
+import PropTypes from "prop-types"
+import { Link } from "react-router-dom"
+import classNames from "classnames/bind"
+import styles from "./Button.module.scss"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 
 function Button({
   to,
   href,
   children,
   outline = false,
+  box = false,
   small = false,
   large = false,
   primary = false,
@@ -20,25 +21,26 @@ function Button({
   onClick,
   ...passProp
 }) {
-  let Comp = 'button';
-  const classes = cx('wrapper', {
+  let Comp = "button"
+  const classes = cx("wrapper", {
     primary,
     outline,
+    box,
     small,
     large,
     disabled,
     rounded,
-    [className]: className,
-  });
+    [className]: className
+  })
 
   const props = {
     onClick,
-    ...passProp,
-  };
+    ...passProp
+  }
 
   // 2 cách Remove event listeners when btn is disabled
   if (disabled) {
-    delete props.onClick;
+    delete props.onClick
   }
   // if (disabled) {
   //   Object.keys(props).forEach((key) => {
@@ -49,19 +51,19 @@ function Button({
   // }
 
   if (to) {
-    props.to = to;
-    Comp = Link;
+    props.to = to
+    Comp = Link
   } else if (href) {
-    props.href = href;
-    Comp = 'a';
+    props.href = href
+    Comp = "a"
   }
 
   return (
     <Comp className={classes} {...props}>
-      {leftIcon && <span className={cx('icon')}>{leftIcon}</span>}
-      <span className={cx('title')}>{children}</span>
+      {leftIcon && <span className={cx("icon")}>{leftIcon}</span>}
+      <span className={cx("title")}>{children}</span>
     </Comp>
-  );
+  )
 }
 
 Button.propTypes = {
@@ -76,7 +78,7 @@ Button.propTypes = {
   rounded: PropTypes.bool,
   className: PropTypes.string,
   leftIcon: PropTypes.object,
-  onClick: PropTypes.func,
-};
+  onClick: PropTypes.func
+}
 
-export default Button;
+export default Button

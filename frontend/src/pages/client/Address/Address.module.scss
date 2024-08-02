@@ -16,10 +16,12 @@
 }
 
 .li-address {
+  margin-bottom: 20px;
 }
 
 .item-my-address {
   min-width: 80px;
+  min-height: 150px;
   display: flex;
   background-color: #fff;
   box-sizing: border-box;
@@ -45,15 +47,16 @@
 
   .color-success {
     color: #009220;
-    padding: 5px 12px;
+    padding: 5px 10px;
+    font-size: 1.4rem;
   }
 
   a {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     background-color: #2069d6;
-    border-color: #0a58ca;
     display: block;
-    padding: 5px 12px;
+    border-radius: 3px;
+    padding: 4px 10px;
     color: #fff !important;
     font-weight: 400;
     cursor: pointer;

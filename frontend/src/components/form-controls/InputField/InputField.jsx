@@ -20,7 +20,13 @@ function InputField(props) {
       variant="outlined"
       fullWidth
       type={type}
-      sx={{ ...sx }}
+      sx={{
+        "& .MuiFormHelperText-root": {
+          fontSize: "1.4rem",
+          marginLeft: "4px"
+        },
+        ...sx
+      }}
       {...validate}
       select={select}
       error={!!hasError}

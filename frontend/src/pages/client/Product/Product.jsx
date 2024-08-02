@@ -1,28 +1,28 @@
-import classNames from "classnames/bind";
-import styles from "./Product.module.scss";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import * as productService from "@/services/productService";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "react-query";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import ProductItem from "@/components/ProductItem";
-import { useDeliveryInfo } from "@/hook/useContext";
-import NavContent from "@/components/NavContent";
-import Pagination from "@/components/Pagination";
+import classNames from "classnames/bind"
+import styles from "./Product.module.scss"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { useParams, useSearchParams } from "react-router-dom"
+import * as productService from "@/services/productService"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { useQuery } from "react-query"
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons"
+import ProductItem from "@/components/ProductItem"
+import { useDeliveryInfo } from "@/hook/useContext"
+import NavContent from "@/components/NavContent"
+import Pagination from "@/components/Pagination"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function Product() {
-  const limit = 1;
-  const selectRef = useRef();
-  const { id } = useParams();
-  const [sortBy, setSortBy] = useState();
-  const { setShowModalFilter, filter } = useDeliveryInfo();
-  const [page, setPage] = useState(0);
-  const [searchParams] = useSearchParams();
-  const categoryId = searchParams.get("categoryId");
-  const subCategoryId = searchParams.get("subCategoryId");
-  const name = searchParams.get("categoryName");
+  const limit = 1
+  const selectRef = useRef()
+  const { id } = useParams()
+  const [sortBy, setSortBy] = useState()
+  const { setShowModalFilter, filter } = useDeliveryInfo()
+  const [page, setPage] = useState(0)
+  const [searchParams] = useSearchParams()
+  const categoryId = searchParams.get("categoryId")
+  const subCategoryId = searchParams.get("subCategoryId")
+  const name = searchParams.get("categoryName")
 
   const sortingOptions = useMemo(
     () => [
@@ -30,21 +30,21 @@ function Product() {
       { value: "price-asc", label: "Giá: Tăng dần" },
       { value: "price-desc", label: "Giá: Giảm dần" },
       { value: "name-asc", label: "Tên: A-Z" },
-      { value: "name-desc", label: "Tên: Z-A" },
+      { value: "name-desc", label: "Tên: Z-A" }
     ],
     []
-  );
+  )
 
   useEffect(() => {
-    selectRef.current.textContent = sortingOptions[0].label;
-    setSortBy(sortingOptions[0].value);
-  }, [id, sortingOptions]);
+    selectRef.current.textContent = sortingOptions[0].label
+    setSortBy(sortingOptions[0].value)
+  }, [id, sortingOptions])
 
   // Sort Product
   const handleSortChange = (selectedOption) => {
-    selectRef.current.textContent = selectedOption.label;
-    setSortBy(selectedOption.value);
-  };
+    selectRef.current.textContent = selectedOption.label
+    setSortBy(selectedOption.value)
+  }
 
   // Get Product
   const { data: allProducts = [], isLoading } = useQuery({
@@ -55,19 +55,27 @@ function Product() {
         limit,
         page,
         sortBy,
-        ...filter,
-      });
+        ...filter
+      })
     },
-  });
+    retry: 1,
+    retryDelay: 1000,
+    onSuccess: (data) => {
+      console.log("query", data)
+    },
+    onError: (error) => {
+      console.log("query", error)
+    }
+  })
 
   const handleShowModalFilter = () => {
-    setShowModalFilter(true);
-  };
+    setShowModalFilter(true)
+  }
 
   const handlePageChange = (event, value) => {
-    setPage(value);
-    window.scrollTo(0, 0);
-  };
+    setPage(value)
+    window.scrollTo(0, 0)
+  }
 
   return (
     <section className={cx("collections")}>
@@ -109,7 +117,7 @@ function Product() {
                             <li
                               key={option.value}
                               className={cx("option", {
-                                active: option.value === sortBy,
+                                active: option.value === sortBy
                               })}
                               onClick={() => handleSortChange(option)}
                             >
@@ -129,7 +137,7 @@ function Product() {
                         itemPro={itemPro}
                         loading={isLoading}
                       />
-                    );
+                    )
                   })}
                 </div>
               </div>
@@ -143,7 +151,7 @@ function Product() {
         />
       </div>
     </section>
-  );
+  )
 }
 
-export default Product;
+export default Product

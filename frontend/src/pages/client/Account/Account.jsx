@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useRef, useState } from "react"
 import * as yup from "yup"
-import ImageSrc from "@/components/Image"
+import Images from "@/components/Image"
 import InputField from "@/components/form-controls/InputField/InputField"
 import * as userService from "@/services/userService"
 import { loginSuccess } from "@/redux/authSlice"
@@ -196,7 +196,7 @@ function Account() {
               <div className={cx("col-md-5")}>
                 <div className={cx("content-image")}>
                   <div className={cx("img-right")}>
-                    <ImageSrc
+                    <Images
                       className={cx("object-cover rounded-full h-80 w-80")}
                       src={preview || pathProcessing(user?.image)}
                       fallBack="https://fullstack.edu.vn/static/media/fallback-avatar.155cdb2376c5d99ea151.jpg"

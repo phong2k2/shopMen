@@ -258,7 +258,7 @@ function MainProductDetail({
                         aria-expanded="false"
                         aria-controls="collapseTwo"
                       >
-                        <i class="bi bi-credit-card"></i>
+                        <i className="bi bi-credit-card"></i>
                         <span>Đa dạng phương thức thanh toán</span>
                       </button>
                     </h2>

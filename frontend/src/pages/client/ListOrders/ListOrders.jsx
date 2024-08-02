@@ -1,52 +1,48 @@
-import { useQuery } from "react-query";
-import { useSearchParams } from "react-router-dom";
-import classNames from "classnames/bind";
-import styles from "./ListOrders.module.scss";
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
-import * as orderService from "@/services/orderService";
-import { formatPrice } from "@/components/formatData/formatData";
-import { pathProcessing } from "@/helpers/image";
+import { useQuery } from "react-query"
+import { useSearchParams } from "react-router-dom"
+import classNames from "classnames/bind"
+import styles from "./ListOrders.module.scss"
+import { useState } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons"
+import * as orderService from "@/services/orderService"
+import { formatPrice } from "@/components/formatData/formatData"
+import { pathProcessing } from "@/helpers/image"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function ListOrders() {
-  const [searchParams] = useSearchParams();
-  const [idShowItem, setIdShowItem] = useState(null);
-  const [idCancer, serIdCancer] = useState("");
-  const status = searchParams.get("status");
-  const user = searchParams.get("user");
+  const [searchParams] = useSearchParams()
+  const [idShowItem, setIdShowItem] = useState(null)
+  const [idCancer, serIdCancer] = useState("")
+  const status = searchParams.get("status")
+  const user = searchParams.get("user")
 
   const handleShowDetailOrder = (index) => {
     if (idShowItem === index) {
-      return setIdShowItem(null);
+      return setIdShowItem(null)
     }
-    setIdShowItem(index);
-  };
+    setIdShowItem(index)
+  }
 
   const handleClose = () => {
-    setIdShowItem(null);
-  };
+    setIdShowItem(null)
+  }
 
   const handleCancerOrder = async () => {
     try {
-      const res = await orderService.cancerOrder(idCancer);
+      const res = await orderService.cancerOrder(idCancer)
       if (res) {
-        window.location = "";
+        window.location = ""
       }
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
   const { data: listOrderStatus } = useQuery({
     queryKey: ["orderStatus", status, user],
     queryFn: () => orderService.getAllOrderStatus({ status, user }),
-    enabled: status !== undefined,
-  });
-  console.log(
-    "🚀 ~ file: ListOrders.jsx:64 ~ ListOrders ~ listOrderStatus:",
-    listOrderStatus
-  );
+    enabled: status !== undefined
+  })
 
   return (
     <section className={cx("list-order")}>
@@ -80,7 +76,7 @@ function ListOrders() {
                 </tr>
                 <tr
                   className={cx("info-order", {
-                    "show-modal": idShowItem === index,
+                    show: idShowItem === index
                   })}
                 >
                   <td colSpan={5}>
@@ -88,7 +84,7 @@ function ListOrders() {
                       <div className={cx("item-info")}>
                         <h3>Địa chỉ nhận hàng</h3>
                         <span>
-                          Tên:{" "}
+                          Tên:
                           {`${item?.shippingAddress?.fullName} ${item?.shippingAddress?.city}`}
                         </span>
                         <span>Địa chỉ: {item?.shippingAddress?.address}</span>
@@ -106,46 +102,51 @@ function ListOrders() {
                       </div>
                     </div>
 
-                    <div className={cx("detail-order")}>
+                    <div className={cx("order-detail")}>
                       <table>
-                        <tbody>
-                          {item?.orderItems?.map((itemProduct, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>
-                                  <div className={cx("wrap-oder")}>
-                                    <div className={cx("img")}>
-                                      <img
-                                        src={pathProcessing(itemProduct?.image)}
-                                        alt=""
-                                      />
-                                    </div>
-                                    <div className={cx("title-product")}>
-                                      <h3>{itemProduct?.name}</h3>
+                        {item?.orderItems?.map((itemProduct, index) => {
+                          return (
+                            <tr key={index}>
+                              <td>
+                                <div className={cx("wrap-oder")}>
+                                  <div className={cx("img-product")}>
+                                    <img
+                                      src={pathProcessing(itemProduct?.image)}
+                                      alt="image product"
+                                    />
+                                  </div>
+                                  <div className={cx("product-details")}>
+                                    <h3>{itemProduct?.name}</h3>
+                                    <div className={cx("product-attributes")}>
                                       <div className={cx("item-desc")}>
                                         <span>{`${itemProduct?.size} / ${itemProduct?.color}`}</span>
                                       </div>
                                       <span>
                                         Số lượng: {itemProduct?.amount}
                                       </span>
+                                      <br />
+                                      <span>
+                                        {formatPrice(itemProduct?.price)}
+                                      </span>
                                     </div>
                                   </div>
-                                </td>
-                                <td>{formatPrice(itemProduct?.price)}</td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                        })}
                         <tfoot>
                           <tr>
                             <td colSpan={2}>
-                              <div className={cx("price-total")}>
+                              <div className={cx("total-price")}>
                                 <span>
-                                  Phí vận chuyển:{" "}
-                                  {formatPrice(item?.shippingPrice)}
+                                  Phí vận chuyển:
+                                  <span className={cx("transport-fee")}>
+                                    {formatPrice(item?.shippingPrice)}
+                                  </span>
                                 </span>
                                 <span>
-                                  Tổng cộng:{" "}
+                                  Tổng cộng:
                                   <strong>
                                     {formatPrice(item?.totalPrice)}
                                   </strong>
@@ -162,7 +163,6 @@ function ListOrders() {
                         onClick={() => handleClose()}
                         className={cx("cancel")}
                       >
-                        <i className="fa-solid fa-chevron-up"></i>
                         Rút gọn
                       </button>
                       {/* <button onClick={() => handleCancerOrder(item?._id)} className={cx('close')}>Hủy đơn hàng</button> */}
@@ -183,7 +183,7 @@ function ListOrders() {
                   </td>
                 </tr>
               </tbody>
-            );
+            )
           })}
         </table>
         {/* Model */}
@@ -232,7 +232,7 @@ function ListOrders() {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default ListOrders;
+export default ListOrders

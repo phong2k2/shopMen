@@ -1,0 +1,36 @@
+.title-error {
+  font-size: 2rem;
+  color: var(--black);
+  margin: 40px 0;
+  margin-left: 40px;
+}
+
+.wrapper-content {
+  margin: 0 auto;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 200px;
+  }
+}
+
+.not-page {
+  font-size: 2.5rem;
+  margin: 20px 0;
+  color: var(--color-text);
+}
+
+.notification {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.back-home {
+  margin: 40px 0 20px;
+}

@@ -13,7 +13,7 @@ const initLogin = {
   password: ""
 }
 
-function FormLogin({ handleSubmitLogin, statusAuth }) {
+function FormLogin({ handleSubmitLogin, statusAuth, messageError }) {
   const {
     register,
     reset,
@@ -27,12 +27,8 @@ function FormLogin({ handleSubmitLogin, statusAuth }) {
     reset(initLogin)
   }, [statusAuth, reset])
 
-  const handleOnSubmit = (values) => {
-    handleSubmitLogin(values)
-  }
-
   return (
-    <form className="form-login" onSubmit={handleSubmit(handleOnSubmit)}>
+    <form className="form-login" onSubmit={handleSubmit(handleSubmitLogin)}>
       <h3 className="pb-4 text-center text-uppercase font-semibold title-auth text-5xl">
         Đăng nhập
       </h3>
@@ -75,6 +71,10 @@ function FormLogin({ handleSubmitLogin, statusAuth }) {
         <Link to={PUBLICROUTER.forGotPassword}>Quên mật khẩu?</Link>
       </div>
       <input type="submit" value="Đăng nhập" className="btn btn-custom" />
+
+      <p className="text-red-600 text-2xl mt-2">
+        {messageError ? "Hmmmm, Thông tin đăng nhập không chính xác." : ""}
+      </p>
     </form>
   )
 }

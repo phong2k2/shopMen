@@ -1,129 +1,135 @@
-import axios from "axios";
-import { history } from "@/helpers/history";
-import { loginSuccess, logoutSuccess } from "@/redux/authSlice";
-import { store } from "@/redux/store";
+import axios from "axios"
+import { history } from "@/helpers/history"
+import { loginSuccess, logoutSuccess } from "@/redux/authSlice"
+import { store } from "@/redux/store"
+import { BASE_URL, SERVER_ERROR, UNAUTHORIZED } from "./constants"
 
 class HttpRequest {
   constructor() {
     this.httpRequest = axios.create({
-      baseURL: process.env.VITE_BASE_API_ENDPOINT,
-    });
+      baseURL: BASE_URL
+    })
 
     this.httpRequest.interceptors.request.use((config) => {
-      const accessToken = store?.getState()?.auth?.login?.tokens;
+      const accessToken = store?.getState()?.auth?.login?.tokens
       if (accessToken) {
-        config.headers["Authorization"] = `Bearer ${accessToken}`;
+        config.headers["Authorization"] = `Bearer ${accessToken}`
       }
-      return config;
-    });
+      return config
+    })
 
     this.httpRequest.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const originalRequest = error.config;
-        const user = store.getState().auth.login.currentUser;
-        const dispatch = store.dispatch;
+      this.handleSuccess,
+      this.handleError
+    )
+  }
 
-        if (error.response && error.response.status === 401) {
-          if (
-            error.response &&
-            error.response.status === 401 &&
-            error.response.data.message === "The token has expired"
-          ) {
-            axios.interceptors.response.eject(this.httpRequest);
-            try {
-              const response = await axios.post(
-                "http://localhost:3000/v1/auth/refresh",
-                null,
-                {
-                  withCredentials: true,
-                }
-              );
-              const responseData = response.data;
-              const refreshUser = {
-                data: user,
-                meta: responseData,
-              };
+  handleSuccess = (response) => response
 
-              dispatch(loginSuccess(refreshUser));
-              this.httpRequest.defaults.headers.common["Authorization"] =
-                responseData.accessToken;
-              originalRequest.headers["Authorization"] =
-                responseData.accessToken;
+  handleError = async (error) => {
+    const originalRequest = error.config
+    const user = store.getState().auth.login.currentUser
+    const dispatch = store.dispatch
 
-              return this.httpRequest(originalRequest);
-            } catch (error) {
-              if (error?.message) {
-                dispatch(logoutSuccess());
-                history.push("/");
-              }
-            }
-          } else {
-            dispatch(logoutSuccess());
-            history.push("/");
-          }
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      error.response.data.message === "The token has expired"
+    ) {
+      axios.interceptors.response.eject(this.httpRequest)
+      try {
+        const response = await axios.post(`${BASE_URL}/v1/auth/refresh`, null, {
+          withCredentials: true
+        })
+        const responseData = response.data
+        const refreshUser = {
+          data: user,
+          meta: responseData
         }
-        return Promise.reject(error);
+
+        dispatch(loginSuccess(refreshUser))
+        this.httpRequest.defaults.headers.common["Authorization"] =
+          responseData.accessToken
+        originalRequest.headers["Authorization"] = responseData.accessToken
+
+        return this.httpRequest(originalRequest)
+      } catch (error) {
+        dispatch(logoutSuccess())
+        history.push("/")
       }
-    );
+    }
+    const { status, data } = error.response
+
+    switch (status) {
+      case UNAUTHORIZED:
+        dispatch(logoutSuccess())
+        break
+      case SERVER_ERROR:
+        setTimeout(() => dispatch(logoutSuccess()), 1000)
+        history.push("/404")
+        break
+      default:
+        break
+    }
+    return Promise.reject(error)
   }
 
   async get(path, params) {
     try {
       const response = await this.httpRequest.get(path, {
         params,
-        withCredentials: true,
-      });
+        withCredentials: true
+      })
 
-      return response.data;
+      return response.data
     } catch (error) {
-      throw error?.response?.data;
+      throw error?.response?.data
     }
   }
 
   async post(path, params) {
     try {
       const response = await this.httpRequest.post(path, params, {
-        withCredentials: true,
-      });
-      return response.data;
+        withCredentials: true
+      })
+      return response.data
     } catch (error) {
-      throw error?.response?.data;
+      throw error?.response?.data
     }
   }
 
   async update(path, params) {
     try {
       const response = await this.httpRequest.put(path, params, {
-        withCredentials: true,
-      });
-      return response.data;
+        withCredentials: true
+      })
+      return response.data
     } catch (error) {
-      throw error?.response?.data;
+      throw error?.response?.data
     }
   }
 
   async patch(path, params) {
     try {
       const response = await this.httpRequest.patch(path, params, {
-        withCredentials: true,
-      });
-      return response.data;
+        withCredentials: true
+      })
+      return response.data
     } catch (error) {
-      throw error?.response?.data;
+      throw error?.response?.data
     }
   }
 
   async delete(path, params) {
     try {
       const response = await this.httpRequest.delete(path, params, {
-        withCredentials: true,
-      });
-      return response.data;
+        withCredentials: true
+      })
+      return response.data
     } catch (error) {
-      throw error?.response?.data;
+      throw error?.response?.data
     }
   }
 }
 
-export default new HttpRequest();
+export default new HttpRequest()

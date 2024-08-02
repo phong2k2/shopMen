@@ -7,12 +7,9 @@ import AddIcon from "@mui/icons-material/Add"
 import {
   createAddress,
   deleteAddress,
-  getAddressDetail,
   getAllAddress,
-  updateAddress,
-  updateStatusAddress
+  updateAddress
 } from "@/services/addressService"
-
 import ModalAddress from "@/components/ModalAddress"
 import { openModalAddress, closeModalAddress } from "@/redux/modalAddressSlice"
 
@@ -78,18 +75,6 @@ function Address() {
     }
   })
 
-  // Update Status Address
-  const updateStatusAddressUser = useMutation({
-    mutationFn: ({ addressId, status }) =>
-      updateStatusAddress(addressId, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["allAddress", userId],
-        exact: true
-      })
-    }
-  })
-
   // [Delete]
   const handleClickDelete = (addressId) => {
     deleteAddressUser.mutate(addressId)
@@ -97,7 +82,8 @@ function Address() {
 
   // Fnc Update
   const handleUpdateStatus = (addressId, status) => {
-    updateStatusAddressUser.mutate({ addressId, status })
+    status = status === 0 ? 1 : 0
+    updateAddressUser.mutate({ status, addressId })
   }
 
   const handleSubmitAddress = (values) => {
@@ -121,7 +107,10 @@ function Address() {
         <h5 className={cx("title")}>Địa chỉ của bạn</h5>
         <ul className={cx("row", "list-my-address")}>
           {listAddress?.map((itemAddress) => (
-            <li key={itemAddress?._id} className={cx("col-4", "li-address")}>
+            <li
+              key={itemAddress?._id}
+              className={cx("col-lg-4", "col-sm-6", "col-12", "li-address")}
+            >
               <div className={cx("item-my-address")}>
                 <div className={cx("item-body")}>
                   <div className={cx("heading")}>
