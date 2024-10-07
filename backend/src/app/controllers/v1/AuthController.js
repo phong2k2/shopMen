@@ -67,20 +67,20 @@ const AuthController = {
   // Refresh Token
   requestRefreshToken: async (req, res, next) => {
     try {
-      const refreshToken = req.cookies.refreshToken
-      if (!refreshToken || refreshToken == "undefined") {
+      const refreshTokenOld = req.cookies.refreshToken
+      if (!refreshTokenOld || refreshTokenOld == "undefined") {
         throw new ApiError(
           StatusCodes.UNAUTHORIZED,
           "You are not authenticated"
         )
       }
-      const response = await AuthService.requestRefreshToken(refreshToken)
-      const { newAccessToken, newRefreshToken } = response
+      const response = await AuthService.requestRefreshToken(refreshTokenOld)
+      const { accessToken, refreshToken } = response
 
-      res.cookie("refreshToken", newRefreshToken, cookieOptionsRefreshToken)
+      res.cookie("refreshToken", refreshToken, cookieOptionsRefreshToken)
 
       res.status(StatusCodes.OK).json({
-        accessToken: newAccessToken
+        accessToken
       })
     } catch (error) {
       res.clearCookie("refreshToken", {

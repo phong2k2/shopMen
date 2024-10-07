@@ -146,8 +146,8 @@ const requestRefreshToken = async (refreshToken) => {
       } else {
         const { accessToken, refreshToken } = createJwt(user)
         resolve({
-          newAccessToken,
-          newRefreshToken
+          accessToken,
+          refreshToken
         })
       }
     })
