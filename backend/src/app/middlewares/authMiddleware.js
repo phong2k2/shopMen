@@ -43,7 +43,7 @@ const middlewareController = {
 
   authAdminMiddleWare: (req, res, next) => {
     middlewareController.verifyToken(req, res, () => {
-      if (req.user.isAdmin) {
+      if (req?.user?.isAdmin) {
         next()
       } else {
         return res.status(403).json("You're not allowed to do that!")

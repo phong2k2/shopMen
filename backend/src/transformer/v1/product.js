@@ -1,7 +1,7 @@
-const { getImageThumbnail } = require("../../utils/getImageThumbnail");
+const { getImageThumbnail } = require("../../utils/getImageThumbnail")
 
 const getProductList = (data) => {
-  const { results, ...meta } = data;
+  const { results, ...meta } = data
   const products = results.map((i) => {
     const {
       price,
@@ -16,8 +16,8 @@ const getProductList = (data) => {
       category,
       subCategory,
       createdAt,
-      updatedAt,
-    } = i._doc;
+      updatedAt
+    } = i._doc
     return {
       price,
       salePrice,
@@ -31,25 +31,25 @@ const getProductList = (data) => {
       thumbnail: getImageThumbnail(color[0]?.gallery),
       category: {
         name: category?.name || null,
-        _id: category?._id || null,
+        _id: category?._id || null
       },
       subcategory: {
         name: subCategory?.name || null,
-        _id: subCategory?._id || null,
+        _id: subCategory?._id || null
       },
       createdAt,
-      updatedAt,
-    };
-  });
+      updatedAt
+    }
+  })
 
   return {
     data: products,
-    meta,
-  };
-};
+    meta
+  }
+}
 
 const getProduct = (data) => {
-  const { results, ...meta } = data;
+  const { results, ...meta } = data
   const {
     price,
     countInStock,
@@ -63,8 +63,8 @@ const getProduct = (data) => {
     category,
     subCategory,
     createdAt,
-    updatedAt,
-  } = results[0];
+    updatedAt
+  } = results[0]
 
   const products = {
     price,
@@ -76,26 +76,20 @@ const getProduct = (data) => {
     hot,
     slug,
     color,
-    category: {
-      name: category?.name || null,
-      _id: category?._id || null,
-    },
-    subCategory: {
-      name: subCategory?.name || null,
-      _id: subCategory?._id || null,
-    },
+    category,
+    subCategory,
     thumbnail: getImageThumbnail(color[0]?.gallery),
     createdAt,
-    updatedAt,
-  };
+    updatedAt
+  }
 
   return {
     data: products,
-    ...meta,
-  };
-};
+    ...meta
+  }
+}
 
 module.exports = {
   getProduct,
-  getProductList,
-};
+  getProductList
+}

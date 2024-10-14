@@ -28,7 +28,7 @@ const googleStrategy = new GoogleStrategy(
   {
     clientID: env.GOOGLE_AUTHORIZED_CLIENT_ID,
     clientSecret: env.GOOGLE_AUTHORIZED_CLIENT_SECRET,
-    callbackURL: env.GOOGLE_AUTHORIZED_REDIRECT_URI
+    callbackURL: env.APP_URL + env.GOOGLE_AUTHORIZED_REDIRECT_URI
   },
   async function (accessToken, refreshToken, profile, cb) {
     try {
