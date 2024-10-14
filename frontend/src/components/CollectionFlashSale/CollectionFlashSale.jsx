@@ -1,26 +1,24 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
-import { useEffect, useRef, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import classNames from "classnames/bind";
-import { Navigation, Scrollbar } from "swiper/modules";
-import styles from "./CollectionFlashSale.module.scss";
-import { Link } from "react-router-dom";
-import { PUBLICROUTER } from "@/config/routes";
-import { formatPrice } from "../formatData/formatData";
-import { pathProcessing } from "@/helpers/image";
+import { useEffect, useRef, useState } from "react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import classNames from "classnames/bind"
+import { Navigation, Scrollbar } from "swiper/modules"
+import styles from "./CollectionFlashSale.module.scss"
+import ProductItem from "../ProductItem"
+import ProductSkeleton from "../Skeleton/Product/ProductSkeleton"
 
-const cx = classNames.bind(styles);
-function CollectionFlashSale({ allProductFlashSeal }) {
-  const [timerDays, setTimerDays] = useState(0);
-  const [timerHours, setTimerHours] = useState(0);
-  const [timerMinutes, setTimerMinutes] = useState(0);
-  const [timerSeconds, setTimerSeconds] = useState(0);
-  let interval = useRef(null);
+const cx = classNames.bind(styles)
+function CollectionFlashSale({ allProductFlashSeal, isLoading }) {
+  const [timerDays, setTimerDays] = useState(0)
+  const [timerHours, setTimerHours] = useState(0)
+  const [timerMinutes, setTimerMinutes] = useState(0)
+  const [timerSeconds, setTimerSeconds] = useState(0)
+  let interval = useRef(null)
 
   useEffect(() => {
     const startTimer = () => {
-      const currentDate = new Date();
+      const currentDate = new Date()
       let countdownDate = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
@@ -28,34 +26,34 @@ function CollectionFlashSale({ allProductFlashSeal }) {
         currentDate.getHours(),
         currentDate.getMinutes(),
         currentDate.getSeconds()
-      ).getTime();
+      ).getTime()
 
       interval.current = setInterval(() => {
-        const now = new Date().getTime();
-        const distance = countdownDate - now;
+        const now = new Date().getTime()
+        const distance = countdownDate - now
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24))
         const hours = Math.floor(
           (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        )
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000)
 
         if (distance < 0) {
           // stop timer
-          clearInterval(interval.current);
+          clearInterval(interval.current)
         } else {
-          setTimerDays(days);
-          setTimerHours(hours);
-          setTimerMinutes(minutes);
-          setTimerSeconds(seconds);
+          setTimerDays(days)
+          setTimerHours(hours)
+          setTimerMinutes(minutes)
+          setTimerSeconds(seconds)
         }
-      }, 1000);
-    };
+      }, 1000)
+    }
 
-    startTimer();
-    return () => clearInterval(interval.current);
-  }, []);
+    startTimer()
+    return () => clearInterval(interval.current)
+  }, [])
 
   return (
     <section className={cx("section-home-collection")}>
@@ -93,63 +91,30 @@ function CollectionFlashSale({ allProductFlashSeal }) {
           </div>
         </div>
         <div className={cx("list-product")}>
-          <Swiper
-            spaceBetween={18}
-            navigation={true}
-            slidesPerView={2}
-            breakpoints={{
-              "@1.50": {
-                slidesPerView: 6,
-              },
-            }}
-            modules={[Scrollbar, Navigation]}
-            loop={true}
-            direction={"horizontal"}
-          >
-            {allProductFlashSeal?.map((item) => {
-              return (
+          {isLoading ? (
+            <ProductSkeleton />
+          ) : (
+            <Swiper
+              spaceBetween={18}
+              navigation={true}
+              slidesPerView={2}
+              breakpoints={{
+                "@1.50": {
+                  slidesPerView: 4
+                }
+              }}
+              modules={[Scrollbar, Navigation]}
+              loop={true}
+              direction={"horizontal"}
+              className="swiperCustom"
+            >
+              {allProductFlashSeal?.map((item) => (
                 <SwiperSlide style={{ height: "auto" }} key={item?._id}>
-                  <div className={cx("product-loop")}>
-                    <div className={cx("product-inner")}>
-                      <div className={cx("product-image")}>
-                        <Link
-                          className={cx("lazy-img")}
-                          to={PUBLICROUTER.productDetail.slug(
-                            item?.slug,
-                            item?._id
-                          )}
-                        >
-                          <img
-                            src={pathProcessing(item?.thumbnail)}
-                            alt="image1"
-                          />
-                        </Link>
-                      </div>
-                      <div className={cx("product-detail")}>
-                        <Link
-                          to={PUBLICROUTER.productDetail.slug(
-                            item?.slug,
-                            item?._id
-                          )}
-                          className={cx("product-name")}
-                        >
-                          <h3 className={cx("name-desc")}>{item?.name}</h3>
-                        </Link>
-                        <div className={cx("product-price")}>
-                          <span className={cx("price")}>
-                            {formatPrice(item?.salePrice)}
-                          </span>
-                          <span className={cx("price-del")}>
-                            {formatPrice(item?.price)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <ProductItem itemPro={item} />
                 </SwiperSlide>
-              );
-            })}
-          </Swiper>
+              ))}
+            </Swiper>
+          )}
         </div>
 
         <div className={cx("see-more-product")}>
@@ -160,7 +125,7 @@ function CollectionFlashSale({ allProductFlashSeal }) {
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default CollectionFlashSale;
+export default CollectionFlashSale

@@ -19,6 +19,10 @@
   &.active {
     transform: translateX(0);
   }
+
+  @include global.mobile {
+    width: 100%;
+  }
 }
 
 .header {
@@ -56,8 +60,8 @@
     position: absolute;
     top: 0;
     width: 20px;
-    height: 3px;
-    background-color: #6f6868;
+    height: 2px;
+    background-color: var(--black);
     transform: rotate(-45deg);
   }
 
@@ -66,8 +70,8 @@
     position: absolute;
     top: 0;
     width: 20px;
-    height: 3px;
-    background-color: #6f6868;
+    height: 2px;
+    background-color: var(--black);
     transform: rotate(45deg);
   }
 }
@@ -90,6 +94,9 @@
   flex-direction: column;
   padding: 0 30px;
   min-height: 100%;
+  @include global.tablet {
+    padding: 0 18px;
+  }
 }
 
 .menu-title h2 {
@@ -117,6 +124,10 @@
 .filter-box-price {
   margin-top: 15px;
   position: relative;
+
+  @include global.mobile {
+    padding: 10px;
+  }
 }
 
 .slider-price {

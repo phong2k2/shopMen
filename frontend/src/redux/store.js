@@ -14,6 +14,7 @@ import authReducer from "./authSlice"
 import categoryReducer from "./categorySlice"
 import cartReducer from "./cartSlice"
 import modalAddressReducer from "./modalAddressSlice"
+import countReducer from "./countSlice"
 
 const authPersistConfig = {
   key: "auth",
@@ -29,6 +30,7 @@ const persistedReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   cart: persistReducer(cartPersistConfig, cartReducer),
   category: categoryReducer,
+  count: countReducer,
   modalAddress: modalAddressReducer
 })
 

@@ -1,46 +1,47 @@
-import { useState } from "react";
-import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
+import { useState } from "react"
+import Typography from "@mui/material/Typography"
+import { Link } from "react-router-dom"
+import PropTypes from "prop-types"
 import {
   AccordionCustom,
   AccordionDetailsCustom,
-  AccordionSummaryCustom,
-} from "./CustomAccordion";
-import { useDeliveryInfo } from "@/hook/useContext";
-import { PUBLICROUTER } from "@/config/routes";
+  AccordionSummaryCustom
+} from "./CustomAccordion"
+import { useDeliveryInfo } from "@/hook/useContext"
+import { PUBLICROUTER } from "@/config/routes"
 
 export const CustomizeAccordion = ({ listCategory }) => {
-  const [expanded, setExpanded] = useState("panel1");
-  const { setShowModalFilter, setShowModalCategory } = useDeliveryInfo();
+  const [expanded, setExpanded] = useState("panel1")
+  const { setShowModalFilter, setShowModalCategory } = useDeliveryInfo()
 
   const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
-  };
+    setExpanded(newExpanded ? panel : false)
+  }
 
   const handleCloseModal = () => {
-    setShowModalCategory(false);
-    setShowModalFilter(false);
-  };
+    setShowModalCategory(false)
+    setShowModalFilter(false)
+  }
 
   return (
     <AccordionCustom
       expanded={expanded === "panel1"}
       onChange={handleChange("panel1")}
     >
-      <AccordionDetailsCustom
-        sx={{
-          marginLeft: "8px",
-        }}
-      >
+      <AccordionDetailsCustom>
         {listCategory?.map((item) => (
-          <AccordionCustom key={item?._id}>
+          <AccordionCustom
+            key={item?._id}
+            sx={{
+              marginLeft: 2
+            }}
+          >
             <AccordionSummaryCustom aria-controls="panel1d-content">
               <Typography
                 sx={{
                   fontWeight: 400,
                   fontSize: 16,
-                  textTransform: "capitalize !important",
+                  textTransform: "capitalize !important"
                 }}
               >
                 {item?.name}
@@ -50,7 +51,7 @@ export const CustomizeAccordion = ({ listCategory }) => {
               <AccordionDetailsCustom key={subItem?._id}>
                 <Link
                   style={{
-                    color: "#000",
+                    color: "#000"
                   }}
                   to={PUBLICROUTER.product.subCategory(
                     subItem?._id,
@@ -60,9 +61,8 @@ export const CustomizeAccordion = ({ listCategory }) => {
                 >
                   <Typography
                     sx={{
-                      fontSize: 13,
                       cursor: "pointer",
-                      textTransform: "capitalize",
+                      textTransform: "capitalize"
                     }}
                     variant="button"
                   >
@@ -75,9 +75,9 @@ export const CustomizeAccordion = ({ listCategory }) => {
         ))}
       </AccordionDetailsCustom>
     </AccordionCustom>
-  );
-};
+  )
+}
 
 CustomizeAccordion.propTypes = {
-  listCategory: PropTypes.array,
-};
+  listCategory: PropTypes.array
+}

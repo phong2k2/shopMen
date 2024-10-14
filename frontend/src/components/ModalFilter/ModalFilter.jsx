@@ -1,63 +1,63 @@
-import classNames from "classnames/bind";
-import styles from "./ModalFilter.module.scss";
-import { Slider } from "@mui/material";
-import { CustomizeAccordion } from "@/components/CustomMaterial/CustomMaterial";
-import { formatPrice } from "@/components/formatData/formatData";
-import { useState } from "react";
-import { useDeliveryInfo } from "@/hook/useContext";
-import { useQuery } from "react-query";
-import { getAllCategory } from "@/services/categoryService";
-import { productSizes } from "@/contant";
+import classNames from "classnames/bind"
+import styles from "./ModalFilter.module.scss"
+import { Slider } from "@mui/material"
+import { CustomizeAccordion } from "@/components/CustomMaterial/CustomMaterial"
+import { useState } from "react"
+import { useDeliveryInfo } from "@/hook/useContext"
+import { useQuery } from "react-query"
+import { getAllCategory } from "@/services/categoryService"
+import { productSizes } from "@/contant"
+import { formatPrice } from "@/utils/formatPrice"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function ModalFilter() {
-  const [priceScroll, setPriceScroll] = useState([0, 10000000]);
+  const [priceScroll, setPriceScroll] = useState([0, 10000000])
   const { showModalFilter, setShowModalFilter, filter, setFilter } =
-    useDeliveryInfo();
-  const minDistance = 10;
+    useDeliveryInfo()
+  const minDistance = 10
 
   const { data: listCategory } = useQuery({
     queryKey: "listCategoryModal",
-    queryFn: () => getAllCategory(),
-  });
+    queryFn: () => getAllCategory()
+  })
 
   const handleChangeFindPrice = (event, newValue, activeThumb) => {
     if (!Array.isArray(newValue)) {
-      return;
+      return
     }
 
     if (activeThumb === 0) {
       setPriceScroll([
         Math.min(newValue[0], priceScroll[1] - minDistance),
-        priceScroll[1],
-      ]);
+        priceScroll[1]
+      ])
     } else {
       setPriceScroll([
         priceScroll[0],
-        Math.max(newValue[1], priceScroll[0] + minDistance),
-      ]);
+        Math.max(newValue[1], priceScroll[0] + minDistance)
+      ])
     }
-  };
+  }
 
   const handleCloseModal = () => {
-    setShowModalFilter(false);
-  };
+    setShowModalFilter(false)
+  }
 
   const handleClickFilter = () => {
     if (priceScroll) {
-      const price_min = priceScroll[0];
-      const price_max = priceScroll[1];
+      const price_min = priceScroll[0]
+      const price_max = priceScroll[1]
       setFilter({
         ...filter,
         price_min,
-        price_max,
-      });
+        price_max
+      })
 
-      setShowModalFilter(false);
+      setShowModalFilter(false)
     }
-  };
+  }
 
-  const handleFilterSize = () => {};
+  const handleFilterSize = () => {}
 
   return (
     <div className={cx("site-cart", { active: showModalFilter })}>
@@ -117,7 +117,7 @@ function ModalFilter() {
                       <Slider
                         getAriaLabel={() => "Temperature range"}
                         sx={{
-                          color: "#000",
+                          color: "#000"
                         }}
                         value={priceScroll}
                         disableSwap
@@ -151,7 +151,7 @@ function ModalFilter() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default ModalFilter;
+export default ModalFilter

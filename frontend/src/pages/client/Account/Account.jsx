@@ -14,7 +14,6 @@ import ImageCropModalContent from "@/components/Cropper/ImageCropModalContent"
 import { useImageCropContext } from "@/providers/ImageCropProvider"
 import { readFile } from "@/helpers/cropImage"
 import Modal from "@/components/Cropper/Modal"
-import { pathProcessing } from "@/helpers/image"
 
 const cx = classNames.bind(styles)
 function Account() {
@@ -28,12 +27,7 @@ function Account() {
 
   const dispatch = useDispatch()
   const fileInputRef = useRef()
-  const schema = yup
-    .object({
-      // email: yup.string().email('Email không đúng').required('Vui lòng không để trống'),
-      // password: yup.string().required('Vui lòng nhập mật khẩu').min(8, 'Mật khẩu cần dài ít nhất 8 ký tự'),
-    })
-    .required()
+  const schema = yup.object({}).required()
 
   const {
     register,
@@ -56,15 +50,7 @@ function Account() {
     formData.append("crop", cropDataString)
     try {
       const res = await userService.updateUser(formData, userProfile?._id)
-      dispatch(
-        loginSuccess({
-          ...user,
-          data: {
-            ...res
-          }
-        })
-      )
-
+      dispatch(loginSuccess({ data: res }))
       setUserProfile(res)
       toastify({
         type: "success",
@@ -81,15 +67,12 @@ function Account() {
   const handleInputChange = async (e) => {
     const type = e.target.name
     let value
-
     switch (type) {
       case "image":
         value = e.target.files[0]
-        if (value) {
-          const imageDataUrl = await readFile(value)
-          setImage(imageDataUrl)
-          setOpenModal(true)
-        }
+        const imageDataUrl = await readFile(e.target.files[0])
+        setImage(imageDataUrl)
+        setOpenModal(true)
         break
       default:
         value = e.target.value
@@ -105,7 +88,8 @@ function Account() {
     const crop = croppedAreaPixels
 
     const avatar = await getProcessedImage()
-    setPreview(window.URL.createObjectURL(avatar))
+
+    setPreview(URL.createObjectURL(avatar))
     setCropImage(crop)
     resetStates()
     setOpenModal(false)
@@ -198,8 +182,7 @@ function Account() {
                   <div className={cx("img-right")}>
                     <Images
                       className={cx("object-cover rounded-full h-80 w-80")}
-                      src={preview || pathProcessing(user?.image)}
-                      fallBack="https://fullstack.edu.vn/static/media/fallback-avatar.155cdb2376c5d99ea151.jpg"
+                      src={preview || user?.image}
                     />
                   </div>
                   <div className={cx("upload")}>
@@ -228,7 +211,6 @@ function Account() {
                   >
                     Lưu
                   </button>
-                  {/* <button type="submit" className={cx('btn btn-dangezr', 'submit-profile')}>Hủy</button> */}
                 </div>
               </div>
             </div>

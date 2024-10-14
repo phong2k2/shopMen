@@ -13,7 +13,6 @@ export const getAllProducts = async (params) => {
     const res = await HttpRequest.get("/v1/products", params)
     return res
   } catch (error) {
-    console.log("🚀 ~ error:", error)
     throw error
   }
 }

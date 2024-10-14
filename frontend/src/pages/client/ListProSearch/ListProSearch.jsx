@@ -1,17 +1,17 @@
-import { useMemo, useState } from "react";
-import classNames from "classnames/bind";
-import styles from "./ListProSearch.module.scss";
-import * as productService from "@/services/productService";
-import { useSearchParams } from "react-router-dom";
-import ProductItem from "@/components/ProductItem";
-import { useQuery } from "react-query";
-import Pagination from "@/components/Pagination";
+import { useMemo, useState } from "react"
+import classNames from "classnames/bind"
+import styles from "./ListProSearch.module.scss"
+import * as productService from "@/services/productService"
+import { useSearchParams } from "react-router-dom"
+import ProductItem from "@/components/ProductItem"
+import { useQuery } from "react-query"
+import Pagination from "@/components/Pagination"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function ListProSearch() {
-  const [page, setPage] = useState(1);
-  let [searchParams] = useSearchParams();
-  const name = searchParams.get("name");
+  const [page, setPage] = useState(1)
+  let [searchParams] = useSearchParams()
+  const name = searchParams.get("name")
 
   const { data: listSearch = [] } = useQuery({
     queryKey: ["search", name, page],
@@ -19,15 +19,15 @@ function ListProSearch() {
       return productService.getAllProducts({
         name,
         page,
-        limit: 6,
-      });
-    },
-  });
+        limit: 6
+      })
+    }
+  })
 
   const handlePageChange = ({ selected }) => {
-    setPage(selected);
-    window.scrollTo(0, 0);
-  };
+    setPage(selected)
+    window.scrollTo(0, 0)
+  }
 
   return (
     <section className={cx("collections")}>
@@ -72,21 +72,27 @@ function ListProSearch() {
               <h4>{`Tìm được ${listSearch?.data?.length} kết quả`}</h4>
             </div>
             <div className={cx("row")}>
-              {listSearch?.data?.map((itemPro, index) => {
-                return <ProductItem key={index} itemPro={itemPro} />;
-              })}
+              {listSearch?.data?.map((itemPro, index) => (
+                <div className={cx(" col-md-3 col-sm-6 mt-5", "col-6")}>
+                  <ProductItem key={index} itemPro={itemPro} />
+                </div>
+              ))}
             </div>
           </div>
         </div>
-        <Pagination
-          count={listSearch?.meta?.totalPages}
-          showFirstButton
-          showLastButton
-          onChange={handlePageChange}
-        />
+        {listSearch?.meta?.totalPages ? (
+          <Pagination
+            count={listSearch?.meta?.totalPages}
+            showFirstButton
+            showLastButton
+            onChange={handlePageChange}
+          />
+        ) : (
+          ""
+        )}
       </div>
     </section>
-  );
+  )
 }
 
-export default ListProSearch;
+export default ListProSearch

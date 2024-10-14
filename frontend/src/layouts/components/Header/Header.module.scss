@@ -254,6 +254,12 @@
 }
 
 @include global.tablet {
+  .icon-category {
+    display: block;
+  }
+  .wrap-category {
+    display: none;
+  }
 }
 
 @include global.mobile {

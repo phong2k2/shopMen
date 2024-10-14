@@ -5,7 +5,6 @@ import PropTypes from "prop-types"
 import { Controller, useForm } from "react-hook-form"
 import { useDispatch } from "react-redux"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { formatPrice } from "@/components/formatData/formatData"
 import InputField from "@/components/form-controls/InputField/InputField"
 import { RadioGroup, FormControlLabel, Radio } from "@mui/material"
 import PayPal from "../../Paypal"
@@ -14,6 +13,7 @@ import { getClientIdPaypal } from "@/services/paymentService"
 import { schemaCheckout } from "@/validations/yupSchema"
 import LocationSelector from "@/components/LocationSelector"
 import { setLocationsAddress } from "@/redux/modalAddressSlice"
+import { formatPrice } from "@/utils/formatPrice"
 
 const cx = classNames.bind(styles)
 const DeliveryInformation = function DeliveryInformation({

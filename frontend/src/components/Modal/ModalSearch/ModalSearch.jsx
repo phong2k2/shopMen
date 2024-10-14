@@ -1,82 +1,80 @@
-import classNames from "classnames/bind";
-import styles from "./ModalSearch.module.scss";
-import { useEffect, useRef, useState } from "react";
-import { IconSearch } from "@/components/Icons/icon";
-import useDebounce from "@/hook/useDebounce";
-import * as productService from "@/services/productService";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import ItemSearch from "@/components/ItemSearch";
-import { useNavigate } from "react-router-dom";
-import { useQuery } from "react-query";
-import { useDeliveryInfo } from "@/hook/useContext";
-import { PUBLICROUTER } from "@/config/routes";
+import classNames from "classnames/bind"
+import styles from "./ModalSearch.module.scss"
+import { useEffect, useRef, useState } from "react"
+import { IconSearch } from "@/components/Icons/icon"
+import useDebounce from "@/hook/useDebounce"
+import * as productService from "@/services/productService"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCircleXmark, faSpinner } from "@fortawesome/free-solid-svg-icons"
+import ItemSearch from "@/components/ItemSearch"
+import { useNavigate } from "react-router-dom"
+import { useQuery } from "react-query"
+import { useDeliveryInfo } from "@/hook/useContext"
+import { PUBLICROUTER } from "@/config/routes"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function ModalSearch() {
-  const [searchValue, setSearchValue] = useState("");
-  const [showResult, setShowResult] = useState(false);
-  const navigate = useNavigate();
-  const inputRef = useRef();
+  const [searchValue, setSearchValue] = useState("")
+  const [showResult, setShowResult] = useState(false)
+  const navigate = useNavigate()
+  const inputRef = useRef()
 
-  const { setShowModalSearch } = useDeliveryInfo();
+  const { setShowModalSearch } = useDeliveryInfo()
   //Hook custom
-  let debouncedValue = useDebounce(searchValue, 500);
+  let debouncedValue = useDebounce(searchValue, 500)
 
   const { data: searchResult = [], isLoading } = useQuery({
     queryKey: ["search", debouncedValue],
     queryFn: () => {
       if (!debouncedValue?.trim()) {
-        return;
+        return
       }
       return productService.getAllProducts({
         name: debouncedValue,
-        limit: 6,
-      });
-    },
-  });
+        limit: 6
+      })
+    }
+  })
 
   const handleChangeSearch = (e) => {
-    let searchValue = e.target.value;
+    let searchValue = e.target.value
     if (searchValue.startsWith(" ")) {
-      return;
+      return
     } else {
-      setSearchValue(searchValue);
+      setSearchValue(searchValue)
     }
-  };
+  }
 
   const handleClear = () => {
-    setSearchValue("");
-    inputRef.current.focus();
-  };
+    setSearchValue("")
+    inputRef.current.focus()
+  }
 
   const handleNextPageSearch = (itemSearch) => {
-    navigate(
-      PUBLICROUTER.productDetail.slug(itemSearch?.slug, itemSearch?._id)
-    );
-    setSearchValue("");
-    setShowModalSearch(false);
-  };
+    navigate(PUBLICROUTER.productDetail.slug(itemSearch?.slug, itemSearch?._id))
+    setSearchValue("")
+    setShowModalSearch(false)
+  }
 
   const handleSearchProduct = (e) => {
-    e.preventDefault();
-    navigate(`/search?name=${searchValue}`);
-    setShowModalSearch(false);
-  };
+    e.preventDefault()
+    navigate(`/search?name=${searchValue}`)
+    setShowModalSearch(false)
+  }
 
   useEffect(() => {
     function onClickOutside(e) {
-      const input = inputRef.current;
+      const input = inputRef.current
       if (showResult && !input.contains(e.target)) {
-        setShowResult(false);
+        setShowResult(false)
       }
     }
-    document.addEventListener("click", onClickOutside);
+    document.addEventListener("click", onClickOutside)
 
     return () => {
-      document.removeEventListener("click", onClickOutside);
-    };
-  });
+      document.removeEventListener("click", onClickOutside)
+    }
+  })
 
   return (
     <div className={cx("site-nav-search")}>
@@ -87,14 +85,14 @@ function ModalSearch() {
             <input
               value={searchValue}
               onFocus={(e) => {
-                e.stopPropagation();
-                setShowResult(true);
+                e.stopPropagation()
+                setShowResult(true)
               }}
               onChange={(e) => handleChangeSearch(e)}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleSearchProduct(e);
+                  e.preventDefault()
+                  handleSearchProduct(e)
                 }
               }}
               type="text"
@@ -128,7 +126,7 @@ function ModalSearch() {
                   itemSearch={itemSearch}
                   handleNextPageSearch={handleNextPageSearch}
                 />
-              );
+              )
             })}
             <div className={cx("results-more")}>
               <a onClick={handleSearchProduct}>Xem thêm</a>
@@ -144,7 +142,7 @@ function ModalSearch() {
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export default ModalSearch;
+export default ModalSearch

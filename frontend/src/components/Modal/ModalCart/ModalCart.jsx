@@ -1,28 +1,28 @@
-import classNames from "classnames/bind";
-import styles from "./ModalCart.module.scss";
-import { useDeliveryInfo } from "@/hook/useContext";
-import { useNavigate } from "react-router-dom";
-import { formatPrice } from "../../formatData/formatData";
-import { Button } from "@mui/material";
-import PropTypes from "prop-types";
-import { pathProcessing } from "@/helpers/image";
+import classNames from "classnames/bind"
+import styles from "./ModalCart.module.scss"
+import { useDeliveryInfo } from "@/hook/useContext"
+import { useNavigate } from "react-router-dom"
+import { Button } from "@mui/material"
+import PropTypes from "prop-types"
+import { pathProcessing } from "@/helpers/image"
+import { formatPrice } from "@/utils/formatPrice"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function ModalCart({
   handleRemoveCart,
   handleClickNextPageCart,
   handleClickNextPagePay,
   handleClickNextLogin,
   user,
-  cart,
+  cart
 }) {
-  const navigate = useNavigate();
-  const { setShowModalCart } = useDeliveryInfo();
+  const navigate = useNavigate()
+  const { setShowModalCart } = useDeliveryInfo()
 
   const handleNextPage = (slug) => {
-    navigate(`/products/${slug}`);
-    setShowModalCart(false);
-  };
+    navigate(`/products/${slug}`)
+    setShowModalCart(false)
+  }
   return (
     <div className={cx("site-nav-container")}>
       <p className={cx("title")}>Giỏ hàng</p>
@@ -66,7 +66,7 @@ function ModalCart({
                       </span>
                     </td>
                   </tr>
-                );
+                )
               })
             ) : (
               <tr>
@@ -113,7 +113,7 @@ function ModalCart({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 ModalCart.propTypes = {
@@ -122,7 +122,7 @@ ModalCart.propTypes = {
   handleClickNextPagePay: PropTypes.func,
   handleClickNextLogin: PropTypes.func,
   user: PropTypes.object,
-  cart: PropTypes.object,
-};
+  cart: PropTypes.object
+}
 
-export default ModalCart;
+export default ModalCart

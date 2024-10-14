@@ -1,9 +1,23 @@
-import classNames from "classnames/bind";
-import styles from "./NavContent.module.scss";
-import PropTypes from "prop-types";
+import classNames from "classnames/bind"
+import styles from "./NavContent.module.scss"
+import PropTypes from "prop-types"
+import { Link } from "react-router-dom"
 
-const cx = classNames.bind(styles);
-function NavContent({ name, subName, nameProduct }) {
+const cx = classNames.bind(styles)
+function NavContent({ data }) {
+  const LinkTo = (item) =>
+    item.path ? (
+      [
+        <Link to={item?.path}>
+          <span>{item?.label}</span>
+        </Link>
+      ]
+    ) : (
+      <a>
+        <span>{item?.label}</span>
+      </a>
+    )
+
   return (
     <div className={cx("breadcrumb-shop")}>
       <div className={cx("container")}>
@@ -11,37 +25,25 @@ function NavContent({ name, subName, nameProduct }) {
           <div className={cx("col-md-12")}>
             <ol className={cx("breadcrumb")}>
               <li>
-                <a>
+                <Link to={"/"}>
                   <span>Home</span>
-                </a>
+                </Link>
               </li>
-              <li >
-                <a>
-                  <span>{name}</span>
-                </a>
-              </li>
-              {subName ? <li >
-                <a>
-                  <span>{subName}</span>
-                </a>
-              </li> : ''}
-              {nameProduct ? <li >
-                <a>
-                  <span>{nameProduct}</span>
-                </a>
-              </li> : ''}
+              {data?.map((item, index) => (
+                <li key={index}>{LinkTo(item)}</li>
+              ))}
             </ol>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 NavContent.propTypes = {
   name: PropTypes.string,
-  subName: PropTypes.string, 
+  subName: PropTypes.string,
   nameProduct: PropTypes.string
-};
+}
 
-export default NavContent;
+export default NavContent

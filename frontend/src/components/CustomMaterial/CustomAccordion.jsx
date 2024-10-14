@@ -1,19 +1,19 @@
-import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp";
-import { styled } from "@mui/material/styles";
-import MuiAccordionSummary from "@mui/material/AccordionSummary";
-import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import MuiAccordion from "@mui/material/Accordion";
+import ArrowForwardIosSharpIcon from "@mui/icons-material/ArrowForwardIosSharp"
+import { styled } from "@mui/material/styles"
+import MuiAccordionSummary from "@mui/material/AccordionSummary"
+import MuiAccordionDetails from "@mui/material/AccordionDetails"
+import MuiAccordion from "@mui/material/Accordion"
 
 export const AccordionCustom = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))({
   "&:not(:last-child)": {
-    borderBottom: 0,
+    borderBottom: 0
   },
   "&:before": {
-    display: "none",
-  },
-});
+    display: "none"
+  }
+})
 
 export const AccordionSummaryCustom = styled((props) => (
   <MuiAccordionSummary
@@ -24,20 +24,21 @@ export const AccordionSummaryCustom = styled((props) => (
   paddingLeft: 0,
   backgroundColor: "#fff",
   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
-    transform: "rotate(90deg)",
+    transform: "rotate(90deg)"
   },
   "& p": {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 400,
-    textTransform: "uppercase",
-  },
-});
+    textTransform: "uppercase"
+  }
+})
 
 export const AccordionDetailsCustom = styled(MuiAccordionDetails)({
   padding: 0,
   "& span": {
-    fontSize: 14,
-    fontWeight: 400,
+    fontSize: 16,
+    fontWeight: 400
   },
-  marginLeft: 25,
-});
+  marginLeft: 10,
+  marginBottom: 10
+})

@@ -2,9 +2,8 @@ import classNames from "classnames/bind"
 import styles from "./ItemSearch.module.scss"
 import PropTypes from "prop-types"
 import { NavLink } from "react-router-dom"
-import { formatPrice } from "../formatData/formatData"
 import Images from "../Image"
-import { pathProcessing } from "@/helpers/image"
+import { formatPrice } from "@/utils/formatPrice"
 
 const cx = classNames.bind(styles)
 function ItemSearch({ itemSearch, handleNextPageSearch }) {
@@ -16,10 +15,7 @@ function ItemSearch({ itemSearch, handleNextPageSearch }) {
       >
         <div className={cx("wrapper-item")}>
           <div className={cx("tips-wrapper")}>
-            <Images
-              className={cx("img")}
-              src={pathProcessing(itemSearch?.thumbnail)}
-            />
+            <Images className={cx("img")} src={itemSearch?.thumbnail} />
           </div>
 
           <p className={cx("text-search")}>

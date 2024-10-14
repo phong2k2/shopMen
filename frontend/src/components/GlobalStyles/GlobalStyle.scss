@@ -149,29 +149,23 @@ img {
   font-size: 1.6rem;
 }
 
-// Swipper css
-.productHotSwiper .swiper-wrapper {
-  padding-bottom: 5rem !important;
-}
-
-.productHotSwiper .swiper-button-next,
-.productHotSwiper .swiper-button-prev {
+.swiperCustom .swiper-button-next,
+.swiperCustom .swiper-button-prev {
   width: 40px;
   height: 40px;
   background: rgba(0, 0, 0, 0.1);
   color: #fff !important;
   border-radius: 40px;
   opacity: 1;
-  top: 42%;
 }
 
-.productHotSwiper .swiper-button-next:after,
-.productHotSwiper .swiper-button-prev:after {
+.swiperCustom .swiper-button-next:after,
+.swiperCustom .swiper-button-prev:after {
   font-size: 16px;
 }
 
-.productHotSwiper .swiper-button-next:hover,
-.productHotSwiper .swiper-button-prev:hover {
+.swiperCustom .swiper-button-next:hover,
+.swiperCustom .swiper-button-prev:hover {
   background: #fff;
   color: #000 !important;
 }

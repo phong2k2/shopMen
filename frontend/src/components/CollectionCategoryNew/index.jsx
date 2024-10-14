@@ -1,22 +1,22 @@
 /* eslint-disable react/prop-types */
-import classNames from "classnames/bind";
-import { Link } from "react-router-dom";
-import styles from "./CollectionCategoryNew.module.scss";
-import SwiperSlides from "@/components/SwiperSlide/SwiperSlide";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Scrollbar } from "swiper/modules";
-import { IconArrowRight } from "@/components/Icons/icon";
-import { PUBLICROUTER } from "@/config/routes";
-import { pathProcessing } from "@/helpers/image";
+import classNames from "classnames/bind"
+import { Link } from "react-router-dom"
+import styles from "./CollectionCategoryNew.module.scss"
+import SwiperSlides from "@/components/SwiperSlide/SwiperSlide"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation, Scrollbar } from "swiper/modules"
+import { IconArrowRight } from "@/components/Icons/icon"
+import { PUBLICROUTER } from "@/config/routes"
+import { pathProcessing } from "@/helpers/image"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function CollectionCategoryNew({ allListSubCategory }) {
   return (
     <section className={cx("category-hot")}>
       <SwiperSlides
         title="Danh mục mới"
         sx={{
-          paddingTop: 20,
+          paddingTop: 20
         }}
       >
         <Swiper
@@ -27,8 +27,8 @@ function CollectionCategoryNew({ allListSubCategory }) {
           breakpoints={{
             "@1.50": {
               slidesPerView: 4,
-              spaceBetween: 25,
-            },
+              spaceBetween: 25
+            }
           }}
           modules={[Scrollbar, Navigation]}
           className="productHotSwiper swiper-horizontal"
@@ -66,12 +66,12 @@ function CollectionCategoryNew({ allListSubCategory }) {
                   </div>
                 </div>
               </SwiperSlide>
-            );
+            )
           })}
         </Swiper>
       </SwiperSlides>
     </section>
-  );
+  )
 }
 
-export default CollectionCategoryNew;
+export default CollectionCategoryNew

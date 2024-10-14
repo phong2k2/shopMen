@@ -12,7 +12,7 @@ import { Suspense, lazy, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { privateRoutes, publicRoutes } from "@/routes/routes"
 import PublicLayout from "@/customRoutes/PublicLayout"
-import Loading from "./components/Loading"
+import LoadingScreen from "./components/LoadingScreen"
 import Modal from "./components/Modal"
 import Overlay from "./components/Overlay/Overlay"
 import ModalFilter from "./components/ModalFilter/ModalFilter"
@@ -71,11 +71,13 @@ function App() {
               key={index}
               path={route.path}
               element={
-                <PublicLayout route={route}>
-                  <PrivateRoute route={route}>
-                    <Page />
-                  </PrivateRoute>
-                </PublicLayout>
+                <Suspense fallback={<LoadingScreen />}>
+                  <PublicLayout route={route}>
+                    <PrivateRoute route={route}>
+                      <Page />
+                    </PrivateRoute>
+                  </PublicLayout>
+                </Suspense>
               }
             />
           )
@@ -87,7 +89,7 @@ function App() {
               key={index}
               path={route.path}
               element={
-                <Suspense fallback={<Loading />}>
+                <Suspense fallback={<LoadingScreen />}>
                   <PublicLayout route={route}>
                     <Page />
                   </PublicLayout>

@@ -8,7 +8,7 @@ const cx = classNames.bind(styles)
 function NotFound() {
   return (
     <>
-      <NavContent name="Error 404" />
+      <NavContent data={[{ label: "404" }]} />
       <div className={cx("container")}>
         <h2 className={cx("title-error")}>ERROR 404</h2>
 

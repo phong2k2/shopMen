@@ -1,10 +1,10 @@
-import classNames from "classnames/bind";
-import styles from "./OrderInformation.module.scss";
-import { formatPrice } from "@/components/formatData/formatData";
-import PropTypes from "prop-types";
-import { pathProcessing } from "@/helpers/image";
+import classNames from "classnames/bind"
+import styles from "./OrderInformation.module.scss"
+import PropTypes from "prop-types"
+import { pathProcessing } from "@/helpers/image"
+import { formatPrice } from "@/utils/formatPrice"
 
-const cx = classNames.bind(styles);
+const cx = classNames.bind(styles)
 function OrderInformation({ cart, shippingCost, totalPrice }) {
   return (
     <div className={cx("sidebar-content")}>
@@ -34,7 +34,7 @@ function OrderInformation({ cart, shippingCost, totalPrice }) {
                     <span>{formatPrice(proItem?.price)}</span>
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         </div>
@@ -58,13 +58,13 @@ function OrderInformation({ cart, shippingCost, totalPrice }) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 OrderInformation.propTypes = {
   cart: PropTypes.object,
   shippingCost: PropTypes.number,
-  totalPrice: PropTypes.number,
-};
+  totalPrice: PropTypes.number
+}
 
-export default OrderInformation;
+export default OrderInformation

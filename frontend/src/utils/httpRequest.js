@@ -58,7 +58,7 @@ class HttpRequest {
         history.push("/")
       }
     }
-    const { status, data } = error.response
+    const { status } = error.response
 
     switch (status) {
       case UNAUTHORIZED:

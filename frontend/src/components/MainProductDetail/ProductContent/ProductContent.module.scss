@@ -1,10 +1,3 @@
-.product-gallery {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  padding-right: 40px;
-}
-
 .product-content {
   position: sticky;
   top: 15%;
@@ -296,11 +289,6 @@
 }
 
 @include global.mobile {
-  .product-gallery {
-    display: block;
-    margin-bottom: 10px;
-  }
-
   .product-title {
     p {
       display: flex;

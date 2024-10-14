@@ -6,8 +6,8 @@ import { useState } from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons"
 import * as orderService from "@/services/orderService"
-import { formatPrice } from "@/components/formatData/formatData"
 import { pathProcessing } from "@/helpers/image"
+import { formatPrice } from "@/utils/formatPrice"
 
 const cx = classNames.bind(styles)
 function ListOrders() {

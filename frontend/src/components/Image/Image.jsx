@@ -1,8 +1,9 @@
-import classNames from "classnames";
-import { useState } from "react";
-import { images } from "@/assets/Images";
-import PropTypes from "prop-types";
-import styles from "./Image.module.scss";
+import classNames from "classnames"
+import { useState } from "react"
+import { images } from "@/assets/Images"
+import PropTypes from "prop-types"
+import styles from "./Image.module.scss"
+import { pathProcessing } from "@/helpers/image"
 
 function Images({
   src,
@@ -11,28 +12,28 @@ function Images({
   fallBack: customFallBack = images.noImage,
   ...props
 }) {
-  const [fallBack, setFallBack] = useState("");
+  const [fallBack, setFallBack] = useState("")
 
   const handleError = () => {
-    setFallBack(customFallBack);
-  };
+    setFallBack(customFallBack)
+  }
 
   return (
     <img
       className={classNames(styles.wrapper, className)}
       alt={alt}
-      src={fallBack || src}
+      src={pathProcessing(src) || fallBack}
       {...props}
       onError={handleError}
     />
-  );
+  )
 }
 
 Images.propTypes = {
   src: PropTypes.string,
   alt: PropTypes.string,
   className: PropTypes.string,
-  fallBack: PropTypes.string,
-};
+  fallBack: PropTypes.string
+}
 
-export default Images;
+export default Images

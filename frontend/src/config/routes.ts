@@ -4,7 +4,7 @@ const PUBLICROUTER = {
   social: "/social",
   product: {
     index: "/collections",
-    slug: (slug, id) => `/collections/${slug}?id=${id}`,
+    slug: (slug, id) => `/product/${slug}?id=${id}`,
     category: (categoryId, categoryName) =>
       `/collections?categoryId=${categoryId}&categoryName=${encodeURIComponent(
         categoryName

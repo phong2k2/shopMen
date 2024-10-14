@@ -104,7 +104,6 @@ const publicRoutes = [
     component: Social,
     layout: null
   },
-  ,
   {
     path: PUBLICROUTER.notFound,
     component: NotFound,

@@ -9,11 +9,11 @@ import {
   removeFromCart
 } from "@/redux/cartSlice"
 import { Link } from "react-router-dom"
-import { formatPrice } from "@/components/formatData/formatData"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faTrashCan } from "@fortawesome/free-solid-svg-icons"
 import { pathProcessing } from "@/helpers/image"
 import { PUBLICROUTER } from "@/config/routes"
+import { formatPrice } from "@/utils/formatPrice"
 
 const cx = classNames.bind(styles)
 function Cart() {

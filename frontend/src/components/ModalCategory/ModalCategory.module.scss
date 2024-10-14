@@ -27,7 +27,7 @@
 
 .hamburger-menu {
   position: absolute;
-  top: 10px;
+  top: 6px;
   right: 20px;
   width: 35px;
   height: 35px;
@@ -46,8 +46,8 @@
     position: absolute;
     top: 0;
     width: 20px;
-    height: 3px;
-    background-color: #000;
+    height: 2px;
+    background-color: var(--black);
     transform: rotate(-45deg);
   }
 
@@ -56,8 +56,8 @@
     position: absolute;
     top: 0;
     width: 20px;
-    height: 3px;
-    background-color: #000;
+    height: 2px;
+    background-color: var(--black);
     transform: rotate(45deg);
   }
 }
@@ -71,9 +71,10 @@
 
 .site-header-text {
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--black);
   padding: 10px;
+  margin-left: 10px;
   border-bottom: 1px solid #e6e7e8;
 }
 

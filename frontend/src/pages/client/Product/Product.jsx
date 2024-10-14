@@ -10,10 +10,13 @@ import ProductItem from "@/components/ProductItem"
 import { useDeliveryInfo } from "@/hook/useContext"
 import NavContent from "@/components/NavContent"
 import Pagination from "@/components/Pagination"
+import ProductSkeleton from "@/components/Skeleton/Product/ProductSkeleton"
+import { PUBLICROUTER } from "@/config/routes"
+import EmptyBox from "@/components/EmptyBox"
 
 const cx = classNames.bind(styles)
 function Product() {
-  const limit = 1
+  const limit = 10
   const selectRef = useRef()
   const { id } = useParams()
   const [sortBy, setSortBy] = useState()
@@ -22,7 +25,7 @@ function Product() {
   const [searchParams] = useSearchParams()
   const categoryId = searchParams.get("categoryId")
   const subCategoryId = searchParams.get("subCategoryId")
-  const name = searchParams.get("categoryName")
+  const nameMain = searchParams.get("categoryName")
 
   const sortingOptions = useMemo(
     () => [
@@ -59,13 +62,7 @@ function Product() {
       })
     },
     retry: 1,
-    retryDelay: 1000,
-    onSuccess: (data) => {
-      console.log("query", data)
-    },
-    onError: (error) => {
-      console.log("query", error)
-    }
+    retryDelay: 1000
   })
 
   const handleShowModalFilter = () => {
@@ -80,18 +77,18 @@ function Product() {
   return (
     <section className={cx("collections")}>
       <div className={cx("main-content")}>
-        <NavContent name={name} />
+        <NavContent data={[{ label: nameMain }]} />
         {/* List Product */}
         <div className={cx("list-collections")}>
           <div className={cx("container")}>
             {/* List Product */}
             <div className={cx("row")}>
-              <div className={cx(" col-md-12")}>
+              <div className={cx("col-md-12")}>
                 <div className={cx("row", "hed-title")}>
-                  <div className={cx("col-md-6")}>
-                    <h1 className={cx("product-name")}>{name}</h1>
+                  <div className={cx("product-title")}>
+                    <h1 className={cx("product-name")}>{nameMain}</h1>
                   </div>
-                  <div className={cx("col-md-6", "select")}>
+                  <div className={cx("list-filter")}>
                     <div className={cx("control-filter")}>
                       <div
                         onClick={handleShowModalFilter}
@@ -129,26 +126,39 @@ function Product() {
                     </div>
                   </div>
                 </div>
-                <div className={cx("row")}>
-                  {allProducts?.data?.map((itemPro, index) => {
-                    return (
-                      <ProductItem
-                        key={index}
-                        itemPro={itemPro}
-                        loading={isLoading}
-                      />
-                    )
-                  })}
-                </div>
+                {isLoading ? (
+                  <ProductSkeleton />
+                ) : (
+                  <div className={cx("row")}>
+                    {allProducts?.data.length ? (
+                      allProducts?.data?.map((itemPro, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className={cx(" col-md-3 col-sm-6 mt-5", "col-6")}
+                          >
+                            <ProductItem itemPro={itemPro} />
+                          </div>
+                        )
+                      })
+                    ) : (
+                      <EmptyBox title="Không có sản phẩm" />
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
 
-        <Pagination
-          count={allProducts?.meta?.totalPages}
-          onChange={handlePageChange}
-        />
+        {allProducts?.meta?.totalPages ? (
+          <Pagination
+            count={allProducts?.meta?.totalPages}
+            onChange={handlePageChange}
+          />
+        ) : (
+          ""
+        )}
       </div>
     </section>
   )
