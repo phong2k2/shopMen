@@ -4,6 +4,11 @@
 
 /* ----------------------------- react-easy-crop ---------------------------- */
 
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
 .crop-container {
   position: relative;
   width: 236px;
@@ -25,6 +30,6 @@
   color: rgba(255, 255, 255, 0.8) !important;
 }
 
-.reactEasyCrop_Image{
+.reactEasyCrop_Image {
   width: 100%;
 }

@@ -11,7 +11,6 @@ import { useDeliveryInfo } from "@/hook/useContext"
 import NavContent from "@/components/NavContent"
 import Pagination from "@/components/Pagination"
 import ProductSkeleton from "@/components/Skeleton/Product/ProductSkeleton"
-import { PUBLICROUTER } from "@/config/routes"
 import EmptyBox from "@/components/EmptyBox"
 
 const cx = classNames.bind(styles)

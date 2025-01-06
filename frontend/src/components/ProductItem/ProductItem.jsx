@@ -25,7 +25,7 @@ function ProductItem({ itemPro, loading }) {
       <div className={cx("product-detail")}>
         <div className={cx("product-name")}>
           <NavLink
-            className={cx("name")}
+            className={cx("link-href")}
             to={PUBLICROUTER.productDetail.slug(itemPro?.slug, itemPro?._id)}
           >
             {itemPro?.name}

@@ -40,7 +40,6 @@ function CollectionFlashSale({ allProductFlashSeal, isLoading }) {
         const seconds = Math.floor((distance % (1000 * 60)) / 1000)
 
         if (distance < 0) {
-          // stop timer
           clearInterval(interval.current)
         } else {
           setTimerDays(days)

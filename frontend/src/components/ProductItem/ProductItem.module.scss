@@ -5,7 +5,7 @@
   overflow: hidden;
   background-color: var(--while);
   width: 100%;
-  height: 450px;
+  // height: 450px;
 }
 
 .product-img {
@@ -13,12 +13,6 @@
   overflow: hidden;
   width: 100%;
   text-align: center;
-}
-
-.pro-name {
-  padding-bottom: 6px;
-  font-weight: 500;
-  text-transform: capitalize;
 }
 
 .product-image {
@@ -49,15 +43,24 @@
   flex: 1;
 }
 
-.name {
-  display: -webkit-box;
+.product-name {
+  width: 100%;
+  height: 45px;
+  padding-bottom: 6px;
+  font-weight: 500;
+  padding-bottom: 4px;
+}
+
+.link-href {
   width: 100%;
   height: 100%;
   margin: 0;
+  text-transform: capitalize;
   font-size: 1.6rem;
-  line-height: 1.8rem;
+  line-height: 2rem;
   color: #000;
   font-weight: 300;
+  display: -webkit-box;
   text-transform: capitalize;
   overflow: hidden;
   -webkit-box-orient: vertical;

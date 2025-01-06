@@ -1,16 +1,14 @@
 import classNames from "classnames/bind"
 import { useDispatch, useSelector } from "react-redux"
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart"
-import { productSizes } from "@/contant"
 import { decrement, increment, incrementByAmount } from "@/redux/countSlice"
-import { colorList } from "@/utils/colorList"
 import styles from "./ProductContent.module.scss"
 import { formatPrice } from "@/utils/formatPrice"
+import { pathProcessing } from "@/helpers/image"
 
 const cx = classNames.bind(styles)
 function ProductContent({
   detailProduct,
-  isSizeInProduct,
   handleChangeSelectColor,
   handleChangeSelectSize,
   handleAddToCart,
@@ -19,7 +17,6 @@ function ProductContent({
 }) {
   const dispatch = useDispatch()
   const { amount } = useSelector((state) => state.count)
-
   return (
     <div className={cx("col-md-6 col-sm-12", "product-content")}>
       <div className={cx("product-title")}>
@@ -42,68 +39,44 @@ function ProductContent({
           <div className={cx("color")}>
             <div className={cx("select-swap")}>
               {/* Color */}
-              {detailProduct?.color?.map((itemColor, index) => {
-                const colorStyle = {
-                  backgroundColor:
-                    colorList[itemColor?.nameColor] || "#defaultcolor"
-                }
-                return (
-                  <div
-                    key={index}
-                    className={cx(
-                      "swatch-element",
-                      selectedColor?.nameColor === itemColor?.nameColor
-                        ? "selector"
-                        : ""
-                    )}
-                  >
-                    <input
-                      onChange={() => handleChangeSelectColor(itemColor, index)}
-                      checked={
-                        selectedColor?.nameColor === itemColor?.nameColor
-                      }
-                      value={itemColor?.nameColor}
-                      id={`swatch-1-${itemColor?.nameColor}`}
-                      name="gender"
-                      type="radio"
-                    />
-
-                    <label
-                      htmlFor={`swatch-1-${itemColor?.nameColor}`}
-                      className={cx("block-select")}
-                    >
-                      <span style={colorStyle}>{itemColor?.color}</span>
-                    </label>
-                  </div>
-                )
-              })}
+              {detailProduct?.color?.map((item, index) => (
+                <div
+                  onClick={() => handleChangeSelectColor(item)}
+                  className={cx(
+                    "wrap-color",
+                    selectedColor?._id === item?._id ? "selector" : ""
+                  )}
+                  key={item._id}
+                >
+                  <img src={pathProcessing(item.thumbnail)} alt={item.name} />
+                </div>
+              ))}
             </div>
           </div>
           {/* Sizes */}
           <div className={cx("size")}>
             <div className={cx("select-swap")}>
-              {productSizes?.map((itemSize) => {
+              {detailProduct?.size?.map((size) => {
                 return (
                   <div
-                    key={itemSize.id}
+                    key={size?._id}
                     className={cx("swatch-element", {
-                      hideSize: !isSizeInProduct(itemSize.name),
-                      selector: itemSize.name === selectedSize
+                      selector: size?.name === selectedSize
                     })}
                   >
                     <input
-                      id={`swatch-1-${itemSize.name}`}
+                      id={`swatch-1-${size?.name}`}
                       // onChange={handleChangeSelectSize}
                       name="option1"
-                      value={itemSize.name}
+                      value={size?.name}
                       type="radio"
                     />
                     <label
-                      htmlFor={`swatch-1-${itemSize.name}`}
+                      htmlFor={`swatch-1-${size?.name}`}
                       className={cx("block-select-size")}
-                      onClick={() => handleChangeSelectSize(itemSize.name)}
+                      onClick={() => handleChangeSelectSize(size?.name)}
                     >
-                      <span>{itemSize.name}</span>
+                      <span>{size?.name}</span>
                     </label>
                   </div>
                 )

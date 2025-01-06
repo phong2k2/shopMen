@@ -25,7 +25,6 @@ const DeliveryInformation = function DeliveryInformation({
   handleSubmitCreateOrder,
   optionsPayPal
 }) {
-  const [isShowPayment, setIsShowPayment] = useState(false)
   const dispatch = useDispatch()
   const {
     register,
@@ -59,12 +58,6 @@ const DeliveryInformation = function DeliveryInformation({
 
   const handleChangePayment = (payment) => {
     handleChangeActivePayment(payment)
-    const namePayment = payment?.name.toLowerCase()
-    if (namePayment.includes("paypal")) {
-      setIsShowPayment(true)
-    } else {
-      setIsShowPayment(false)
-    }
   }
 
   return (
@@ -224,18 +217,15 @@ const DeliveryInformation = function DeliveryInformation({
             </div>
           </div>
           {/* Button Paypal */}
-          {isShowPayment ? (
+          {/* {isShowPayment ? (
             <div className={cx("step-footer")}>
               <PayPal optionsPayPal={optionsPayPal} clientId={clientId} />
             </div>
-          ) : (
-            <div className={cx("step-footer")}>
-              <button className={cx("btn-complete-order")}>
-                Hoàn tất đơn hàng
-              </button>
-              <div className={cx("clear")}></div>
-            </div>
-          )}
+          ) : ( */}
+          <div className={cx("step-footer")}>
+            <button className={cx("btn-complete-order")}>Thanh Toán</button>
+            <div className={cx("clear")}></div>
+          </div>
         </form>
       </div>
     </div>

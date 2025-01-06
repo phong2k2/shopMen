@@ -21,8 +21,8 @@ import { PUBLICROUTER } from "@/config/routes"
 
 const cx = classNames.bind(styles)
 function ProductDetail() {
-  const [selectedColor, setSelectedColor] = useState("")
-  const [selectedSize, setSelectedSize] = useState("")
+  const [selectedColor, setSelectedColor] = useState()
+  const [selectedSize, setSelectedSize] = useState()
   const [indexActive, setIndexActive] = useState(0)
   const [searchParams] = useSearchParams()
   const productId = searchParams.get("id")
@@ -33,7 +33,10 @@ function ProductDetail() {
   // Get products Detail
   const { data: detailProduct, isLoading: isLoadingDetailProduct } = useQuery({
     queryKey: ["productDetail", productId],
-    queryFn: () => productService.getProductDetail(productId)
+    queryFn: () => productService.getProductDetail(productId),
+    onSuccess: (data) => {
+      setSelectedColor(data?.color[0])
+    }
   })
 
   const dataNav = [
@@ -57,15 +60,6 @@ function ProductDetail() {
     }
   ]
 
-  // Images
-  const images = detailProduct?.color[indexActive]?.gallery
-  // Sizes
-  const sizes = detailProduct?.color[indexActive]?.size
-
-  function isSizeInProduct(size) {
-    return sizes?.some((productSize) => productSize.size === size)
-  }
-
   // Get product related
   const { data: allProductRelated } = useQuery({
     queryKey: ["productRelated", detailProduct?.category?._id],
@@ -82,20 +76,13 @@ function ProductDetail() {
       .slice(0, 10)
   }, [allProductRelated, productId])
 
-  const handleChangeSelectColor = (item, index) => {
-    setIndexActive(index)
+  const handleChangeSelectColor = (item) => {
     setSelectedColor(item)
-    setSelectedSize("")
   }
 
   const handleChangeSelectSize = (size) => {
     setSelectedSize(size)
   }
-
-  // Active lần đầu
-  useEffect(() => {
-    setSelectedColor(detailProduct?.color[0])
-  }, [detailProduct])
 
   //Add to Cart
   const handleAddToCart = () => {
@@ -105,11 +92,11 @@ function ProductDetail() {
         addToCart({
           orderItem: {
             name: detailProduct?.name,
-            image: detailProduct?.thumbnail,
+            image: selectedColor?.thumbnail,
             amount,
             price: detailProduct?.price,
             salePrice: detailProduct?.salePrice,
-            color: selectedColor?.nameColor,
+            color: selectedColor?.name,
             size: selectedSize,
             product: detailProduct?._id,
             slug: detailProduct?.slug
@@ -126,9 +113,8 @@ function ProductDetail() {
       <NavContent data={dataNav} />
       <div className={cx("container")}>
         <MainProductDetail
-          images={images}
+          images={selectedColor?.images}
           detailProduct={detailProduct}
-          isSizeInProduct={isSizeInProduct}
           handleChangeSelectColor={handleChangeSelectColor}
           handleChangeSelectSize={handleChangeSelectSize}
           handleAddToCart={handleAddToCart}

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { pathProcessing } from "@/helpers/image"
 import { FreeMode, Navigation, Thumbs } from "swiper/modules"
@@ -6,15 +6,6 @@ import "./ProductSlide.scss"
 
 function ProductSlide({ images }) {
   const [thumbsSwiper, setThumbsSwiper] = useState(null)
-  const imgRefs = useRef([])
-  const [height, setHeight] = useState(null)
-
-  const handleSlideChange = (swiper) => {}
-
-  const handleResize = (swiper) => {
-    const swiperElement = swiper.el
-    setHeight(swiperElement.offsetHeight)
-  }
 
   return (
     <div className="col-md-6 col-sm-12 product-gallery">
@@ -26,14 +17,12 @@ function ProductSlide({ images }) {
         modules={[FreeMode, Navigation, Thumbs]}
         className="productHotSwiper"
         style={{ order: 2 }}
-        onSlideChange={handleSlideChange}
-        onResize={handleResize}
       >
         {images?.map((item, index) => {
           return (
-            <SwiperSlide style={{ cursor: "pointer" }} key={item?._id}>
+            <SwiperSlide style={{ cursor: "pointer" }} key={index}>
               <img
-                src={pathProcessing(item?.image)}
+                src={pathProcessing(item)}
                 className="swiper-lazy"
                 alt={item?.nameImage}
                 loading="lazy"
@@ -60,11 +49,11 @@ function ProductSlide({ images }) {
           }
         }}
       >
-        {images?.map((item) => {
+        {images?.map((item, index) => {
           return (
-            <SwiperSlide key={item?._id} className="wrap-img">
+            <SwiperSlide key={index} className="wrap-img">
               <img
-                src={pathProcessing(item?.image)}
+                src={pathProcessing(item)}
                 className={"swiper-slide-auto"}
                 alt={item?.image}
                 loading="lazy"

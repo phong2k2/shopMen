@@ -88,7 +88,6 @@ function Cart() {
     const { checked } = e.target
     setIsCheckAll(checked)
     if (cart?.cartItems) {
-      console.log("🚀 ~ checkItems:", checkItems)
       if (cart.cartItems.length === checkItems?.length) {
         setCheckItems([])
       } else {

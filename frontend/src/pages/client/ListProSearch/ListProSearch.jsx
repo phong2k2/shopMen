@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import classNames from "classnames/bind"
 import styles from "./ListProSearch.module.scss"
 import * as productService from "@/services/productService"

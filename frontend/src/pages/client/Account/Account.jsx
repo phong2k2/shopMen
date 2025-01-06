@@ -86,9 +86,7 @@ function Account() {
 
   const handleDone = async () => {
     const crop = croppedAreaPixels
-
     const avatar = await getProcessedImage()
-
     setPreview(URL.createObjectURL(avatar))
     setCropImage(crop)
     resetStates()

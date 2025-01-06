@@ -6,7 +6,6 @@ import Loading from "./Loading"
 function MainProductDetail({
   images,
   detailProduct,
-  isSizeInProduct,
   handleChangeSelectColor,
   handleChangeSelectSize,
   handleAddToCart,
@@ -20,7 +19,6 @@ function MainProductDetail({
       <ProductSlide images={images} />
       <ProductContent
         detailProduct={detailProduct}
-        isSizeInProduct={isSizeInProduct}
         handleChangeSelectColor={handleChangeSelectColor}
         handleChangeSelectSize={handleChangeSelectSize}
         handleAddToCart={handleAddToCart}

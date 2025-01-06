@@ -10,7 +10,7 @@ import { clearCart, getTotals } from "@/redux/cartSlice"
 import OrderInformation from "./OrderInformation/OrderInformation"
 import DeliveryInformation from "./DeliveryInformation/DeliveryInformation"
 import { useMutation, useQuery } from "react-query"
-import { getAllPayments } from "@/services/paymentService"
+import { createUrlVnPay, getAllPayments } from "@/services/paymentService"
 import { getAllAddress } from "@/services/addressService"
 import { PUBLICROUTER } from "@/config/routes"
 
@@ -56,15 +56,15 @@ function Order() {
   })
   const { data: allPayments } = getAllPaymentsQuery
 
-  useEffect(() => {
-    if (allPayments) {
-      const activePayment = allPayments.find((item) => {
-        const namePayment = item.name.toLowerCase()
-        return namePayment.includes("cod")
-      })
-      setActivePayment(activePayment)
-    }
-  }, [allPayments])
+  // useEffect(() => {
+  //   if (allPayments) {
+  //     const activePayment = allPayments.find((item) => {
+  //       const namePayment = item.name.toLowerCase()
+  //       return namePayment.includes("cod")
+  //     })
+  //     setActivePayment(activePayment)
+  //   }
+  // }, [allPayments])
 
   const handleChangeActivePayment = (payment) => {
     setActivePayment(payment)
@@ -79,6 +79,16 @@ function Order() {
       dispatch(getTotals())
     }
   })
+
+  // create url VN_PAY
+  const createUrlVnPayMutations = useMutation({
+    mutationFn: (data) => createUrlVnPay(data),
+    onSuccess: (data) => {
+      console.log("🚀 ~ data:", data)
+      // window.location.href = data
+    }
+  })
+
   //Tạo đơn hàng
   const handleSubmitCreateOrder = async (values) => {
     const dataOrder = {
@@ -93,7 +103,12 @@ function Order() {
       shippingPrice: shippingCost,
       ...locations
     }
-    addOrderMutations.mutate(dataOrder)
+    if (activePayment?.type === "vnpay") {
+      dataOrder.bankCode = "NCB"
+      createUrlVnPayMutations.mutate(dataOrder)
+    } else {
+      addOrderMutations.mutate(dataOrder)
+    }
   }
 
   // Tạo đơn hàng ví PalPay

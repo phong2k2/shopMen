@@ -22,7 +22,6 @@ function CollectionCategoryNew({ allListSubCategory }) {
         <Swiper
           spaceBetween={25}
           navigation={true}
-          scrollbar={true}
           slidesPerView={2}
           breakpoints={{
             "@1.50": {
@@ -30,7 +29,7 @@ function CollectionCategoryNew({ allListSubCategory }) {
               spaceBetween: 25
             }
           }}
-          modules={[Scrollbar, Navigation]}
+          modules={[Navigation]}
           className="productHotSwiper swiper-horizontal"
           loop={true}
           direction={"horizontal"}

@@ -2,13 +2,10 @@ import {
   BrowserRouter as Router,
   unstable_HistoryRouter as HistoryRouter,
   Route,
-  RouterProvider,
-  createBrowserRouter,
-  createRoutesFromElements,
   Navigate,
   Routes
 } from "react-router-dom"
-import { Suspense, lazy, useEffect } from "react"
+import { Suspense, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { privateRoutes, publicRoutes } from "@/routes/routes"
 import PublicLayout from "@/customRoutes/PublicLayout"
@@ -22,7 +19,7 @@ import { getUserSuccess } from "./redux/authSlice"
 import ModalCategory from "./components/ModalCategory/ModalCategory"
 import { useDeliveryInfo } from "./hook/useContext"
 import { history } from "./helpers/history"
-// const PublicLayout = lazy(() => import("@/customRoutes/PublicLayout"));
+import ScrollToTop from "./components/ScrollToTop"
 
 function App() {
   const dispatch = useDispatch()
@@ -63,6 +60,7 @@ function App() {
 
   return (
     <HistoryRouter history={history}>
+      <ScrollToTop />
       <Routes>
         {privateRoutes.map((route, index) => {
           const Page = route.component
