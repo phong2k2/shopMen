@@ -1,11 +1,11 @@
 const getProduct = (data) => {
-  const { results, ...meta } = data;
+  const { results, ...meta } = data
   const {
     price,
     countInStock,
     salePrice,
     hot,
-    color,
+    thumbnail,
     description,
     slug,
     _id,
@@ -13,8 +13,8 @@ const getProduct = (data) => {
     category,
     subCategory,
     createdAt,
-    updatedAt,
-  } = results[0];
+    updatedAt
+  } = results[0]
 
   const products = {
     price,
@@ -25,19 +25,19 @@ const getProduct = (data) => {
     countInStock,
     hot,
     slug,
-    color,
+    thumbnail,
     category: category?._id || null,
     subCategory: subCategory?._id || null,
     createdAt,
-    updatedAt,
-  };
+    updatedAt
+  }
 
   return {
     data: products,
-    ...meta,
-  };
-};
+    ...meta
+  }
+}
 
 module.exports = {
-  getProduct,
-};
+  getProduct
+}

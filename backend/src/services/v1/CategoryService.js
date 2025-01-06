@@ -1,97 +1,96 @@
-const { ObjectId } = require("mongodb");
-const { StatusCodes } = require("http-status-codes");
-const Category = require("../../app/model/Category");
-const ApiError = require("../../utils/ApiError");
-const SubCategory = require("../../app/model/SubCategory");
+const { StatusCodes } = require("http-status-codes")
+const Category = require("../../app/model/Category")
+const ApiError = require("../../utils/ApiError")
+const SubCategory = require("../../app/model/SubCategory")
 
 const createCategory = async (newCategory) => {
-  const { name } = newCategory;
+  const { name } = newCategory
   try {
-    const checkCategory = await Category.findOne({ name: name });
+    const checkCategory = await Category.findOne({ name: name })
 
     if (checkCategory) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Category not found");
+      throw new ApiError(StatusCodes.NOT_FOUND, "Category not found")
     }
     const newCategory = await Category.create({
-      name,
-    });
+      name
+    })
     return {
-      data: newCategory,
-    };
+      data: newCategory
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 const getAllCategories = async () => {
   try {
-    const getAllCategories = await Category.find({}).populate("subCategory");
+    const getAllCategories = await Category.find({}).populate("subCategory")
 
     return {
-      data: getAllCategories,
-    };
+      data: getAllCategories
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 const getCategoryDetail = async (id) => {
   try {
     const getCategoryDetail = await Category.findById({
-      _id: id,
-    });
+      _id: id
+    })
 
     if (!getCategoryDetail) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Category not found");
+      throw new ApiError(StatusCodes.NOT_FOUND, "Category not found")
     }
     return {
-      data: getCategoryDetail,
-    };
+      data: getCategoryDetail
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 const updateCategory = async (id, data) => {
   try {
-    const checkCateId = await Category.findOne({ _id: new ObjectId(id) });
+    const checkCateId = await Category.findOne({ _id: new ObjectId(id) })
     if (!checkCateId) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Category not found");
+      throw new ApiError(StatusCodes.NOT_FOUND, "Category not found")
     }
 
     const updateCategory = await Category.findOneAndUpdate({ _id: id }, data, {
-      new: true,
-    });
+      new: true
+    })
     return {
-      data: updateCategory,
-    };
+      data: updateCategory
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 const deleteCategory = async (id) => {
   try {
     const checkSubcategory = await SubCategory.findOne({
-      category: new ObjectId(id),
-    });
+      category: id
+    })
     if (checkSubcategory) {
-      throw new ApiError(StatusCodes.CONFLICT, "Danh mục này không thể xóa");
+      throw new ApiError(StatusCodes.CONFLICT, "Danh mục này không thể xóa")
     }
 
-    await Category.deleteOne({ _id: new ObjectId(id) });
+    await Category.deleteOne({ _id: id })
     return {
-      message: "Delete Success",
-    };
+      message: "Delete Success"
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 module.exports = {
   getAllCategories,
   getCategoryDetail,
   createCategory,
   updateCategory,
-  deleteCategory,
-};
+  deleteCategory
+}

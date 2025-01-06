@@ -1,90 +1,87 @@
-const { StatusCodes } = require("http-status-codes");
-const Product = require("../../app/model/Product");
-const productTransformer = require("../../transformer/v1/product");
-const ApiError = require("../../utils/ApiError");
+const { StatusCodes } = require("http-status-codes")
+const Product = require("../../app/model/Product")
+const productTransformer = require("../../transformer/v1/product")
+const ApiError = require("../../utils/ApiError")
 
 //GetAll Products
 const getAllProducts = async (filter, options) => {
   try {
-    const data = await Product.paginate({ ...filter }, options);
-
-    return productTransformer.getProductList(data);
+    const data = await Product.paginate({ ...filter }, options)
+    return productTransformer.getProductList(data)
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 // Get Product Detail
 const getProductDetail = async (filter, options) => {
   try {
-    const data = await Product.paginate({ ...filter }, options);
-    return productTransformer.getProduct(data);
+    const data = await Product.paginate({ ...filter }, options)
+    return productTransformer.getProduct(data)
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 // Add Product
 const createProduct = async (body) => {
   try {
-    const checkProduct = await Product.findOne({ name: body.name });
+    const checkProduct = await Product.findOne({ name: body.name })
     if (checkProduct) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
+      throw new ApiError(StatusCodes.NOT_FOUND, "Product not found")
     }
     const newProduct = await Product.create({
-      ...body,
-    });
+      ...body
+    })
 
     return {
-      data: newProduct,
-    };
+      data: newProduct
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 // Update product
-const updateProduct = async (productId, body) => {
+const updateProduct = async (id, body) => {
   try {
-    const checkProduct = await Product.findOne({ _id: productId });
-    if (!checkProduct) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
+    const productOld = await Product.findOne({ _id: id })
+    if (!productOld) {
+      throw new ApiError(StatusCodes.NOT_FOUND, "Product not found")
     }
-    const updateProduct = await Product.findOneAndUpdate(
-      { _id: productId },
-      body,
-      { new: true }
-    );
+    const updateProduct = await Product.findOneAndUpdate({ _id: id }, body, {
+      new: true
+    })
 
     return {
-      data: updateProduct,
-    };
+      data: updateProduct
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 // Delete product
-const deleteProduct = async (productId) => {
+const deleteProduct = async (id) => {
   try {
-    const checkDeleteProduct = await Product.findOne({ _id: productId });
+    const checkDeleteProduct = await Product.findOne({ _id: id })
 
     if (!checkDeleteProduct) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Product not found");
+      throw new ApiError(StatusCodes.NOT_FOUND, "Product not found")
     }
-    await Product.findOneAndDelete({ _id: productId });
+    await Product.findOneAndDelete({ _id: id })
     return {
-      message: "Delete Success",
-    };
+      message: "Delete Success"
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 module.exports = {
   getAllProducts,
   getProductDetail,
   createProduct,
   updateProduct,
-  deleteProduct,
-};
+  deleteProduct
+}

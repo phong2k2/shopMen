@@ -1,142 +1,118 @@
-const { ObjectId } = require("mongodb");
-const { StatusCodes } = require("http-status-codes");
-const SubCategory = require("../../app/model/SubCategory");
-const Category = require("../../app/model/Category");
-const { uploadToCloudinary } = require("../../services/v1/CloudinaryService");
-const ApiError = require("../../utils/ApiError");
-const Product = require("../../app/model/Product");
+const { StatusCodes } = require("http-status-codes")
+const SubCategory = require("../../app/model/SubCategory")
+const Category = require("../../app/model/Category")
+const ApiError = require("../../utils/ApiError")
+const Product = require("../../app/model/Product")
 
-// Get SubCategory Service
-const getSubCategory = async (filter, options) => {
+const getAllSubCategory = async (filter, options) => {
   try {
-    const getAllSubCate = await SubCategory.paginate({ ...filter }, options);
+    const getAllSubCate = await SubCategory.paginate({ ...filter }, options)
     return {
-      data: getAllSubCate,
-    };
+      data: getAllSubCate
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
-// Get SubCategory Detail
 const getSubCategoryDetail = async (id) => {
   try {
     const subCategory = await SubCategory.findOne({
-      _id: new ObjectId(id),
-    });
+      _id: id
+    })
     return {
-      data: subCategory,
-    };
+      data: subCategory
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
-// Get SubCategory By category
-const getAllSubCategoryForCategory = async (categoryId) => {
-  try {
-    const allSubCategory = await SubCategory.find({
-      category: new ObjectId(categoryId),
-    }).populate("category", ["name"]);
-
-    return {
-      data: allSubCategory,
-    };
-  } catch (error) {
-    throw error;
-  }
-};
-
-// Add SubCategory Service
 const createSubCategory = async (name, category, filename) => {
   try {
-    const checkSubCate = await SubCategory.findOne({ name: name });
+    const checkSubCate = await SubCategory.findOne({ name: name })
     if (checkSubCate) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Danh mục đã tồn tại");
+      throw new ApiError(StatusCodes.NOT_FOUND, "Danh mục đã tồn tại")
     }
 
     const newSubCategory = await SubCategory.create({
       name,
       image: filename,
-      category,
-    });
+      category
+    })
 
     if (newSubCategory) {
-      // Add subcategory to category
       if (category) {
         await Category.findOneAndUpdate(
-          { _id: category }, // Điều kiện tìm kiếm
-          { $push: { subCategory: newSubCategory._id } }, // Toán tử $push để cập nhật mảng
+          { _id: category },
+          { $push: { subCategory: newSubCategory._id } },
           { new: true }
-        );
+        )
       }
     }
     return {
-      data: newSubCategory,
-    };
+      data: newSubCategory
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
-// Update SubCategory Service
 const updateSubCategory = async (id, data, filename) => {
   try {
-    const checkSubCatId = await SubCategory.findOne({ _id: new ObjectId(id) });
+    const checkSubCatId = await SubCategory.findOne({ _id: id })
     if (!checkSubCatId) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Sub category not found");
+      throw new ApiError(StatusCodes.NOT_FOUND, "Sub category not found")
     }
 
     const updateSubCategory = await SubCategory.findOneAndUpdate(
       { _id: id },
       { ...data, image: filename },
       { new: true }
-    );
+    )
 
     return {
-      data: updateSubCategory,
-    };
+      data: updateSubCategory
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
-// Delete SubCategory
 const deleteSubCategory = async (id) => {
   try {
     const checkSubCate = await SubCategory.findOne({
-      _id: id,
-    });
+      _id: id
+    })
     if (!checkSubCate) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Sub category not found");
+      throw new ApiError(StatusCodes.NOT_FOUND, "Sub category not found")
     }
 
     const checkProduct = await Product.findOne({
-      subCategory: id,
-    });
+      subCategory: id
+    })
     if (checkProduct) {
-      throw new ApiError(StatusCodes.CONFLICT, "Danh mục này không thể xóa");
+      throw new ApiError(StatusCodes.CONFLICT, "Danh mục này không thể xóa")
     }
 
     await Category.updateMany(
       { subCategory: id },
       { $pull: { subCategory: id } }
-    );
-    await SubCategory.findByIdAndDelete({ _id: id });
+    )
+    await SubCategory.findByIdAndDelete({ _id: id })
 
     return {
-      message: "Delete Success",
-    };
+      message: "Delete Success"
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 module.exports = {
-  getSubCategory,
+  getAllSubCategory,
   getSubCategoryDetail,
   createSubCategory,
   updateSubCategory,
-  deleteSubCategory,
-  getAllSubCategoryForCategory,
-};
+  deleteSubCategory
+}

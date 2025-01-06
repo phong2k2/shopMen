@@ -1,18 +1,18 @@
-const express = require("express");
-const router = express.Router();
+const express = require("express")
+const router = express.Router()
 
-const galleryController = require("../../app/controllers/v1/GalleryController");
-const { uploadMiddleware } = require("../../app/middlewares/multerMiddleware");
-const middlewareController = require("../../app/middlewares/authMiddleware");
+const galleryController = require("../../app/controllers/v1/GalleryController")
+const { uploadMiddleware } = require("../../app/middlewares/multerMiddleware")
+const middlewareController = require("../../app/middlewares/authMiddleware")
 
 router
   .route("/")
   .get(galleryController.getAllGalleries)
   .post(
     middlewareController.authAdminMiddleWare,
-    uploadMiddleware,
+    uploadMiddleware().any("pictures"),
     galleryController.createGallery
-  );
+  )
 
 router
   .route("/:id")
@@ -25,6 +25,6 @@ router
   .delete(
     middlewareController.authAdminMiddleWare,
     galleryController.deleteGallery
-  );
+  )
 
-module.exports = router;
+module.exports = router

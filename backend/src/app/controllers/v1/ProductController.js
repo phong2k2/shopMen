@@ -30,10 +30,8 @@ const ProductController = {
       options.populate = [
         { path: "category" },
         { path: "subCategory" },
-        {
-          path: "color",
-          populate: [{ path: "gallery" }, { path: "size" }]
-        }
+        { path: "size" },
+        { path: "color" }
       ]
 
       if (queryString.featured) {
@@ -63,7 +61,7 @@ const ProductController = {
   getProductDetail: async (req, res, next) => {
     try {
       const {
-        params: { productId },
+        params: { id },
         query
       } = req
 
@@ -71,14 +69,12 @@ const ProductController = {
       options.populate = [
         { path: "category" },
         { path: "subCategory" },
-        {
-          path: "color",
-          populate: [{ path: "gallery" }, { path: "size" }]
-        }
+        { path: "size" },
+        { path: "color" }
       ]
 
       const response = await ProductService.getProductDetail(
-        { _id: productId },
+        { _id: id },
         options
       )
       res.status(StatusCodes.OK).json(response)
@@ -90,6 +86,7 @@ const ProductController = {
   // Add Product
   createProduct: async (req, res, next) => {
     try {
+      if (req.file) req.body.thumbnail = req.file.filename
       const response = await ProductService.createProduct(req.body)
       res.status(StatusCodes.CREATED).json(response)
     } catch (error) {
@@ -100,8 +97,9 @@ const ProductController = {
   // Update product
   updateProduct: async (req, res, next) => {
     try {
-      const { productId } = req.params
-      const response = await ProductService.updateProduct(productId, req.body)
+      const { id } = req.params
+      if (req.file) req.body.thumbnail = req.file.filename
+      const response = await ProductService.updateProduct(id, req.body)
       res.status(StatusCodes.OK).json(response)
     } catch (error) {
       next(error)
@@ -111,9 +109,9 @@ const ProductController = {
   //Delete Product
   deleteProduct: async (req, res, next) => {
     try {
-      const { productId } = req.params
+      const { id } = req.params
 
-      const response = await ProductService.deleteProduct(productId)
+      const response = await ProductService.deleteProduct(id)
       res.status(StatusCodes.OK).json(response)
     } catch (error) {
       next(error)

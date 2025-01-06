@@ -1,18 +1,39 @@
-const { StatusCodes } = require("http-status-codes");
-const Gallery = require("../../app/model/Gallery");
-const ProductColor = require("../../app/model/ProductColor");
-const {
-  uploadToCloudinary,
-  deleteAnCloudinary,
-} = require("../../services/v1/CloudinaryService");
-const ApiError = require("../../utils/ApiError");
+const { StatusCodes } = require("http-status-codes")
+const Gallery = require("../../app/model/Gallery")
+const ProductColor = require("../../app/model/ProductColor")
+const ApiError = require("../../utils/ApiError")
 
-const createGallery = async (body, filename) => {
+const getAllGalleries = async (filter, options) => {
+  try {
+    const allGallery = await Gallery.paginate({ ...filter }, options)
+    return {
+      data: allGallery
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+const getGalleryDetail = async (id) => {
+  try {
+    const imageProduct = await Gallery.findOne({
+      _id: id
+    })
+
+    return {
+      data: imageProduct
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
+const createGallery = async (body, imgs) => {
   try {
     const newImageProduct = await Gallery.create({
       ...body,
-      image: filename,
-    });
+      image: filename
+    })
 
     // Add galleryId from productColor image list
     if (newImageProduct) {
@@ -20,93 +41,66 @@ const createGallery = async (body, filename) => {
         { _id: newImageProduct.productColor }, // Điều kiện tìm kiếm
         { $push: { gallery: newImageProduct._id } }, // Toán tử $push để cập nhật mảng
         { new: true }
-      );
+      )
     }
 
     return {
-      data: newImageProduct,
-    };
+      data: newImageProduct
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
-
-const getAllGalleries = async (filter, options) => {
-  try {
-    const allGallery = await Gallery.paginate({ ...filter }, options);
-    return {
-      data: allGallery,
-    };
-  } catch (error) {
-    throw error;
-  }
-};
-
-const getGalleryDetail = async (id) => {
-  try {
-    const imageProduct = await Gallery.findOne({
-      _id: id,
-    });
-
-    return {
-      data: imageProduct,
-    };
-  } catch (error) {
-    throw error;
-  }
-};
+}
 
 const updateGallery = async (id, body, fileData) => {
   try {
     const galleryProduct = await Gallery.findOne({
-      _id: id,
-    });
+      _id: id
+    })
 
     if (!galleryProduct) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Image not found");
+      throw new ApiError(StatusCodes.NOT_FOUND, "Image not found")
     }
 
     const updateGalleryProduct = await Gallery.findOneAndUpdate(
       { _id: id },
-      { ...body, image: fileData 
-      
-      },
+      { ...body, image: fileData },
       { new: true }
-    );
+    )
 
     return {
-      data: updateGalleryProduct,
-    };
+      data: updateGalleryProduct
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 const deleteGallery = async (id) => {
   try {
     const checkGallery = await Gallery.findOne({
-      _id: id,
-    });
+      _id: id
+    })
     if (!checkGallery) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Image not found");
+      throw new ApiError(StatusCodes.NOT_FOUND, "Image not found")
     }
     // Delete gallery from productColor
-    await ProductColor.updateMany({ gallery: id }, { $pull: { gallery: id } });
+    await ProductColor.updateMany({ gallery: id }, { $pull: { gallery: id } })
 
-    await Gallery.findOneAndDelete({ _id: id });
+    await Gallery.findOneAndDelete({ _id: id })
 
     return {
-      message: "Delete Successful",
-    };
+      message: "Delete Successful"
+    }
   } catch (error) {
-    throw error;
+    throw error
   }
-};
+}
 
 module.exports = {
   getAllGalleries,
   getGalleryDetail,
   createGallery,
   updateGallery,
-  deleteGallery,
-};
+  deleteGallery
+}

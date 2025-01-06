@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config()
 
 const env = {
   BUILD_MODE: process.env.BUILD_MODE,
@@ -27,6 +27,12 @@ const env = {
   SMTP_PORT: process.env.SMTP_PORT,
   SMTP_USERNAME: process.env.SMTP_USERNAME,
   SMTP_PASSWORD: process.env.SMTP_PASSWORD,
-};
 
-module.exports = { env };
+  // VNPAY
+  VNP_TMN_CODE: process.env.VNP_TMN_CODE,
+  VNP_HASH_SECRET: process.env.VNP_HASH_SECRET,
+  VNP_URL: process.env.VNP_URL,
+  VNP_RETURN_URL: process.env.VNP_RETURN_URL
+}
+
+module.exports = { env }

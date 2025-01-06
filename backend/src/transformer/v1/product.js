@@ -1,5 +1,3 @@
-const { getImageThumbnail } = require("../../utils/getImageThumbnail")
-
 const getProductList = (data) => {
   const { results, ...meta } = data
   const products = results.map((i) => {
@@ -9,6 +7,8 @@ const getProductList = (data) => {
       salePrice,
       hot,
       color,
+      size,
+      thumbnail,
       description,
       slug,
       _id,
@@ -28,7 +28,8 @@ const getProductList = (data) => {
       hot,
       slug,
       color,
-      thumbnail: getImageThumbnail(color[0]?.gallery),
+      thumbnail,
+      size,
       category: {
         name: category?.name || null,
         _id: category?._id || null
@@ -56,6 +57,8 @@ const getProduct = (data) => {
     salePrice,
     hot,
     color,
+    thumbnail,
+    size,
     description,
     slug,
     _id,
@@ -76,9 +79,10 @@ const getProduct = (data) => {
     hot,
     slug,
     color,
+    thumbnail,
+    size,
     category,
     subCategory,
-    thumbnail: getImageThumbnail(color[0]?.gallery),
     createdAt,
     updatedAt
   }

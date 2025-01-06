@@ -1,31 +1,31 @@
-const express = require("express");
-const dashboardRoute = require("./dashboard");
-const categoryRoute = require("./category");
-const subCategoryRoute = require("./subCategory");
-const productRoute = require("./product");
-const orderRoute = require("./order");
-const authRoute = require("./auth");
-const userRoute = require("./user");
-const productColorRouter = require("./productColor");
-const productGalleryRouter = require("./gallery");
-const productSizeRouter = require("./productSize");
-const paymentRoute = require("./payment");
-const addressRoute = require("./address");
+const express = require("express")
+const dashboardRoute = require("./dashboard")
+const categoryRoute = require("./category")
+const subCategoryRoute = require("./subCategory")
+const productRoute = require("./product")
+const orderRoute = require("./order")
+const authRoute = require("./auth")
+const userRoute = require("./user")
+const productColorRouter = require("./productColor")
+const productGalleryRouter = require("./gallery")
+const productSizeRouter = require("./productSize")
+const paymentRoute = require("./payment")
+const addressRoute = require("./address")
 
-const Router = express.Router();
+const Router = express.Router()
 
-Router.use("/products", productRoute);
-Router.use("/dashboard", dashboardRoute);
-Router.use("/categories", categoryRoute);
-Router.use("/subcategories", subCategoryRoute);
+Router.use("/products", productRoute)
+Router.use("/dashboard", dashboardRoute)
+Router.use("/categories", categoryRoute)
+Router.use("/subcategories", subCategoryRoute)
 
-Router.use("/colors", productColorRouter);
-Router.use("/galleries", productGalleryRouter);
-Router.use("/sizes", productSizeRouter);
-Router.use("/payments", paymentRoute);
-Router.use("/auth", authRoute);
-Router.use("/users", userRoute);
-Router.use("/addresses", addressRoute);
-Router.use("/orders", orderRoute);
+Router.use("/colors", productColorRouter)
+Router.use("/galleries", productGalleryRouter)
+Router.use("/sizes", productSizeRouter)
+Router.use("/payments", paymentRoute)
+Router.use("/auth", authRoute)
+Router.use("/users", userRoute)
+Router.use("/addresses", addressRoute)
+Router.use("/orders", orderRoute)
 
-module.exports = { APIs_VI: Router };
+module.exports = { APIs_VI: Router }
